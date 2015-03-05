@@ -6,14 +6,205 @@ head
 
   title Declaire.js
 
-  link(rel="shortcut icon" href="/favicon.png")
   link(rel="stylesheet" href="/stylesheets/main.css")
   link(rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" )
+  link(rel="shortcut icon" href="/favicon.png")
 
 body
-  header
-    img(src="/img/logo.png")
-    h1 Declaire.js
+  header#main-header
+    #logo
+      //- img(src="/img/logo.png")
+      i.fa.fa-dashcube
+      span Declaire.js
+    nav
+      ul
+        li
+          a(href="#features") Features
+        li
+          a(href="#get-started") Get Started
+        li
+          a(href="/pages/documentation") Documentation
+        li
+          a(href="https://github.com/syntheticore/declaire") Github
 
+  main
+    header
+      h1 Declaire.js
+      h2 A Developer friendly, full-stack Web Application Framework
+      
+      ul.features
+        li
+          h3 Minimal, yet a complete package
+          p
+            | Declaire.js allows you to write a single web application that runs on both
+            | client and server. Pages are first generated in a streaming fashion on the server
+            | - for short time to first byte and easy SEO - and get rehydrated on the client
+            | afterwards, using the same codebase.
+          p
+            | Declaire brings its own templating language, with a compact, Jade-inspired syntax
+            | and a robust set of logic blocks for structuring your markup.
+          p
+            | RESTfull resources get served for your models automatically, without the need to write
+            | additional code. Just define a data model, create instances and you're good to go.
+          p
+            | Stylesheets written in Stylus/nib are compiled and served automatically for you.
+        
+        li
+          h3 Realtime Sync
+          p
+            | Model state is kept current with the remote database at all times automatically.
+            | Declaire does this in a scalable fashion, without the need for an additional PubSub
+            | server like Redis. A single MongoDB connections is sufficient for all data storage
+            | and synchronization needs.
+        
+        li
+          h3 Offline First
+          p
+            | All Declaire applications work offline by default.
+            | Data changes are kept in local browser storage when offline and get synced back to
+            | the server later, when connectivity is available again.
+            br
+            | Application files are cached using an offline manifest by the framework.
+        
+        li
+          h3 Declarative
+          p
+            | The template is the highest authority in a Declaire application and manages most
+            | application state for you. ViewModels get instantiated and deleted by the template engine
+            | as neccessary when data changes, freeing you from having to manage memory and event
+            | handlers yourself.
+          p
+            | Writing application code in this declarative way minimizes overhead and prevents many
+            | common programming mistakes.
+
+        li
+          h3 Server Streaming
+          p
+            | When templates get first rendered on the server, Declaire utilises Node.js' streaming technology
+            | to transmit the first few bytes as soon as possible. Browsers can already display content
+            | and start downloading additional resources, before the database has fully finished returning data.
+        
+        li
+          h3 Auto Bindings
+          p
+            | Watch the DOM magically update, as your model data changes. No matter if those changes
+            | resulted from your own actions or from updates to the server.
+        
+        li
+          h3 Computed properties
+          p
+            | Computed properties are like regular model methods, except that they also emit change
+            | events when one of the properties they depend on changes. This allow you to hook up
+            | complex logic to templates in a completely declarative way.
+            br
+            | Dependency tracking happens automatically, without the need to declare these
+            | relationships ahead of time.
+        
+        li
+          h3 Based on trusted Components
+          p
+            | Declaire runs on Node.js and uses Express internally to serve requests.
+            | Data is stored in a MongoDB instance, and code is packaged using Browserify.
+            | The express app, as well as the connected database instance are supplied to interested
+            | applications using a hook function, just before listening for requests.
+            br
+            | This allows you to hook up legacy code or load additional express middleware and make
+            | changes to the database before serving requests.
+
+    article#features
+
+    article#get-started
+      p
+        | Start a new app by creating a package.json and installing declaire.
+        pre(data-filename="Shell")
+          | mkdir my-app
+          | cd my-app
+          | npm init
+          | npm install declaire --save
+      p
+        | Next, create an application file, load declaire, define your models and
+        | supply the start method with the address of your development database.
+        pre(data-filename="app.js")
+          | var declaire = require('declaire');
+          |
+          | var Todo = Declaire.Model('todos', {
+          |   title: 'Untitled Todo',
+          |   done: false
+          | });
+          |
+          | Declaire.ViewModel('TodosView', {
+          |   todos: declaire.Collection(Todo),
+          | 
+          |   newTodo: function(input) {
+          |     var title = input.val().toUpperCase();
+          |     this.get('todos').create({title: title});
+          |     input.val('');
+          |   }
+          | });
+          |
+          | declaire.start({
+          |   mongoDevUrl: 'mongodb://127.0.0.1:27017/my-app'
+          | });
+      p
+        | Create your main layout template in the views folder (this default can be changed)
+        pre(data-filename="layout.tmpl")
+          | head
+          |   title Todos
+          |   meta(content='text/html; charset=utf-8' http-equiv='Content-Type')
+          |   link(href='/stylesheets/main.css' rel='stylesheet')
+          | body
+          |   {{view TodosView}}
+          |     .todos-view
+          |       header
+          |         h1 Todos
+          |       main
+          |         input(type="text" placeholder="What would you like to do?" {{action change newTodo}})
+          |         ul
+          |           {{for todo in todos}}
+          |             li
+          |               input(type="checkbox" checked="{todo.done}")
+          |               h2 {todo.title}
+          |       footer
+          |         | {todos.length} Items left to do
+          |
+          |   script(src="/bundle.js")
+      p
+        | Finally, run your application using
+        pre
+          | node app.js
+
+  footer#main-footer
+    ul.blocks
+      li
+        h4 Declaire
+        ul.items
+          li Home
+          li Blog
+      li
+        h4 About
+        ul.items
+          li Terms of Service
+          li Privacy Policy
+          li Contact
+      li
+        h4 Help
+        ul.items
+          li Get started
+          li Examples
+          li Documentation
+      li
+        h4 Connect
+        ul.items
+          li
+            i.fa.fa-github-square
+            | Github
+          li
+            i.fa.fa-facebook-square
+            | Facebook
+          li
+            i.fa.fa-twitter
+            | Twitter
+    .bottom
+      i.fa.fa-dashcube
 
   //- script(src="/bundle.js")

@@ -1,0 +1,19 @@
+{
+  "name": "declaire-website",
+  "version": "0.1.0",
+  "description": "Website for Declaire.js",
+  "main": "app.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/syntheticore/declaire-website.git"
+  },
+  "author": "Björn Breitgoff <syntheticore@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/syntheticore/declaire-website/issues"
+  },
+  "homepage": "https://github.com/syntheticore/declaire-website",
+  "dependencies": {
+    "declaire": "^0.1.8"
+  }
+}

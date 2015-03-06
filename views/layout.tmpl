@@ -162,12 +162,12 @@ body
           |       h1 Todos
           |     main
           |       input(type="text" placeholder="What's next?" {{action change newTodo}})
-          |       ul
+          |       ul.todos
           |         {{for todos}}
           |           li
           |             input(type="checkbox" checked="{done}")
           |             h2 {title}
-          |     footer {todos.length} Items left to do
+          |     footer {todos.length} items left to do
       p
         | Finally, run your application using
         pre(data-filename="Shell")

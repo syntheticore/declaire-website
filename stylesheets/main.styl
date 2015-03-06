@@ -64,6 +64,7 @@ pre
     left: 0
     padding: 0.2rem 0.5rem
     background: whitesmoke
+    color: $main
 
 #header
   overflow: hidden
@@ -110,15 +111,18 @@ main
       margin-top: 4rem
       font-size: 1rem
       padding: 1rem
-      background: $main
-      color: white
+      border: 1px solid $main
+      color: $main
       text-transform: uppercase
-      font-weight: 200
+      font-weight: 300
       letter-spacing: 0.3rem
-      border-radius: 4px
+      border-radius: 2px
       text-decoration: none
+      transition: all 0.3s
       &:hover
         background: $main * 0.8
+        color: white
+        border: white
       &:active
         background: $main * 0.5
 
@@ -163,7 +167,7 @@ main
     margin-bottom: 1rem
     font-size: 0.8rem
     text-transform: uppercase
-    color: gray
+    color: $main
   .items
     & > li
       padding: 0.5rem 0

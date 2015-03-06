@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/syntheticore/declaire-website",
   "dependencies": {
-    "declaire": "^0.1.8"
+    "declaire": "^0.1.9",
+    "newrelic": "^1.17.1"
   }
 }

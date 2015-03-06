@@ -39,7 +39,9 @@ body
           h3 Minimal, yet a complete Package
           p
             | Declaire.js allows you to write a single web application that runs on both
-            | client and server. Pages are first generated in a streaming fashion on the server
+            | client and server.
+            br
+            | Pages are first generated in a streaming fashion on the server
             | - for short time to first byte and easy SEO - and get rehydrated on the client
             | afterwards, using the same codebase.
           p
@@ -107,9 +109,9 @@ body
           p
             | Declaire runs on Node.js and uses Express internally to serve requests.
             | Data is stored in a MongoDB instance, and code is packaged using Browserify.
-            | The express app, as well as the connected database instance are supplied to interested
-            | applications using a hook function, just before listening for requests.
             br
+            | The express app, as well as the connected database instance are exposed to interested
+            | applications just before listening for requests.
             | This allows you to hook up legacy code or load additional express middleware and make
             | changes to the database before serving requests.
 
@@ -122,9 +124,9 @@ body
       p
         | Start creating a simple todos app by creating a package.json and installing declaire.
         pre(data-filename="Shell")
-          | mkdir my-app; cd my-app
-          | npm init
-          | npm install declaire --save
+          | $ mkdir my-app; cd my-app
+          | $ npm init
+          | $ npm install declaire --save
       p
         | Next, create an application file, load declaire, define your models and
         | supply the start method with the address of your development database.
@@ -150,7 +152,7 @@ body
           | });
       p
         | Create your main layout template in the views folder (this default can be changed)
-        pre(data-filename="layout.tmpl")
+        pre(data-filename="views/layout.tmpl")
           | head
           |   title Todos
           |   link(href="/stylesheets/main.css" rel="stylesheet")
@@ -169,7 +171,7 @@ body
       p
         | Finally, run your application using
         pre(data-filename="Shell")
-          | node app.js
+          | $ node app.js
 
   footer#footer
     ul.blocks

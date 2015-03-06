@@ -69,7 +69,6 @@ main
       // font-family: 'Open Sans', sans-serif
 
 article
-  padding: 2rem 0
   h2
     font-size: 1.5rem
     // font-weight: bold
@@ -152,23 +151,35 @@ pre
     margin-top: 2rem
     color: $main
 
+
 @media(max-width: 740px)
   #header
     nav
+      margin-top: 1.5rem
       li
         display: block
+        padding-top: 0.5rem
   #footer
     .blocks
       width: 22rem
 
+
 @media(max-width: 360px)
+  #header
+    margin: 0 1rem
+    .logo
+      padding: 1rem 0
+    nav
+      margin-top: 0.5rem
   main
+    margin: 0 1rem
     & > header
       padding: 2rem 0
       h1
-        font-size: 3.5rem
+        font-size: 3rem
       h2
         font-size: 1.2rem
   #footer
+    margin: 0 1rem
     .blocks
       width: 11rem

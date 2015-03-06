@@ -7,15 +7,15 @@ head
   title Declaire.js
 
   link(rel="stylesheet" href="/stylesheets/main.css")
+  link(href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,700' rel='stylesheet')
   link(rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" )
   link(rel="shortcut icon" href="/favicon.png")
 
 body
-  header#main-header
-    #logo
-      //- img(src="/img/logo.png")
-      i.fa.fa-dashcube
-      span Declaire.js
+  header#header
+    .logo
+      i.fa.fa-barcode
+      span Declaire
     nav
       ul
         li
@@ -24,14 +24,15 @@ body
           a(href="#get-started") Get Started
         li
           a(href="/pages/documentation") Documentation
-        li
-          a(href="https://github.com/syntheticore/declaire") Github
+        //- li
+        //-   a(href="https://github.com/syntheticore/declaire") Github
 
   main
     header
       h1 Declaire.js
-      h2 A Developer friendly, full-stack Web Application Framework
+      h2 A minimal, yet complete Web Application Framework
       
+    article
       ul.features
         li
           h3 Minimal, yet a complete package
@@ -50,23 +51,6 @@ body
             | Stylesheets written in Stylus/nib are compiled and served automatically for you.
         
         li
-          h3 Realtime Sync
-          p
-            | Model state is kept current with the remote database at all times automatically.
-            | Declaire does this in a scalable fashion, without the need for an additional PubSub
-            | server like Redis. A single MongoDB connections is sufficient for all data storage
-            | and synchronization needs.
-        
-        li
-          h3 Offline First
-          p
-            | All Declaire applications work offline by default.
-            | Data changes are kept in local browser storage when offline and get synced back to
-            | the server later, when connectivity is available again.
-            br
-            | Application files are cached using an offline manifest by the framework.
-        
-        li
           h3 Declarative
           p
             | The template is the highest authority in a Declaire application and manages most
@@ -76,13 +60,14 @@ body
           p
             | Writing application code in this declarative way minimizes overhead and prevents many
             | common programming mistakes.
-
+        
         li
-          h3 Server Streaming
+          h3 Realtime Sync
           p
-            | When templates get first rendered on the server, Declaire utilises Node.js' streaming technology
-            | to transmit the first few bytes as soon as possible. Browsers can already display content
-            | and start downloading additional resources, before the database has fully finished returning data.
+            | Model state is kept current with the remote database at all times automatically.
+            | Declaire does this in a scalable fashion, without the need for an additional PubSub
+            | server like Redis. A single MongoDB connections is sufficient for all data storage
+            | and synchronization needs.
         
         li
           h3 Auto Bindings
@@ -101,6 +86,22 @@ body
             | relationships ahead of time.
         
         li
+          h3 Offline First
+          p
+            | All Declaire applications work offline by default.
+            | Data changes are kept in local browser storage when offline and get synced back to
+            | the server later, when connectivity is available again.
+            br
+            | Application files are cached using an offline manifest by the framework.
+
+        li
+          h3 Streaming Server
+          p
+            | When templates get first rendered on the server, Declaire utilises Node.js' streaming technology
+            | to transmit the first few bytes as soon as possible. Browsers can already display content
+            | and start downloading additional resources, before the database has fully finished returning data.
+        
+        li
           h3 Based on trusted Components
           p
             | Declaire runs on Node.js and uses Express internally to serve requests.
@@ -111,11 +112,11 @@ body
             | This allows you to hook up legacy code or load additional express middleware and make
             | changes to the database before serving requests.
 
-    article#features
 
     article#get-started
+      h2 Get started
       p
-        | Start a new app by creating a package.json and installing declaire.
+        | Start creating a simple todos app by creating a package.json and installing declaire.
         pre(data-filename="Shell")
           | mkdir my-app
           | cd my-app
@@ -160,20 +161,20 @@ body
           |       main
           |         input(type="text" placeholder="What would you like to do?" {{action change newTodo}})
           |         ul
-          |           {{for todo in todos}}
+          |           {{for todos}}
           |             li
-          |               input(type="checkbox" checked="{todo.done}")
-          |               h2 {todo.title}
+          |               input(type="checkbox" checked="{done}")
+          |               h2 {title}
           |       footer
           |         | {todos.length} Items left to do
           |
           |   script(src="/bundle.js")
       p
         | Finally, run your application using
-        pre
+        pre(data-filename="Shell")
           | node app.js
 
-  footer#main-footer
+  footer#footer
     ul.blocks
       li
         h4 Declaire
@@ -181,22 +182,22 @@ body
           li Home
           li Blog
       li
-        h4 About
-        ul.items
-          li Terms of Service
-          li Privacy Policy
-          li Contact
-      li
         h4 Help
         ul.items
           li Get started
           li Examples
           li Documentation
       li
+        h4 About
+        ul.items
+          li Terms of Service
+          li Privacy Policy
+          li Contact
+      li
         h4 Connect
         ul.items
           li
-            i.fa.fa-github-square
+            i.fa.fa-github
             | Github
           li
             i.fa.fa-facebook-square
@@ -205,6 +206,6 @@ body
             i.fa.fa-twitter
             | Twitter
     .bottom
-      i.fa.fa-dashcube
+      i.fa.fa-barcode
 
   //- script(src="/bundle.js")

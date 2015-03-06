@@ -2,8 +2,8 @@
 global-reset()
 
 $baseFont = 'Neue Helvetica', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif
-$black = #333
-$main = #1b5416
+$black = #515151
+$main = #4fa6ad
 
 sticky()
   position: -webkit-sticky
@@ -21,9 +21,124 @@ html
   text-size-adjust: 100%
 
 body
-  width: 100%
-  margin: 0
+  max-width: 960px
+  margin: 0 auto
   font-family: $baseFont
   font-size: 1rem
   color: $black
   position: relative
+
+#header
+  overflow: hidden
+  // border-bottom: 1px solid whitesmoke
+  .logo
+    display: inline-block
+    font-size: 1.4rem
+    padding: 2rem 0
+    i.fa
+      color: $main
+      margin-right: 0.4rem
+  nav
+    float: right
+    li
+      display: inline-block
+      margin-left: 1rem
+      padding: 2rem 0
+      a
+        text-decoration: none
+        font-size: 1rem
+        color: #7b7b7b
+        &:hover
+          color: $main
+
+main
+  & > header
+    padding: 6rem 2rem
+    text-align: center
+    h1
+      font-size: 4rem
+      line-height: 1.4
+      margin-bottom: 0.5rem
+    h2
+      font-size: 1.6rem
+      line-height: 1.3
+      color: $main
+      // font-family: 'Open Sans', sans-serif
+
+article
+  padding: 2rem 0
+  h2
+    font-size: 1.5rem
+    // font-weight: bold
+  p
+    margin: 1rem 0
+    line-height: 1.6
+    font-size: 0.95rem
+    color: $black
+
+pre
+  overflow: auto
+  font-size: 0.9rem
+  border: 1px solid whitesmoke
+  padding: 0.5rem
+  padding-top: 1.5rem
+  position: relative
+  border-radius: 2px
+  &:after
+    content: attr(data-filename)
+    display: block
+    position: absolute
+    font-size: 0.8rem
+    top: 0
+    left: 0
+    padding: 0.2rem 0.5rem
+    background: whitesmoke
+    color: gray
+
+.features
+  -webkit-columns: 3
+  -webkit-column-gap: 2rem
+  columns: 3
+  column-gap: 2rem
+  li
+    margin: 2rem 0
+    &:first-child
+      margin-top: 0
+  h3
+    font-weight: bold
+    color: black
+
+#get-started
+  width: 39rem
+
+#footer
+  // background: whitesmoke
+  border-top: 1px solid whitesmoke
+  padding: 2rem
+  .blocks
+    overflow: hidden
+    width: 44rem
+    margin: 0 auto
+    & > li
+      float: left
+      margin-right: 3rem
+      width: 8rem
+      &::last-child
+        margin-right: 0
+  h4
+    margin-bottom: 1rem
+    font-size: 0.8rem
+    text-transform: uppercase
+    color: gray
+  .items
+    & > li
+      padding: 0.5rem 0
+      font-size: 0.9rem
+      color: $black
+      i.fa
+        margin-right: 0.5rem
+  .bottom
+    clear: both
+    text-align: center
+    margin-top: 2rem
+    color: $main

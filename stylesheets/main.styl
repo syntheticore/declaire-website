@@ -31,6 +31,7 @@ body
 #header
   overflow: hidden
   // border-bottom: 1px solid whitesmoke
+  margin: 0 2rem
   .logo
     display: inline-block
     font-size: 1.4rem
@@ -44,6 +45,7 @@ body
       display: inline-block
       margin-left: 1rem
       padding: 2rem 0
+      padding-bottom: 0
       a
         text-decoration: none
         font-size: 1rem
@@ -52,8 +54,9 @@ body
           color: $main
 
 main
+  margin: 0 2rem
   & > header
-    padding: 6rem 2rem
+    padding: 6rem 0
     text-align: center
     h1
       font-size: 4rem
@@ -96,9 +99,13 @@ pre
     color: gray
 
 .features
-  -webkit-columns: 3
+  -webkit-column-width: 15rem
   -webkit-column-gap: 2rem
-  columns: 3
+  -moz-column-width: 15rem
+  -moz-column-gap: 2rem
+  -ms-column-width: 15rem
+  -ms-column-gap: 2rem
+  column-width: 15rem
   column-gap: 2rem
   li
     margin: 2rem 0
@@ -109,12 +116,13 @@ pre
     color: black
 
 #get-started
-  width: 39rem
+  // max-width: 39rem
 
 #footer
   // background: whitesmoke
   border-top: 1px solid whitesmoke
-  padding: 2rem
+  padding: 2rem 0
+  margin: 0 2rem
   .blocks
     overflow: hidden
     width: 44rem
@@ -123,6 +131,7 @@ pre
       float: left
       margin-right: 3rem
       width: 8rem
+      margin-bottom: 2rem
       &::last-child
         margin-right: 0
   h4
@@ -142,3 +151,24 @@ pre
     text-align: center
     margin-top: 2rem
     color: $main
+
+@media(max-width: 740px)
+  #header
+    nav
+      li
+        display: block
+  #footer
+    .blocks
+      width: 22rem
+
+@media(max-width: 360px)
+  main
+    & > header
+      padding: 2rem 0
+      h1
+        font-size: 3.5rem
+      h2
+        font-size: 1.2rem
+  #footer
+    .blocks
+      width: 11rem

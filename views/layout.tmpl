@@ -113,6 +113,9 @@ body
             | This allows you to hook up legacy code or load additional express middleware and make
             | changes to the database before serving requests.
 
+        // Implicit router and offline handling through scope
+        // Authentication and permission system
+
 
     article#get-started
       h2 Get Started
@@ -128,17 +131,16 @@ body
         pre(data-filename="app.js")
           | var declaire = require('declaire');
           |
-          | var Todo = Declaire.Model('todos', {
+          | var Todo = declaire.Model('todos', {
           |   title: 'Untitled Todo',
           |   done: false
           | });
           |
-          | Declaire.ViewModel('TodosView', {
+          | declaire.ViewModel('TodosView', {
           |   todos: declaire.Collection(Todo),
           | 
           |   newTodo: function(input) {
-          |     var title = input.val().toUpperCase();
-          |     this.get('todos').create({title: title});
+          |     this.get('todos').create({title: input.val()});
           |     input.val('');
           |   }
           | });
@@ -151,7 +153,7 @@ body
         pre(data-filename="layout.tmpl")
           | head
           |   title Todos
-          |   link(href='/stylesheets/main.css' rel='stylesheet')
+          |   link(href="/stylesheets/main.css" rel="stylesheet")
           | body
           |   {{view TodosView}}
           |     header
@@ -163,10 +165,7 @@ body
           |           li
           |             input(type="checkbox" checked="{done}")
           |             h2 {title}
-          |     footer
-          |       | {todos.length} Items left to do
-          |
-          |   script(src="/bundle.js")
+          |     footer {todos.length} Items left to do
       p
         | Finally, run your application using
         pre(data-filename="Shell")
@@ -215,6 +214,7 @@ body
               i.fa.fa-twitter
               | Twitter
     .bottom
-      i.fa.fa-barcode
+      a(href="#")
+        i.fa.fa-barcode
 
   //- script(src="/bundle.js")

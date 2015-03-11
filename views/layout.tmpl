@@ -7,8 +7,8 @@ head
   title Declaire.js
 
   link(rel="stylesheet" href="/stylesheets/main.css")
-  link(href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,700' rel='stylesheet')
   link(href="/js/bower/fontawesome/css/font-awesome.min.css" rel="stylesheet")
+  link(href="/js/bower/highlightjs/styles/github.css" rel="stylesheet")
   link(rel="shortcut icon" href="/favicon.png")
 
 body
@@ -21,7 +21,7 @@ body
         li
           a(href="#features") Features
         li
-          a(href="#get-started") Get Started
+          a(href="#install") Get Started
         li
           a(href="/pages/docs") Documentation
         //- li
@@ -31,7 +31,7 @@ body
     header
       h1 Declaire.js
       h2 A minimal, yet complete Web Application Framework
-      a.cta(href="#get-started") Get Started
+      a.cta(href="#install") Get Started
       
     article#features
       ul.features
@@ -143,60 +143,269 @@ body
         // Implicit router and offline handling through scope
         // Authentication and permission system
 
+    article#install
+      h2 Install Declaire
+      p
+        | Install Declaire into any node application using npm.
+      pre(data-filename="Shell")
+        code(class="bash")
+          | $ cd my-app
+          | $ npm install declaire --save
+
     article#get-started
       h2 Get Started
       p
-        | Start creating a simple todos app by creating a package.json and installing declaire.
-      pre(data-filename="Shell")
-        | $ mkdir my-app; cd my-app
-        | $ npm init
-        | $ npm install declaire --save
-      p
-        | Next, create an application file, load declaire, define your models and
+        | To build a simple todos application, create an application file, load declaire, define your models and
         | supply the start method with the address of your development database.
       pre(data-filename="app.js")
-        | var declaire = require('declaire');
-        |
-        | var Todo = declaire.Model('todos', {
-        |   title: 'Untitled Todo',
-        |   done: false
-        | });
-        |
-        | declaire.ViewModel('TodosView', {
-        |   todos: declaire.Collection(Todo),
-        | 
-        |   newTodo: function(input) {
-        |     this.get('todos').create({title: input.val()});
-        |     input.val('');
-        |   }
-        | });
-        |
-        | declaire.start({
-        |   mongoDevUrl: 'mongodb://127.0.0.1:27017/my-app'
-        | });
+        code(class="javascript")
+          | var declaire = require('declaire');
+          |
+          | var Todo = declaire.Model('todos', {
+          |   title: 'Untitled Todo',
+          |   done: false
+          | });
+          |
+          | declaire.ViewModel('TodosView', {
+          |   todos: declaire.Collection(Todo),
+          | 
+          |   newTodo: function(input) {
+          |     this.get('todos').create({title: input.val()});
+          |     input.val('');
+          |   }
+          | });
+          |
+          | declaire.start({
+          |   mongoDevUrl: 'mongodb://127.0.0.1:27017/my-app'
+          | });
       p
         | Create your main layout template in the views folder.
         | Declaire will wrap it with an html tag automatically if you omit it.
       pre(data-filename="views/layout.tmpl")
-        | head
-        |   title Todos
-        |   link(href="/stylesheets/main.css" rel="stylesheet")
-        | body
-        |   {{view TodosView}}
-        |     header
-        |       h1 Todos
-        |     main
-        |       input(type="text" placeholder="What's next?" {{action change newTodo}})
-        |       ul.todos
-        |         {{for todos}}
-        |           li
-        |             input(type="checkbox" checked="{done}")
-        |             h2 {title}
-        |     footer {todos.length} items left to do
+        code(class="handlebars")
+          | head
+          |   title Todos
+          |   link(href="/stylesheets/main.css" rel="stylesheet")
+          | body
+          |   {{view TodosView}}
+          |     header
+          |       h1 Todos
+          |     main
+          |       input(type="text" placeholder="What's next?" {{action change newTodo}})
+          |       ul.todos
+          |         {{for todos}}
+          |           li
+          |             input(type="checkbox" checked="{{done}}")
+          |             h2 {title}
+          |     footer {todos.length} items left to do
       p
         | Finally, run your application using
       pre(data-filename="Shell")
-        | $ node app.js
+        code(class="bash")
+          | $ node app.js
+
+    article#templates
+      h2 Basic Templating
+      p
+        | Declaire's templating language borrows heavily from Jade, but differs in notable ways.
+        br
+        | Hierachy is denoted through indentation, while most other syntax choices try to adhere
+        | as much as possible to the CSS syntax. A fully defined tag might look like this:
+      pre(data-filename="views/layout.tmpl")
+        code(class="handlebars")
+          | .pane
+          |   input#my-id.foo.bar(type="text" checked)
+      p
+        | We used the '#' character to give the input an id, applied several classes using '.' and
+        | set some attributes using the regular html notation.
+        br
+        | When an id or class is used, divs may have the tagname omited, as divs are the default.
+      section
+        h3 Interpolation
+        p
+          | Any value available in the surrounding scope can be interpolated at any practical point
+          | in a template using a pair of curlies. This also works for attributes.
+        pre(data-filename="views/layout.tmpl")
+          code(class="handlebars")
+            | .todo
+            |   h2 {title}
+            |   input(type="checkbox" checked="{done}")
+        p
+          | By default, text gets escaped before being inserted into the page, to prevent injection attacks.
+          | If you precede the curlies with an exclamation mark though, you can insert unescaped text.
+          | Use this at your own risk!
+        pre(data-filename="views/layout.tmpl")
+          code(class="handlebars")
+            | h2 !{title}
+      section
+        h3 Bindings
+        p
+          | Using double curlies in an attribute will create a two-way binding, meaning that the
+          | input will drive the connected model property when the user makes changes.
+        pre(data-filename="views/layout.tmpl")
+          code(class="handlebars")
+            | input(type="checkbox" checked="{{done}}")
+      section
+        h3 Free flowing text
+        p
+          | When your text doesn't fit on a single line anymore, you can end a tag definition with a dot
+          | and indent the following lines below. Text may also contain regular html tags.
+        pre(data-filename="views/layout.tmpl")
+          code(class="handlebars")
+            | p.
+            |   Lorem ipsum dolor sit amet
+            |   Lorem ipsum &lt;b&gt;dolor&lt;/b&gt; sit amet
+        p
+          | Alternatively, you may insert text anywhere you would insert a regular tag, by preceding it
+          | with the '|' character. This allows you to still insert intermediate tags using the regular
+          | syntax. 
+        pre(data-filename="views/layout.tmpl")
+          code(class="handlebars")
+            | p
+            |   | Lorem ipsum
+            |   a(href="#") dolor 
+            |   | sit amet
+
+    article#models
+      h2 Data Models
+      p
+        | Data models structure your application data and code, shield you from the database, provide offline
+        | capabilities and report updates to their data to interrested listeners using events.
+      p
+        | A model definition consists of a collection name, defaults for your attributes and methods to operate on that data.
+        br
+        | Supply the collection name as the first parameter. In this example, JSON data for your todos
+        | will be available under the url /api/todos.
+      p
+        | Note that model properties get accessed using getter and setter functions and never directly.
+      pre(data-filename="app.js")
+        code(class="javascript")
+          | var Todo = declaire.Model('todos', {
+          |   title: 'Untitled Todo',
+          |   done: false,
+          |
+          |   check: function() {
+          |     this.set('done', true);
+          |   }
+          | });
+      p
+        | Individual models can now be created from that definition using the create method.
+        | You can also pass a hash of values to the constructor to set some properties directly on creation.
+        br
+        | Once created, the object is visible to your application and fully functional, but is not
+        | persisted to the server yet. To make it visible to other users of the app as well,
+        | we need to save it to the database using the appropriately named method.
+      pre(data-filename="app.js")
+        code(class="javascript")
+          | var todo = Todo.create({title: 'Foo'});
+          | todo.check();
+          | todo.save();
+      section
+        h3 Events
+        p
+          | 
+      section
+        h3 Computed Properties
+        p
+      section
+        h3 Loading Models
+        p
+          | 
+
+    article#view-models
+      h2 View Models
+
+    article#client-only
+      h2 Running client- (or server-) only code
+      p
+        | By default, all your code is executed on both server and client, leading to consistent results.
+        | Sometimes though, this will not do the trick and you might want to execute code only on the one side
+        | or the other. Declaire offers several ways to do this:
+      p
+        | Declaire accepts several hooks in its start method, that get executed at specific points
+        | in time. Some on the server, some on the client. Consult the
+        a(href="/pages/docs") docs 
+        | for more detailed information!
+      pre(data-filename="app.js")
+        code(class="javascript")
+          | console.log("Executed once on both client and server");
+          |
+          | declaire.start({
+          |   beforeConnect: function(express, mongoDB) {
+          |     console.log("Executed only on the server");
+          |   },
+          |
+          |   onLoad: function(mainModel) {
+          |     console.log("Executed only on the client");
+          |   }
+          | });
+      p
+        | Declaire also provides helper methods to exclude arbitrary code segments, that can
+        | be used both with a callback, or as a regular function:
+      pre(data-filename="app.js")
+        code(class="javascript")
+          | // Continuation passing style
+          | declaire.onServer(function() { });
+          |
+          | // Good ol' boolean function
+          | if(declaire.onClient()) { }
+
+    article#organizing-templates
+      h2 Organizing Templates
+      p
+        | Declair uses a simple way to combine templates that also serves as a basis to build
+        | reusable components:
+        | Use the import instruction to import another template in the surrounding template.
+      p
+        | We can use this to refactor our todos app from above and
+        | make the TodosView a reusable component that we can insert at multiple locations.
+        br
+        | Parameters passed to the imported template are delegated to the topmost node inside.
+      pre(data-filename="views/TodosView.tmpl")
+        code(class="handlebars")
+          | {{view TodosView}}
+          |   header
+          |     h1 Todos
+          |   main
+          |     input(type="text" placeholder="What's next?" {{action change newTodo}})
+          |     ul.todos
+          |       {{for todos}}
+          |         li
+          |           input(type="checkbox" checked="{{done}}")
+          |           h2 {title}
+          |   footer {todos.length} items left to do
+      pre(data-filename="views/layout.tmpl")
+        code(class="handlebars")
+          | head
+          |   title Todos
+          |   link(href="/stylesheets/main.css" rel="stylesheet")
+          | body
+          |   {{import TodosView}}
+          |   span And another one
+          |   {{import TodosView}}
+
+    article#router
+      h2 Routing URLs
+      p
+        | Declaire apps contain an implicit router, that sets several properties of the main
+        | model automatically. This way, routing information is not only available to javascript,
+        | but - because the main model lies at the base of every scope - to templates as well.
+      p
+        | Because the main model is a regular model object, it will emit change events when its
+        | properties are written to, which are in turn caught by the template engine.
+      pre(data-filename="views/layout.tmpl")
+        code(class="handlebars")
+          | body
+          |   header
+          |     h1 My Page
+          |     nav>ul
+          |       li>a(href="/") Home
+          |       li>a(href="/pages/todos") Todos
+          |   main
+          |     {{if _page == '/'}}
+          |       {{import IndexView}}
+          |     {{if _page == '/pages/todos'}}
+          |       {{import TodosView(_params)}}
 
   footer#footer
     ul.blocks
@@ -248,4 +457,7 @@ body
   script(src="/js/bower/jquery/dist/jquery.min.js")
   script(src="/js/bower/underscore/underscore-min.js")
   script(src="/js/bower/backbone/backbone.js")
-  script(src="/bundle.js")
+  script(src="/js/bower/highlightjs/highlight.pack.js")
+  script
+    | hljs.initHighlightingOnLoad();
+  //- script(src="/bundle.js")

@@ -8,7 +8,7 @@ head
 
   link(rel="stylesheet" href="/stylesheets/main.css")
   link(href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,700' rel='stylesheet')
-  link(rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" )
+  link(href="/js/bower/fontawesome/css/font-awesome.min.css" rel="stylesheet")
   link(rel="shortcut icon" href="/favicon.png")
 
 body
@@ -23,7 +23,7 @@ body
         li
           a(href="#get-started") Get Started
         li
-          a(href="/pages/documentation") Documentation
+          a(href="/pages/docs") Documentation
         //- li
         //-   a(href="https://github.com/syntheticore/declaire") Github
 
@@ -33,7 +33,7 @@ body
       h2 A minimal, yet complete Web Application Framework
       a.cta(href="#get-started") Get Started
       
-    article
+    article#features
       ul.features
         li
           h3 Minimal, yet a complete Package
@@ -68,6 +68,7 @@ body
           h3 Realtime Sync
           p
             | Model state is kept current with the remote database at all times automatically.
+          p
             | Declaire does this in a scalable fashion, without the need for an additional PubSub
             | server like Redis. A single MongoDB connection is sufficient for all data storage
             | and synchronization needs.
@@ -84,7 +85,7 @@ body
             | Computed properties are like regular model methods, except that they also emit change
             | events when one of the properties they depend on changes. This allow you to hook up
             | complex logic to templates in a completely declarative way.
-            br
+          p
             | Dependency tracking happens automatically, without the need to declare these
             | relationships ahead of time.
         
@@ -94,8 +95,6 @@ body
             | All Declaire applications work offline by default.
             | Data changes are kept in local browser storage when offline and get synced back to
             | the server later, when connectivity is available again.
-            br
-            | Application files are cached using an offline manifest by the framework.
 
         li
           h3 Streaming Server
@@ -123,55 +122,56 @@ body
       h2 Get Started
       p
         | Start creating a simple todos app by creating a package.json and installing declaire.
-        pre(data-filename="Shell")
-          | $ mkdir my-app; cd my-app
-          | $ npm init
-          | $ npm install declaire --save
+      pre(data-filename="Shell")
+        | $ mkdir my-app; cd my-app
+        | $ npm init
+        | $ npm install declaire --save
       p
         | Next, create an application file, load declaire, define your models and
         | supply the start method with the address of your development database.
-        pre(data-filename="app.js")
-          | var declaire = require('declaire');
-          |
-          | var Todo = declaire.Model('todos', {
-          |   title: 'Untitled Todo',
-          |   done: false
-          | });
-          |
-          | declaire.ViewModel('TodosView', {
-          |   todos: declaire.Collection(Todo),
-          | 
-          |   newTodo: function(input) {
-          |     this.get('todos').create({title: input.val()});
-          |     input.val('');
-          |   }
-          | });
-          |
-          | declaire.start({
-          |   mongoDevUrl: 'mongodb://127.0.0.1:27017/my-app'
-          | });
+      pre(data-filename="app.js")
+        | var declaire = require('declaire');
+        |
+        | var Todo = declaire.Model('todos', {
+        |   title: 'Untitled Todo',
+        |   done: false
+        | });
+        |
+        | declaire.ViewModel('TodosView', {
+        |   todos: declaire.Collection(Todo),
+        | 
+        |   newTodo: function(input) {
+        |     this.get('todos').create({title: input.val()});
+        |     input.val('');
+        |   }
+        | });
+        |
+        | declaire.start({
+        |   mongoDevUrl: 'mongodb://127.0.0.1:27017/my-app'
+        | });
       p
-        | Create your main layout template in the views folder (this default can be changed)
-        pre(data-filename="views/layout.tmpl")
-          | head
-          |   title Todos
-          |   link(href="/stylesheets/main.css" rel="stylesheet")
-          | body
-          |   {{view TodosView}}
-          |     header
-          |       h1 Todos
-          |     main
-          |       input(type="text" placeholder="What's next?" {{action change newTodo}})
-          |       ul.todos
-          |         {{for todos}}
-          |           li
-          |             input(type="checkbox" checked="{done}")
-          |             h2 {title}
-          |     footer {todos.length} items left to do
+        | Create your main layout template in the views folder.
+        | Declaire will wrap it with an html tag automatically if you omit it.
+      pre(data-filename="views/layout.tmpl")
+        | head
+        |   title Todos
+        |   link(href="/stylesheets/main.css" rel="stylesheet")
+        | body
+        |   {{view TodosView}}
+        |     header
+        |       h1 Todos
+        |     main
+        |       input(type="text" placeholder="What's next?" {{action change newTodo}})
+        |       ul.todos
+        |         {{for todos}}
+        |           li
+        |             input(type="checkbox" checked="{done}")
+        |             h2 {title}
+        |     footer {todos.length} items left to do
       p
         | Finally, run your application using
-        pre(data-filename="Shell")
-          | $ node app.js
+      pre(data-filename="Shell")
+        | $ node app.js
 
   footer#footer
     ul.blocks
@@ -179,27 +179,25 @@ body
         h4 Declaire
         ul.items
           li
-            a(href="#") Home
+            a(href="/") Home
           li
-            a(href="#") Blog
+            a(href="/pages/blog") Blog
       li
         h4 Help
         ul.items
           li
-            a(href="#") Get started
+            a(href="#get-started") Get started
           li
-            a(href="#") Examples
+            a(href="/pages/examples") Examples
           li
-            a(href="#") Documentation
+            a(href="/pages/docs") Documentation
       li
         h4 About
         ul.items
           li
-            a(href="#") Terms of Service
+            a(href="mailto:syntheticore@gmail.com") Contact
           li
-            a(href="#") Privacy Policy
-          li
-            a(href="#") Contact
+            a(href="/pages/imprint") Imprint
       li
         h4 Connect
         ul.items
@@ -219,4 +217,7 @@ body
       a(href="#")
         i.fa.fa-barcode
 
-  //- script(src="/bundle.js")
+  script(src="/js/bower/jquery/dist/jquery.min.js")
+  script(src="/js/bower/underscore/underscore-min.js")
+  script(src="/js/bower/backbone/backbone.js")
+  script(src="/bundle.js")

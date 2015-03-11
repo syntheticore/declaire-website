@@ -1,7 +1,3 @@
-if(typeof(window) == 'undefined') {
-  require('newrelic');
-}
-
 var declaire = require('declaire');
 
 declaire.start({

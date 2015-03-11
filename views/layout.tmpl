@@ -220,6 +220,7 @@ body
         | set some attributes using the regular html notation.
         br
         | When an id or class is used, divs may have the tagname omited, as divs are the default.
+      
       section
         h3 Interpolation
         p
@@ -237,6 +238,7 @@ body
         pre(data-filename="views/layout.tmpl")
           code(class="handlebars")
             | h2 !{title}
+      
       section
         h3 Bindings
         p
@@ -245,6 +247,7 @@ body
         pre(data-filename="views/layout.tmpl")
           code(class="handlebars")
             | input(type="checkbox" checked="{{done}}")
+      
       section
         h3 Free flowing text
         p
@@ -300,20 +303,75 @@ body
           | var todo = Todo.create({title: 'Foo'});
           | todo.check();
           | todo.save();
+      p As a convenience, setting properties and saving immediately can be done in a single method call.
+      pre(data-filename="app.js")
+        code(class="javascript")
+          | todo.save({done: true});
+      
       section
         h3 Events
         p
-          | 
+          | In many cases, the event system is invisible to you and is used by the template engine
+          | automatically to update the DOM when data in your models changes.
+          | You can also access it yourself however, using a handful of methods:
+        pre(data-filename="app.js")
+          code(class="javascript")
+            | todo.on('change', function() {
+            |   console.log("Some property changed");
+            | });
+            |
+            | todo.on('change:title', function() {
+            |   console.log("The title changed to " + todo.get('title'));
+            | });
+            |
+            | todo.once('change', function() {
+            |   console.log("This will get called only on the next change");
+            | });
+        p The on method returns the handler itself, so that it can be unregistered again later:
+        pre(data-filename="app.js")
+          code(class="javascript")
+            | var handler = todo.on('change', function() {});
+            | todo.off(handler);
+      
       section
         h3 Computed Properties
         p
-      section
-        h3 Loading Models
-        p
-          | 
+          | Regular model methods implicitly become Computed properties simply by accessing them
+          | from a template or through the get() method.
+          br
+          | They will then trigger change events, just like normal properties, when one of their
+          | dependencies changes. These dependencies are tracked automatically upon the first
+          | call to get() and will subsequently get updated on every access.
+        pre(data-filename="app.js")
+          code(class="javascript")
+            | var Person = declaire.Model('people', {
+            |   name: '',
+            |   lastName: '',
+            |
+            |   fullName: function() {
+            |     return this.get('name') + ' ' + this.get('lastName');
+            |   }
+            | });
+        pre(data-filename="views/ContactView.tmpl")
+          code(class="handlebars")
+            | h1 {fullName}
+      
+      //- section
+      //-   h3 Loading Models
+      //-   p
+      //-     | 
 
     article#view-models
       h2 View Models
+      p
+        | View models inherit from regular models but fulfill a different purpose.
+        br
+        | They are the building blocks of your UI logic and export a name by which they can be accessed
+        | from within templates.
+      p
+        | Normally, a view model will want to fetch data on instantiation to make it available to templates.
+        | Note that, as opposed to normal models, you will generally not want to instantiate and delete these
+        | yourself, as this job is done by the template engine automatically.
 
     article#client-only
       h2 Running client- (or server-) only code
@@ -374,6 +432,8 @@ body
           |           input(type="checkbox" checked="{{done}}")
           |           h2 {title}
           |   footer {todos.length} items left to do
+          //- |   .embed
+          //- |     {_content}
       pre(data-filename="views/layout.tmpl")
         code(class="handlebars")
           | head
@@ -383,6 +443,7 @@ body
           |   {{import TodosView}}
           |   span And another one
           |   {{import TodosView}}
+          //- |     h1 This is inserted content
 
     article#router
       h2 Routing URLs

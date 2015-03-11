@@ -270,13 +270,24 @@ body
             |   | sit amet
 
       section
+        h3 Scope
+        p
+          | The scope controls what data is visible at any point in a template.
+          br
+          | When you use a path in a template, when interpolating or inside statements, that path is
+          | looked up upward in the scope. When a path hits a property or computed property of a model or view model
+          | in the scope, it returns its value.
+        p
+          | The scope at least contains the main model, which Declaire inserts automatically.
+          | New names get introduced into the scope by control statements like 'for' or 'view'.
+
+      section
         h3 Control Flow
         p
           | Several statements are available in templates to control the generated markup in response
           | to changes to its underlying data, accessible through their respective keywords in double curlies.
         section
-          h4
-            | If
+          h4 if
           p
             | The if statement is different from Javascript and does not execute arbitrary code.
             | Only paths to model or view model properties within the scope, as well as basic literals
@@ -291,8 +302,7 @@ body
               | {{if !_online}}
               |   dialog Waiting for connection ...
         section
-          h4
-            | For
+          h4 for
           p
             | Use the for-statement to iterate through collections and arrays and produce output for
             | every item.
@@ -303,8 +313,7 @@ body
               |     li {todo.title}
           p
             | You can also use the short form, which will insert each item directly into the scope,
-            | making its properties visible from that point downwards in the template.
-            br
+            | making its properties visible from that point downward in the template.
             | Note that its properties may shadow properties or variables of the same name, higher in
             | the scope. These can then no longer be reached.
           pre(data-filename="views/layout.tmpl")
@@ -313,24 +322,19 @@ body
               |   {{for todos}}
               |     li {title}
         section
-          h4
-            | View
+          h4 view
           p
             | Views instantiate view models when they are encoutered in a template and and put these
-            | into the scope. Their properties are subsequently available in the scope.
+            | into the scope. Their properties and methods are subsequently available in the scope.
           p
             | Once a view is no longer needed, perhaps because its item was removed from a collection,
             | or because a parent element got updated, Declaire will remove the associated model object
-            | automatically.
+            | automatically, along with the usual trail of events getting fired.
           pre(data-filename="views/layout.tmpl")
             code(class="handlebars")
               | {{if showSomeView}}
-              |   {{view MyViewModel}}
-              |     h1 {title}
-
-      section
-        h3 Scope
-        p
+              |   {{view MyViewModel as myModel}}
+              |     h1 {myModel.title}
 
     article#models
       h2 Data Models
@@ -438,9 +442,9 @@ body
       section
         h3 Lifecycle event hooks
         p
-          | View models have a few additional methods to hook into their template driven lives.
+          | View models have a few additional methods to hook into their template driven lifes.
           | These are basically sugar for listening to the 'create' and 'remove' events of the
-          | instantiated models, which would otherwise be hard to get by, when your model is first instantiated
+          | instantiated models, which would otherwise be hard to come by, when your model gets instantiated
           | by the template engine.
         pre(data-filename="app.js")
           code(class="javascript")
@@ -606,6 +610,11 @@ body
         code(class="handlebars")
           | head
           |   link(href="/stylesheets/main.css" rel="stylesheet")
+
+    //- article#deployments
+    //-   h2 Deployments
+    //-   p
+    //-     | 
 
   footer#footer
     ul.blocks

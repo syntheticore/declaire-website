@@ -40,7 +40,7 @@ body
           p
             | Declaire.js allows you to write a single web application that runs on both
             | client and server.
-            br
+          p
             | Pages are first generated in a streaming fashion on the server
             | - for short time to first byte and easy SEO - and get rehydrated on the client
             | afterwards, using the same codebase.
@@ -57,7 +57,9 @@ body
           h3 Declarative
           p
             | The template is the highest authority in a Declaire application and manages most
-            | application state for you. ViewModels get instantiated and deleted by the template engine
+            | application state for you.
+          p
+            | ViewModels get instantiated and deleted by the template engine
             | as neccessary when data changes, freeing you from having to manage memory and event
             | handlers yourself.
           p
@@ -108,15 +110,38 @@ body
           p
             | Declaire runs on Node.js and uses Express internally to serve requests.
             | Data is stored in a MongoDB instance, and code is packaged using Browserify.
-            br
+          p
             | The express app, as well as the connected database instance are exposed to interested
             | applications just before listening for requests.
             | This allows you to hook up legacy code or load additional express middleware and make
             | changes to the database before serving requests.
 
+        li
+          //- h3 Decidedly Web
+          h3 ❤ ing the Web
+          p
+            | In the transition from server generated pages to single page applications, some values
+            | of the web have been lost in translation.
+          //- p
+          //-   | Pages often only contain a small fragment of
+          //-   | container html and generate everything else using javascript. Some frameworks these days
+          //-   | even go as far as bypassing the http protocol completely and transmit everything over websockets.
+          //- p
+          //-   | This is not only problematic for search engines and comparatively slow when it comes to
+          //-   | time to first impression, but also undermines the movement to semantic html somewhat,
+          //-   | by relying on a "semantic DOM" that only high-powered, javascript-savy browser engines
+          //-   | can still consume, instead of, say, a simple shell script.
+          p
+            | Declaire therefore delivers:
+            br
+            | Full HTML instead of JS-only.
+            br
+            | Date over standard REST/json.
+            br
+            | Push updates using Server-Sent-Events over standard HTTP instead of websockets.
+
         // Implicit router and offline handling through scope
         // Authentication and permission system
-
 
     article#get-started
       h2 Get Started

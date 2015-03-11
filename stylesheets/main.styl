@@ -3,7 +3,7 @@ global-reset()
 
 $baseFont = 'Neue Helvetica', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif
 $black = #515151
-$main = #6b9cad
+$main = #0aaaad
 
 sticky()
   position: -webkit-sticky
@@ -30,7 +30,7 @@ body
 
 a
   text-decoration: none
-  color: $black
+  color: $main * 0.9
   &:hover
     color: $main
     text-decoration: underline
@@ -77,7 +77,7 @@ pre
     i.fa
       color: $main
       margin-right: 0.4rem
-      font-size: 1.3rem
+      font-size: 0.9em
   nav
     float: right
     li
@@ -91,6 +91,7 @@ pre
         text-transform: uppercase
         &:hover
           color: $main
+          text-decoration: none
 
 main
   margin: 0 2rem
@@ -173,18 +174,25 @@ main
     & > li
       padding: 0.5rem 0
       font-size: 0.9rem
-      color: $black
-      a:hover
-        color: $main
+      a
+        color: $black
+        &:hover
+          color: $main * 0.8
+          text-decoration: none
       i.fa
         margin-right: 0.5rem
   .bottom
     clear: both
     text-align: center
     margin-top: 2rem
-    color: $main
+    font-size: 0.7rem
+    // color: $main
     a
+      // color: $main * 0.8
+    i.fa
       color: $main
+      font-size: 0.9em
+      margin-right: 0.2rem
 
 
 @media(max-width: 740px)
@@ -197,6 +205,8 @@ main
   #footer
     .blocks
       width: 20rem
+    .bottom
+      font-size: 0.6rem
 
 
 @media(max-width: 360px)
@@ -220,3 +230,5 @@ main
       width: 7rem
       & > li
         margin-right: 0
+    .bottom
+      font-size: 0.5rem

@@ -55,6 +55,7 @@ pre
   position: relative
   border-radius: 2px
   font-family: monospace
+  box-shadow: 0 1px 1px rgba(0,0,0, 0.03)
   &:after
     content: attr(data-filename)
     display: block
@@ -120,12 +121,13 @@ main
       border-radius: 2px
       text-decoration: none
       transition: all 0.3s
+      position: relative
       &:hover
-        background: $main * 0.8
-        color: white
-        border: white
+        box-shadow: 0 2px 12px rgba(0,0,0, 0.15)
       &:active
-        background: $main * 0.5
+        top: 1px
+        transition: all 0.05s
+        box-shadow: 0 1px 4px rgba(0,0,0, 0.25)
 
 .features
   -webkit-column-width: 15rem
@@ -226,8 +228,10 @@ main
         font-size: 1.2rem
   #footer
     margin: 0 1rem
+    margin-top: 4rem
     .blocks
       width: 7rem
+      margin: 0
       & > li
         margin-right: 0
     .bottom

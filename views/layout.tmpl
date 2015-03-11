@@ -220,7 +220,7 @@ body
         | set some attributes using the regular html notation.
         br
         | When an id or class is used, divs may have the tagname omited, as divs are the default.
-      
+
       section
         h3 Interpolation
         p
@@ -268,6 +268,69 @@ body
             |   | Lorem ipsum
             |   a(href="#") dolor 
             |   | sit amet
+
+      section
+        h3 Control Flow
+        p
+          | Several statements are available in templates to control the generated markup in response
+          | to changes to its underlying data, accessible through their respective keywords in double curlies.
+        section
+          h4
+            | If
+          p
+            | The if statement is different from Javascript and does not execute arbitrary code.
+            | Only paths to model or view model properties within the scope, as well as basic literals
+            | are allowed, together with a fixed set of comparison operators. Inversion works too.
+          pre(data-filename="views/layout.tmpl")
+            code(class="handlebars")
+              | {{if person.name == 'Peter'}}
+              |   strong Congratulations Peter!
+              |   {{if person.age < 18}}
+              |     .advice Shut your eyes!
+              |
+              | {{if !_online}}
+              |   dialog Waiting for connection ...
+        section
+          h4
+            | For
+          p
+            | Use the for-statement to iterate through collections and arrays and produce output for
+            | every item.
+          pre(data-filename="views/layout.tmpl")
+            code(class="handlebars")
+              | ul
+              |   {{for todo in todos}}
+              |     li {todo.title}
+          p
+            | You can also use the short form, which will insert each item directly into the scope,
+            | making its properties visible from that point downwards in the template.
+            br
+            | Note that its properties may shadow properties or variables of the same name, higher in
+            | the scope. These can then no longer be reached.
+          pre(data-filename="views/layout.tmpl")
+            code(class="handlebars")
+              | ul
+              |   {{for todos}}
+              |     li {title}
+        section
+          h4
+            | View
+          p
+            | Views instantiate view models when they are encoutered in a template and and put these
+            | into the scope. Their properties are subsequently available in the scope.
+          p
+            | Once a view is no longer needed, perhaps because its item was removed from a collection,
+            | or because a parent element got updated, Declaire will remove the associated model object
+            | automatically.
+          pre(data-filename="views/layout.tmpl")
+            code(class="handlebars")
+              | {{if showSomeView}}
+              |   {{view MyViewModel}}
+              |     h1 {title}
+
+      section
+        h3 Scope
+        p
 
     article#models
       h2 Data Models
@@ -372,6 +435,38 @@ body
         | Normally, a view model will want to fetch data on instantiation to make it available to templates.
         | Note that, as opposed to normal models, you will generally not want to instantiate and delete these
         | yourself, as this job is done by the template engine automatically.
+      section
+        h3 Lifecycle event hooks
+        p
+          | View models have a few additional methods to hook into their template driven lives.
+          | These are basically sugar for listening to the 'create' and 'remove' events of the
+          | instantiated models, which would otherwise be hard to get by, when your model is first instantiated
+          | by the template engine.
+        pre(data-filename="app.js")
+          code(class="javascript")
+            | var i = 1;
+            | declaire.ViewModel('MyView', {
+            |   title: '',
+            |
+            |   onCreate: function() {
+            |     this.set('title', 'View ' + i++);
+            |   }
+            |
+            |   onRemove: function() {
+            |     console.log(this.get('title') + " is leaving the ship...");
+            |   }
+            | });
+        h4 onCreate
+        p
+          | View this as a constructor.
+        h4 onRemove
+        p
+          | You should unbind any external handlers that you have bound during the lifetime of the object here
+          | and destroy everything else you may have set up.
+
+    //- article#main-model
+    //-   h2 The Main Model
+    //-   p
 
     article#organizing-templates
       h2 Organizing Templates and Components
@@ -491,7 +586,7 @@ body
           |
           | // Apply vendor-prefixes automatically for unstandardized CSS
           | body
-          |   background: linear-gradient(top, white, black);
+          |   background: linear-gradient(top, white, black)
           |
           | // Nest definitions
           | article

@@ -40,12 +40,15 @@ article
   h2
     font-size: 1.4rem
     font-weight: bold
+    line-height: 1.4
   h3
     font-size: 1.1rem
     font-weight: bold
+    line-height: 1.4
   h4
     font-size: 1rem
     font-weight: bold
+    line-height: 1.4
   p
     margin: 1rem 0
     line-height: 1.6
@@ -164,17 +167,18 @@ main
 
 .side-bar
   overflow: hidden
+  margin: 2rem 0
   header
     margin-bottom: 1rem
     text-transform: uppercase
     font-size: 0.8rem
   li
     margin: 0.4rem 0
-    font-size: 0.95rem
+    font-size: 0.9rem
     ul
       margin: 0.4rem 0
       // margin-left: 1rem
-      border-left: 1px solid lightgray
+      border-left: 1px solid #dcdcdc
       padding-left: 1rem
   a
     line-height: 1.4
@@ -244,6 +248,12 @@ main
       li
         display: block
         padding-top: 0.5rem
+  #side-bar
+    float: none
+    width: auto
+    position: static
+  #main-content
+    width: auto
   #footer
     .blocks
       width: 20rem

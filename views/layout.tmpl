@@ -841,7 +841,7 @@ body
           p The main model can also be accessed from javascript as a field on the main module.
           pre(data-filename="app.js")
             code(class="javascript")
-              | declaire.mainModel.on('change:version', function(v) {
+              | declaire.mainModel.on('change:_version', function(v) {
               |   if(confirm('Reload to install new version?')) {
               |     window.location = window.location;
               |   }
@@ -887,11 +887,11 @@ body
       article#routing
         h2 Routing
         p
-          | Declaire apps contain an implicit router, that sets several properties of the main
-          | model automatically. This way, routing information is not only available to javascript,
+          | Declaire apps contain an implicit router, that lives as another model object inside the <b>_page</b>
+          | property of the main model. This way, routing information is not only available to javascript,
           | but - because the main model lies at the base of every scope - to templates as well.
         p
-          | Because the main model is a regular model object, it will emit change events when its
+          | Because it's a regular model object, it will emit change events when its
           | properties are written to, which are in turn caught by the template engine.
         pre(data-filename="views/layout.tmpl")
           code(class="handlebars")
@@ -906,6 +906,12 @@ body
             |       {{import IndexView}}
             |     {{if _page.route == '/pages/todos'}}
             |       {{import TodosView(_page.params)}}
+        p If you want to access the router more directly, listen to its events using Javascript:
+        pre(data-filename="app.js")
+          code(class="javascript")
+            | declaire.mainModel.get('_page').on('change:route', function(route) {
+            |   console.log("The url changed to " + route);
+            | });
 
       article#client-only
         h2 Running client- (or server-) only Code

@@ -213,7 +213,7 @@ body
         li
           a(href="#queries") Queries
         li
-          a(href="#main-model") Main Model
+          a(href="#main-model") The Main Model
         li
           a(href="#components") Components
         li
@@ -629,6 +629,54 @@ body
       article#queries
         h2 Queries
         p
+          | Queries are a specific type of collection that filters its content according to a
+          | given database query object. Once created, a query remains active, meaning that
+          | matching objects that get added to the database after a query was created will
+          | show up after the fact and trigger the appropriate events.
+        p
+          | Queries can be further narrowed down by calling the chainable filter function:
+        pre(data-filename="app.js")
+          code(class="javascript")
+            | var finishedTodos = declaire.Query(Todo, {done: true});
+            | var aboutSport = finishedTodos.filter({title: {$contains: 'sport'}});
+            | aboutSport.each(function(todo) {
+            |   todo.remove();
+            | });
+        p We can use a query on the shoulders of a computed property for creating a live search feature:
+        pre(data-filename="app.js")
+          code(class="javascript")
+            | declaire.ViewModel('SearchUsersView', {
+            |   people: declaire.Query(Person),
+            |   query: '',
+            |   results: function() {
+            |     // Use computed properties inside filters transparently like a boss
+            |     return this.get('people').filter({name: {$contains: this.get('query')}});
+            |   }
+            | });
+        pre(data-filename="views/searchUsers.tmpl")
+          code(class="handlebars")
+            |   {{view SearchUsersView}}
+            |     input(type="text" placeholder="Search for people" value="{{query}}")
+            |     ul.results
+            |       {{for results}}
+            |         li
+            |           h1 {firstName}, we found you!
+        p
+          | Here, the query property of the view model gets driven by its binding to the text input.
+          | When the user inserts a character, query gets updated, fires a change event which causes
+          | results to fire one as well, which causes the template engine to update the list of
+          | search results.
+        p Look ma! No ajax! No event handlers!
+
+        section
+          h3 Local Queries
+          p
+            | When a query is evaluated, it is performed against the local model cache first, returning
+            | results almost immediately. When the user is online, a live query to the database is
+            | then performed in the background, to fetch additional matching objects from the server.
+            br
+            | When these arrive, a regular update event, as well as fetch event, will be emited by
+            | the query, causing bound views to update again.
 
       article#main-model
         h2 The Main Model
@@ -700,7 +748,7 @@ body
             //- |     h1 This is inserted content
 
       article#routing
-        h2 Routing URLs
+        h2 Routing
         p
           | Declaire apps contain an implicit router, that sets several properties of the main
           | model automatically. This way, routing information is not only available to javascript,

@@ -217,7 +217,7 @@ body
             li
               a(href="#realtime") Realtime Updates
             li
-              a(href="#loading") Loading Models
+              a(href="#relations") Relations
             li
               a(href="#model-offline") Offline Handling
         li
@@ -696,8 +696,8 @@ body
               | // on initial page load or due to push updates
               | todo.on('fetch', function(changes) {});
 
-        section#loading
-          h3 Loading Models
+        section#relations
+          h3 Relations
           p
             | 
 
@@ -736,7 +736,28 @@ body
       article#collections
         h2 Collections
         p
-          | 
+          | Collections represent a set of model objects at a potential REST endpoint.
+          br
+          | Use them to define the relationships between your models.
+        p
+          | When a model contains a collection as
+          | a property, saving the model will only save references to other objects in its collection.
+          | When the model is later loaded again, its collections will be restored.
+          br
+          | This happens immediately upon load for collection objects that are already in local storage.
+          | Collections will not be resolved over the network automatically however, as this could
+          | potentially trigger a chain reaction that would eventually load the entire database.
+        p
+          | You can force a collection to resolve by requesting its <b>values</b>, either through the method
+          | of that name, or implicitly by using its <b>each</b> method.
+        pre(data-filename="app.js")
+          code(class="javascript")
+            | var c = declaire.Collection(Todo);
+            | c.push(Todo.create({done: true}));
+            | c.push(Todo.create({done: false}));
+            | c.each(function(todo) {});
+        p
+          | They can also be used to hold data inside view models, even though these cannot be saved.
 
       article#queries
         h2 Queries

@@ -421,18 +421,22 @@ body
         section#scope
           h3 Scope
           p
-            | The scope controls what data is visible at any point in a template.
-            br
-            | When you use a path in a template, when interpolating or inside statements, that path is
-            | looked up upward in the scope. When a path hits a property or computed property of a model or view model
-            | in the scope, it returns its value.
+            | The scope controls what data is visible at any given point in a template.
+          p
+            | When you use a path in a template, that path is looked up in the scope. Imagine the scope
+            | as a stack of objects, some of them models, some of them regular objects that contain variable names.
+            | Declaire searches for the first path segment upward in the stack, until it finds a variable
+            | or model property that matches and retrieves it using get().
+          p
+            | All subsequent path segment are now basically syntax sugar for calling get() again on the previous
+            | object until we hit a base type that can be interpolated into the page.
           p
             | The scope at least contains the 
             a(href="#main-model") main model
             | , which Declaire inserts automatically.
-            | New names get introduced into the scope by control statements like
+            | New variable names get introduced to the scope by control statements like
             a(href="#flow-for") for 
-            | or 
+            | and 
             a(href="#flow-view") view
             | .
 
@@ -663,7 +667,7 @@ body
             |   people: declaire.Query(Person),
             |   query: '',
             |   results: function() {
-            |     // Use computed properties inside filters transparently like a boss
+            |     // Transparently filter by computed property like a boss
             |     return this.get('people').filter({name: {$contains: this.get('query')}});
             |   }
             | });
@@ -671,10 +675,9 @@ body
           code(class="handlebars")
             |   {{view SearchUsersView}}
             |     input(type="text" placeholder="Search for people" value="{{query}}")
-            |     ul.results
+            |     ul
             |       {{for results}}
-            |         li
-            |           h1 {firstName}, we found you!
+            |         li {name}
         p
           | Here, the query property of the view model gets driven by its binding to the text input.
           | When the user inserts a character, query gets updated, fires a change event which causes
@@ -690,39 +693,51 @@ body
             | then performed in the background, to fetch additional matching objects from the server.
             br
             | When these arrive, a regular update event, as well as fetch event, will be emited by
-            | the query, causing bound views to update again.
+            | the query, causing bound views und dependent properties to update themselves again.
 
       article#main-model
         h2 The Main Model
         p
           | The main model sits at the very bottom of every scope and gets created and updated
-          | by the framework. It is not meant to be written to and should only be read from.
+          | by the framework. It is not meant to be written to directly.
         p
           | It contains several properties of interest to
           a(href="#routing") routing
           | ,
-          a(href="#offline") offline handling 
-          | and
-          a(href="#components") components
-          | .
+          a(href="#offline") offline handling
+          | ,
+          a(href="#session") session
+          | ,
+          a(href="#components") components 
+          | and potentially any application.
         section
-          h3 _page
-          p Contains the current page URL
-          h3 _params
-          p Contains the parameters given to the import statement. Useful to delegate these to a view model.
-          //- h3 _content
+          h4 _page
+          p
+            | This contains another complete model object that acts as a mirror for the current url.
+            | Read its route and params properties to route your pages, or set them to navigate
+            | from code.
+          //- These get created dynamically and do not belong in the main model:
+          //- h4 _params
+          //- p
+          //-   | Contains the parameters given to the import statement or view. Useful to delegate these to
+          //-   | another view model.
+          //- h4 _content
           //- p Contains markup nested below an import statement. Useful to customize reusable components.
-          h3 _online
+          h4 _online
           p
             | Represents the current state of connectivity. Useful to show to user when his changes do
             | not currently reach the server.
-          h3 _authenticated
+          h4 _authenticated
           p Tells if the user is logged in.
-          h3 _version
+          h4 _version
           p 
             | Changes as soon as a new version of the application is available and has been loaded
-            | into the offline cache. This is a good time to inform the user that reloading the page
+            | into the offline cache. This is a good point in time to inform the user that reloading the page
             | will bring new goodness.
+          h4 _cookie
+          p 
+            | This contains another complete model object that acts as a mirror for the real browser session.
+            | This allows you to use the cookie everywhere you can use a model.
 
       article#components
         h2 Organizing Templates and Components
@@ -779,9 +794,9 @@ body
             |       li>a(href="/") Home
             |       li>a(href="/pages/todos") Todos
             |   main
-            |     {{if _page == '/'}}
+            |     {{if _page.route == '/'}}
             |       {{import IndexView}}
-            |     {{if _page == '/pages/todos'}}
+            |     {{if _page.route == '/pages/todos'}}
             |       {{import TodosView(_params)}}
 
       article#client-only
@@ -950,7 +965,7 @@ body
         section#nodemon
           h3 Using Nodemon
           p
-            | Declaire needs to touch the filesystem when bundeling your code, which causes
+            | Declaire needs to touch the filesystem when bundling your code, which causes
             a(href="http://nodemon.io" target="_blank") Nodemon 
             | to reload your application. Adding '_declaire_client.js' to your
             | nodemon configuration will make it behave correctly.

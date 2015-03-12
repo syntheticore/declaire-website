@@ -726,6 +726,24 @@ body
       article#offline
         h2 Offline Support
         p
+          | After the initial page load, Declaire apps can be reloaded - even accross browser
+          | restarts - when the device has no connection to the internet, by the virtue of a
+          | framework generated offline manifest that is injected into your pages.
+          br
+          | Even when you are online, this will give your applications a serious boost on
+          | subsequent loads. 
+        p
+          | Declaire also keeps a cache of checked out data models and can
+          | silently retrieve any objects that had been loaded already from local storage,
+          | without modifications to your code.
+        p
+          | Modifications to existing objects or newly created ones will be saved
+          | locally until the server can be reached for synchronization again.
+        p
+          | All of this happens completely transparently to you. When your app needs to know
+          | more about its internal state though, the 
+          a(href="#main-model") main model 
+          | contains several fields of interest.
 
       article#stylesheets
         h2 Stylesheets
@@ -844,7 +862,7 @@ body
             code(class="json")
               | {
               |   "ignore": ["fixtures/*", "public/*", "_declaire_client.js"]
-              |}
+              | }
 
 
   footer#footer

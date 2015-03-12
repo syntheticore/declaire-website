@@ -175,7 +175,7 @@ body
         // Authentication and permission system
 
     nav#side-bar.side-bar
-      header Declaire
+      header Contents
       ul
         li
           a(href="#install") Installation
@@ -312,7 +312,9 @@ body
             |             h2 {title}
             |     footer {todos.length} items left to do
         p
-          | Finally, make sure you have a MongoDB instance running on your local machine and run your
+          | Finally, make sure you have a
+          a(href="http://mongodb.org" target="_blank") MongoDB 
+          | instance running on your local machine and run your
           | application with
           a(href="http://nodejs.org" target="_blank") Node 
           | like you always have. Enjoy!
@@ -328,7 +330,7 @@ body
           | the server as well. Declaire will package and serve your code using
           a(href="http://browserify.org" target="_blank") Browserify 
           | for usage in the browser.
-        p To include another module, just do as you're used to.
+        p To include another module, just do as you're used to with node.
         pre(data-filename="app.js")
           code(class="javascript")
             | var myModule = require('./src/myModule.js');
@@ -388,7 +390,7 @@ body
             | set attributes in parentheses using the regular html notation. Text may follow on the
             | same line, or other tags may be indented below.
             br
-            | When an id or class is used, divs may have the tagname omited, as divs are the default.
+            | When an id or class is used, divs may have the tag name omited, as divs are the default.
           pre(data-filename="views/layout.tmpl")
             code(class="javascript")
               | // Simple div with a class and some text
@@ -563,7 +565,9 @@ body
 
         section#comments
           h3 Comments
-          p Comments begin with <b>//</b> and extend to the end of the line
+          p
+            | Comments begin with <b>//</b> and extend to the end of the line.
+            | Comments always get their own line.
           pre(data-filename="views/layout.tmpl")
             code(class="javascript")
               | // This will not end up in your generated markup
@@ -732,6 +736,7 @@ body
       article#collections
         h2 Collections
         p
+          | 
 
       article#queries
         h2 Queries
@@ -765,11 +770,11 @@ body
             | });
         pre(data-filename="views/searchUsers.tmpl")
           code(class="handlebars")
-            |   {{view SearchUsersView}}
-            |     input(type="text" placeholder="Search for people" value="{{query}}")
-            |     ul
-            |       {{for results}}
-            |         li {name}
+            | {{view SearchUsersView}}
+            |   input(type="text" placeholder="Search for people" value="{{query}}")
+            |   ul
+            |     {{for results}}
+            |       li {name}
         p
           | Here, the query property of the view model gets driven by its binding to the text input.
           | When the user inserts a character, query gets updated, fires a change event which causes

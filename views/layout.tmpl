@@ -467,9 +467,9 @@ body
             | as a stack of objects, some of them models, some of them regular objects that contain variable
             | names, pointing to models.
             | Declaire searches for the first path segment upward in the stack, until it finds a variable
-            | or model property that matches and retrieves it using get().
+            | or model property that matches and retrieves it using <b>get</b>.
           p
-            | All subsequent path segment are now basically syntax sugar for calling get() again on the previous
+            | All subsequent path segment are now basically syntax sugar for calling <b>get</b> again on the previous
             | object until we hit a base type that can be interpolated into the page.
           p
             | The scope at least contains the 
@@ -489,7 +489,7 @@ body
           section#flow-if
             h4 if
             p
-              | The if statement is different from Javascript and does not execute arbitrary code.
+              | The if statement is different from Javascript, in that it does not execute arbitrary code.
               | Only paths to model or view model properties within the scope, as well as basic literals
               | are allowed, together with a fixed set of comparison operators. Inversion works too.
             pre(data-filename="views/layout.tmpl")
@@ -504,8 +504,8 @@ body
           section#flow-for
             h4 for
             p
-              | Use the for-statement to iterate through collections and arrays and produce output for
-              | every item. When items get added or removed from the collection later, the template
+              | Use the for-statement to iterate through collections and produce output for
+              | every item. When items get added to or removed from the collection later, the template
               | engine will only touch the affected parts of the DOM and leave other elements intact.
             pre(data-filename="views/layout.tmpl")
               code(class="handlebars")
@@ -546,7 +546,8 @@ body
             h4 action
             p
               | When the user generates events by interacting with the page, your application can react
-              | using the action statement. It takes the name of an event and a method to call as arguments.
+              | using the action statement. It takes the name of an event on the element and a method to
+              | look up in the scope as arguments.
             p The method will get passed the originating DOM element as a parameter.
             pre(data-filename="views/layout.tmpl")
               code(class="handlebars")
@@ -574,10 +575,9 @@ body
           | capabilities and report updates to their data to interrested listeners using events.
         p
           | A model definition consists of a collection name, defaults for your attributes and methods to operate on that data.
-          | Supply the collection name as the first parameter. In this example, JSON data for your todos
-          | will be available under the url /api/todos.
+          | In this example, JSON data for your todos will be available under the url /api/todos.
         p
-          | Note that model properties get accessed using getter and setter functions and never directly.
+          | Note that model properties get accessed using the <b>get</b> and <b>set</b> methods and never directly.
         pre(data-filename="app.js")
           code(class="javascript")
             | var Todo = declaire.Model('todos', {
@@ -613,18 +613,31 @@ body
             | You can also access it yourself however, using a handful of methods:
           pre(data-filename="app.js")
             code(class="javascript")
-              | todo.on('change', function() {
-              |   console.log("Some property changed");
+              | // Change events for individual properties trigger first
+              | todo.on('change:title', function(title) {
+              |   console.log("The title changed to " + title);
               | });
               |
-              | todo.on('change:title', function() {
-              |   console.log("The title changed to " + todo.get('title'));
+              | // Updates to one or many properties finalize with a generic
+              | // change event, that carries a hash of all new values
+              | todo.on('change', function(changes) {
+              |   console.log("To resume...");
+              |   for(var key in changes) {
+              |     console.log(key + ' changed to ' + changes[key]);
+              |   }
               | });
               |
-              | todo.once('change', function() {
-              |   console.log("This will get called only on the next change");
+              | // Destroy after use
+              | todo.once('change:done', function() {
+              |   console.log("This will get called only once");
               | });
-          p The on method returns the handler itself, so that it can be unregistered again later:
+              |
+              | // Called when new data arrived from the network,
+              | // on initial page load or due to push updates
+              | todo.on('fetch', function(changes) {
+              |   console.log("This will fire last");
+              | });
+          p The <b>on</b> method returns the handler itself, so that it can be unregistered again later:
           pre(data-filename="app.js")
             code(class="javascript")
               | var handler = todo.on('change', function() {});
@@ -634,12 +647,12 @@ body
         section#computed-properties
           h3 Computed Properties
           p
-            | Regular model methods implicitly become Computed properties simply by accessing them
-            | from a template or through the get() method.
+            | Regular model methods implicitly become computed properties simply by accessing them
+            | from a template or through the <b>get</b> method directly.
           p
             | They will then trigger change events, just like normal properties, when one of their
             | dependencies changes. These dependencies are tracked automatically upon the first
-            | call to get() and will subsequently get updated on every access.
+            | call to <b>get</b> and will subsequently get updated on every access.
           pre(data-filename="app.js")
             code(class="javascript")
               | var Person = declaire.Model('people', {
@@ -657,9 +670,27 @@ body
         section#realtime
           h3 Realtime Updates
           p
-            | When data that you have loaded in your application changes in the database, your models
-            | will get updated automatically in realtime. In additional to emiting the regular change event
-            | for every property that got changed, the model will also fire a fetch event.
+            | When model objects that you have checked out in your application change in the database, they
+            | will automatically receive push updates from the server. This happens in such a way that local,
+            | unsaved changes are preserved and take precendence over the remote changes.
+          p
+            | If you want to purge your local changes and revert back to the most recent database state,
+            | simply call the <b>revert</b> method.
+          pre(data-filename="app.js")
+            code(class="javascript")
+              | todo.set({done: true});
+              | todo.get('done'); // -> true
+              | todo.revert();
+              | todo.get('done'); // -> false
+          p
+            | In addition to emiting the regular change events for every property that got changed and the
+            | generic change event, the model will also fire a fetch event, that carries a hash of actual
+            | changes. Note that the fetch event will also be fired when its list of changes is empty.
+          pre(data-filename="app.js")
+            code(class="javascript")
+              | // Called when new data arrived from the network,
+              | // on initial page load or due to push updates
+              | todo.on('fetch', function(changes) {});
 
         section#loading
           h3 Loading Models
@@ -680,8 +711,12 @@ body
           | be accessed from within templates.
         p
           | Normally, a view model will want to fetch data on instantiation to make it available to templates.
-          | Note that, as opposed to normal models, you will generally not want to instantiate and delete these
+          | Note that, as opposed to normal models, you cannot instantiate and delete these
           | yourself, as this job is done by the template engine automatically.
+        p
+          | Therefore, view models take a constructor function as their third argument, that gets passed the
+          | fresh model instance as a parameter. If you manually allocate any resources or connect any event handlers
+          | here, make sure you also register for the <b>remove</b> event, to clean that up at the appropriate time.
         pre(data-filename="app.js")
           code(class="javascript")
             | var i = 1;
@@ -770,8 +805,8 @@ body
         section
           h4 _page
           p
-            | This contains another complete model object that acts as a mirror for the current url.
-            | Read its route and params properties to route your pages, or set them to navigate
+            | Contains another complete model object that acts as a mirror for the current url.
+            | Read its <b>route</b> and <b>params</b> properties to route your pages, or set them to navigate
             | from code.
           //- These get created dynamically and do not belong in the main model:
           //- h4 _params
@@ -793,8 +828,24 @@ body
             | will bring new goodness.
           h4 _cookie
           p 
-            | This contains another complete model object that acts as a mirror for the real browser session.
+            | Contains another complete model object that acts as a mirror for the real browser session.
             | This allows you to use the cookie everywhere you can use a model.
+        
+        section
+          h3 Accessing the Main Model Singleton Instance
+          p As part of every scope, its underscored properties are available in any template.
+          pre(data-filename="views/layout.tmpl")
+            code(class="handlebars")
+              | {{if !_online}}
+              |   dialog Waiting for connection ...
+          p The main model can also be accessed from javascript as a field on the main module.
+          pre(data-filename="app.js")
+            code(class="javascript")
+              | declaire.mainModel.on('change:version', function(v) {
+              |   if(confirm('Reload to install new version?')) {
+              |     window.location = window.location;
+              |   }
+              | });
 
       article#components
         h2 Organizing Templates and Components

@@ -191,6 +191,8 @@ body
                   a(href="#flow-for") for
                 li
                   a(href="#flow-view") view
+                li
+                  a(href="#flow-action") action
         li
           a(href="#data-models") Data Models
           ul
@@ -439,6 +441,24 @@ body
                 | {{if showSomeView}}
                 |   {{view MyViewModel as myModel}}
                 |     h1 {myModel.title}
+
+          section#flow-action
+            h4 action
+            p
+              | When the user generates events by interacting with the page, your application can react
+              | using the action statement. It takes the name of an event and a method to call as arguments.
+            p The method will get passed the originating DOM element as a parameter.
+            pre(data-filename="views/layout.tmpl")
+              code(class="handlebars")
+                | {{view MyView}}
+                |   input(type="text" {{action keyup method}})
+            pre(data-filename="app.js")
+              code(class="javascript")
+                | declaire.ViewModel('MyView', {
+                |   method: function(input) {
+                |     console.log(input.val());
+                |   }
+                | });
 
       article#data-models
         h2 Data Models

@@ -307,6 +307,35 @@ body
       article#structure
         h2 Structuring your Code
         p
+          | Node.js uses the CommonJS standard for the definition and import of modules.
+          | Your Declaire app will use it too, because it must be able to run on
+          | the server as well. Declaire will package your code using
+          a(href="http://browserify.org" target="_blank") Browserify 
+          | for usage in the browser.
+        p To include another module, just do as you're used to.
+        pre(data-filename="app.js")
+          code(class="javascript")
+            | var myModule = require('./src/myModule.js');
+        p 
+          | Your directory structure should look like follows by default.
+          br
+          | See the
+          a(href="#yeoman") tools section 
+          | to learn how you can generate this very quickly.
+        pre(data-filename="fs")
+          code(class="javascript")
+            | /app
+            |   .gitignore
+            |   /public
+            |     favicon.png
+            |   /src
+            |   /stylesheets
+            |   /views
+            |   app.js
+            |   package.json
+            |   // nodemon.json - optional, but <a href="#nodemon">read this</a> if you want to use it
+
+        p The public folder should contain your static assets and will get served automatically.
 
       article#templates
         h2 Basic Templating

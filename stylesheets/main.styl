@@ -79,6 +79,14 @@ pre
     background: whitesmoke
     color: $main
     // font-family: $baseFont
+  &[data-filename="fs"]
+    &:after
+      content: "\f0e8"
+      font-family: FontAwesome
+      text-rendering: auto
+      -webkit-font-smoothing: antialiased
+      -moz-osx-font-smoothing: grayscale
+      color: $main * 1.05
 
 code
   overflow: auto

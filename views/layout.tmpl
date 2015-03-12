@@ -413,8 +413,14 @@ body
             | looked up upward in the scope. When a path hits a property or computed property of a model or view model
             | in the scope, it returns its value.
           p
-            | The scope at least contains the main model, which Declaire inserts automatically.
-            | New names get introduced into the scope by control statements like 'for' or 'view'.
+            | The scope at least contains the 
+            a(href="#main-model") main model
+            | , which Declaire inserts automatically.
+            | New names get introduced into the scope by control statements like
+            a(href="#flow-for") for 
+            | or 
+            a(href="#flow-view") view
+            | .
 
         section#flow
           h3 Control Flow
@@ -627,6 +633,34 @@ body
       article#main-model
         h2 The Main Model
         p
+          | The main model sits at the very bottom of every scope and gets created and updated
+          | by the framework. It is not meant to be written to and should only be read from.
+        p
+          | It contains several properties of interest to
+          a(href="#routing") routing
+          | ,
+          a(href="#offline") offline handling 
+          | and
+          a(href="#components") components
+          | .
+        section
+          h3 _page
+          p Contains the current page URL
+          h3 _params
+          p Contains the parameters given to the import statement. Useful to delegate these to a view model.
+          //- h3 _content
+          //- p Contains markup nested below an import statement. Useful to customize reusable components.
+          h3 _online
+          p
+            | Represents the current state of connectivity. Useful to show to user when his changes do
+            | not currently reach the server.
+          h3 _authenticated
+          p Tells if the user is logged in.
+          h3 _version
+          p 
+            | Changes as soon as a new version of the application is available and has been loaded
+            | into the offline cache. This is a good time to inform the user that reloading the page
+            | will bring new goodness.
 
       article#components
         h2 Organizing Templates and Components

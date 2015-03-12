@@ -45,13 +45,18 @@ body
             | - for short time to first byte and easy SEO - and get rehydrated on the client
             | afterwards, using the same codebase.
           p
-            | Declaire brings its own templating language, with a compact, Jade-inspired syntax
-            | and a robust set of logic blocks for structuring your markup.
+            | Declaire brings its own templating language, with a compact, 
+            a(href="http://jade-lang.com" target="_blank") Jade
+            | -inspired syntax and a robust set of logic blocks for structuring your markup.
           p
             | RESTfull resources get served for your models automatically, without the need to write
             | additional code. Just define a data model, create instances and you're good to go.
           p
-            | Stylesheets written in Stylus/nib are compiled and served automatically for you.
+            | Stylesheets written in
+            a(href="http://learnboost.github.io/stylus/" target="_blank") Stylus 
+            | /
+            a(href="http://tj.github.io/nib/" target="_blank") Nib 
+            | are compiled and served automatically for you.
         
         li
           h3 Declarative
@@ -72,8 +77,11 @@ body
             | Model state is kept current with the remote database at all times automatically.
           p
             | Declaire does this in a scalable fashion, without the need for an additional PubSub
-            | server like Redis. A single MongoDB connection is sufficient for all data storage
-            | and synchronization needs.
+            | server like 
+            a(href="http://redis.io" target="_blank") Redis
+            | . A single 
+            a(href="http://mongodb.org" target="_blank") MongoDB 
+            | connection is sufficient for all data storage and synchronization needs.
         
         li
           h3 Auto Bindings
@@ -101,20 +109,31 @@ body
         li
           h3 Streaming Server
           p
-            | When templates get first rendered on the server, Declaire utilises Node.js' streaming technology
-            | to transmit the first few bytes as soon as possible. Browsers can already display content
-            | and start downloading additional resources, while the database is still returning data.
+            | When templates get first rendered on the server, Declaire utilises 
+            a(href="http://nodejs.org" target="_blank") Node.js
+            | ' streaming technology to transmit the first few bytes as soon as possible. Browsers can
+            | already display content and start downloading additional resources, while the database
+            | is still returning data.
         
         li
           h3 Based on trusted Technology
           p
-            | Declaire runs on Node.js and uses Express internally to serve requests.
-            | Data is stored in a MongoDB instance, and code is packaged using Browserify.
+            | Declaire runs on 
+            a(href="http://nodejs.org" target="_blank") Node.js 
+            | and uses 
+            a(href="http://expressjs.com" target="_blank") Express 
+            | internally to serve requests.
+            | Data is stored in a 
+            a(href="http://mongodb.org" target="_blank") MongoDB 
+            | instance, and code is packaged using 
+            a(href="http://browserify.org" target="_blank") Browserify
+            | .
           p
             | The express app, as well as the connected database instance are exposed to interested
             | applications just before listening for requests.
-            | This allows you to hook up legacy code or load additional express middleware and make
-            | changes to the database before serving requests.
+            | This allows you to hook up legacy code or load additional 
+            a(href="http://expressjs.com/resources/middleware.html" target="_blank") express middleware 
+            | and make changes to the database before serving requests.
 
         li
           //- h3 Decidedly Web
@@ -150,6 +169,8 @@ body
           a(href="#install") Installation
         li
           a(href="#get-started") Getting Started
+        li
+          a(href="#structure") Structuring your Code
         li
           a(href="#templates") Basic Templating
           ul
@@ -201,15 +222,31 @@ body
           a(href="#offline") Offline Support
         li
           a(href="#stylesheets") Stylesheets
+        li
+          a(href="#deployments") Deployments
+          ul
+            li
+              a(href="#mongodb") MongoDB
+            li
+              a(href="#heroku") Heroku
+        li
+          a(href="#tools") Tools
+          ul
+            li
+              a(href="#yeoman") Yeoman
+            li
+              a(href="#nodemon") Using Nodemon
 
     section#main-content
 
       article#install
         h2 Install Declaire
         p
-          | Install Declaire into any node application using npm.
+          | Install Declaire into any node application using 
+          a(href="http://npmjs.com") npm
+          | .
         pre(data-filename="Shell")
-          code(class="bash")
+          code(class="javascript")
             | $ cd my-app
             | $ npm install declaire --save
 
@@ -262,13 +299,19 @@ body
         p
           | Finally, run your application using
         pre(data-filename="Shell")
-          code(class="bash")
+          code(class="javascript")
             | $ node app.js
+
+      article#structure
+        h2 Structuring your Code
+        p
 
       article#templates
         h2 Basic Templating
         p
-          | Declaire's templating language borrows heavily from Jade, but differs in notable ways.
+          | Declaire's templating language borrows heavily from 
+          a(href="http://jade-lang.com" target="_blank") Jade
+          | , but differs in notable ways.
           br
           | Hierachy is denoted through indentation, while most other syntax choices try to adhere
           | as much as possible to the CSS syntax. A fully defined tag might look like this:
@@ -390,7 +433,7 @@ body
             p
               | Once a view is no longer needed, perhaps because its item was removed from a collection,
               | or because a parent element got updated, Declaire will remove the associated model object
-              | automatically, along with the usual trail of events getting fired.
+              | automatically, firing the usual trail of events.
             pre(data-filename="views/layout.tmpl")
               code(class="handlebars")
                 | {{if showSomeView}}
@@ -459,7 +502,7 @@ body
             code(class="javascript")
               | var handler = todo.on('change', function() {});
               | todo.off(handler);
-          //- p What events are emited=
+          //- p What events are emited?
         
         section#computed-properties
           h3 Computed Properties
@@ -679,10 +722,81 @@ body
             | head
             |   link(href="/stylesheets/main.css" rel="stylesheet")
 
-      //- article#deployments
-      //-   h2 Deployments
-      //-   p
-      //-     | 
+      article#deployments
+        h2 Deployments
+        p
+          | Declaire works as a standard 
+          a(href="http://npmjs.com") NPM 
+          | library and doesn't use any special protocols beside HTTP. You should therefore
+          | be able to deploy your application anywhere where node applications run.
+        p
+          | Be sure to set the environment variable NODE_ENV to 'production' on production
+          | systems, to disable development guides like automatic reparsing of templates.
+          br
+          | This will also minify your assets and apply some other optimizations.
+        section#mongodb
+          h3 MongoDB
+          p
+            | Declaire will take connection information from the environment variables MONGOHQ_URL
+            | and MONGOLAB_URI, unless you override this with the call to declaire.start().
+            br
+            | Because these variables are set by PaaS services like 
+            a(href="http://heroku.com" target="_blank") Heroku
+            | , this allows Declaire apps to connect to these popular services automagically.
+          pre(data-filename="app.js")
+            code(class="javascript")
+              | declaire.start({
+              |   mongoUrl: 'mongodb://my-host:27017/my-app'
+              | });
+        section#heroku
+          h3 Heroku
+          p
+            | Follow these simple steps to wrap your app in a
+            a(href="http://git-scm.com" target="_blank") Git 
+            | repository and deploy it to
+            a(href="http://heroku.com" target="_blank") Heroku
+            | :
+          pre(data-filename="Shell")
+            code(class="javascript")
+              | // Go to your app folder
+              | $ cd my-app
+              | // Initialize a git repository there
+              | $ git init
+              | // Make sure Git doesn't check in generated files
+              | $ echo $'node_modules\npublic' > .gitignore
+              | // Add everything else to the repo and commit
+              | $ git add .
+              | $ git commit -m "Initial commit"
+              | // Create and configure an application on Heroku
+              | $ heroku create my-app
+              | $ heroku config:set NODE_ENV=production
+              | // Add a database
+              | $ heroku addons:add mongolab
+              | // Deploy
+              | $ git push heroku master
+              | // Enjoy!
+              | $ heroku open
+
+      article#tools
+        h2 Tools
+        p
+          | Use these additional resources to speed up your workflow.
+        section#yeoman
+          h3 Yeoman
+          p
+        section#nodemon
+          h3 Using Nodemon
+          p
+            | Declaire needs to touch the filesystem when bundeling your code, which causes
+            a(href="http://nodemon.io" target="_blank") Nodemon 
+            | to reload your application. Adding '_declaire_client.js' to your
+            | nodemon configuration will make it behave correctly.
+          pre(data-filename="nodemon.json")
+            code(class="json")
+              | {
+              |   "ignore": ["fixtures/*", "public/*", "_declaire_client.js"]
+              |}
+
 
   footer#footer
     ul.blocks
@@ -692,12 +806,14 @@ body
           li
             a(href="/") Home
           li
+            a(href="https://www.npmjs.com/package/declaire") NPM
+          li
             a(href="/pages/blog") Blog
       li
         h4 Help
         ul.items
           li
-            a(href="#get-started") Get started
+            a(href="#install") Get started
           li
             a(href="/pages/examples") Examples
           li
@@ -706,7 +822,7 @@ body
         h4 About
         ul.items
           li
-            a(href="https://github.com/syntheticore") Contact
+            a(href="/pages/license") License
           li
             a(href="/pages/imprint") Imprint
       li

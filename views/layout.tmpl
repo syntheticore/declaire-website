@@ -186,7 +186,7 @@ body
         li
           a(href="#structure") Structuring your Code
         li
-          a(href="#templates") Basic Templating
+          a(href="#templating") Templating
           ul
             li
               a(href="#interpolation") Interpolation
@@ -207,6 +207,8 @@ body
                   a(href="#flow-view") view
                 li
                   a(href="#flow-action") action
+            li
+              a(href="#comments") Comments
         li
           a(href="#data-models") Data Models
           ul
@@ -229,11 +231,11 @@ body
         li
           a(href="#main-model") The Main Model
         li
-          a(href="#components") Components
+          a(href="#components") Imports and Components
         li
           a(href="#routing") Routing
         li
-          a(href="#client-only") Client-only code
+          a(href="#client-only") Client-only Code
         li
           a(href="#offline") Offline Support
         li
@@ -351,8 +353,8 @@ body
 
         p The public folder should contain your static assets and will get served automatically.
 
-      article#templates
-        h2 Basic Templating
+      article#templating
+        h2 Templating
         p
           | Declaire's templating language borrows heavily from 
           a(href="http://jade-lang.com" target="_blank") Jade
@@ -374,7 +376,8 @@ body
           h3 Interpolation
           p
             | Any value available in the surrounding scope can be interpolated at any practical point
-            | in a template using a pair of curlies. This also works for attributes.
+            | in a template using a pair of curlies. When the value later changes, the DOM will update
+            | accordingly. This also works for attributes.
           pre(data-filename="views/layout.tmpl")
             code(class="handlebars")
               | .todo
@@ -392,7 +395,7 @@ body
           h3 Bindings
           p
             | Using double curlies in an attribute will create a two-way binding, meaning that the
-            | input will drive the connected model property when the user makes changes.
+            | input will also drive the connected model property when the user makes changes.
           pre(data-filename="views/layout.tmpl")
             code(class="handlebars")
               | input(type="checkbox" checked="{{done}}")
@@ -424,7 +427,8 @@ body
             | The scope controls what data is visible at any given point in a template.
           p
             | When you use a path in a template, that path is looked up in the scope. Imagine the scope
-            | as a stack of objects, some of them models, some of them regular objects that contain variable names.
+            | as a stack of objects, some of them models, some of them regular objects that contain variable
+            | names, pointing to models.
             | Declaire searches for the first path segment upward in the stack, until it finds a variable
             | or model property that matches and retrieves it using get().
           p
@@ -434,7 +438,7 @@ body
             | The scope at least contains the 
             a(href="#main-model") main model
             | , which Declaire inserts automatically.
-            | New variable names get introduced to the scope by control statements like
+            | New variable names and models get introduced to the scope by control statements like
             a(href="#flow-for") for 
             | and 
             a(href="#flow-view") view
@@ -464,7 +468,8 @@ body
             h4 for
             p
               | Use the for-statement to iterate through collections and arrays and produce output for
-              | every item.
+              | every item. When items get added or removed from the collection later, the template
+              | engine will only touch the affected parts of the DOM and leave other elements intact.
             pre(data-filename="views/layout.tmpl")
               code(class="handlebars")
                 | ul
@@ -489,11 +494,16 @@ body
               | Once a view is no longer needed, perhaps because its item was removed from a collection,
               | or because a parent element got updated, Declaire will remove the associated model object
               | automatically, firing the usual trail of events.
+            p
+              | Optionally, the created view model instance can be given a name by which it will be accessible
+              | in the scope. If you leave that out, the model itself will be inserted into the scope.
             pre(data-filename="views/layout.tmpl")
               code(class="handlebars")
                 | {{if showSomeView}}
-                |   {{view MyViewModel as myModel}}
-                |     h1 {myModel.title}
+                |   {{view MyViewModel as myView}}
+                |     h1 {myView.title}
+                |   {{view MyViewModel}}
+                |     h1 {title}
 
           section#flow-action
             h4 action
@@ -512,6 +522,14 @@ body
                 |     console.log(input.val());
                 |   }
                 | });
+
+        section#comments
+          h3 Comments
+          p Comments begin with '//' and extend to the end of the line
+          pre(data-filename="views/layout.tmpl")
+            code(class="javascript")
+              | // This will not end up in your generated markup
+              | div This will
 
       article#data-models
         h2 Data Models
@@ -800,7 +818,7 @@ body
             |       {{import TodosView(_params)}}
 
       article#client-only
-        h2 Running client- (or server-) only code
+        h2 Running client- (or server-) only Code
         p
           | By default, all your code is executed on both server and client, leading to consistent results.
           | Sometimes though, this will not do the trick and you might want to execute code only on the one side
@@ -938,7 +956,7 @@ body
             code(class="javascript")
               | // Go to your app folder
               | $ cd my-app
-              | // Initialize a git repository there
+              | // Initialize a git repository here
               | $ git init
               | // Make sure Git doesn't check in generated files
               | $ echo $'node_modules\npublic' > .gitignore

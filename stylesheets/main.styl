@@ -59,14 +59,12 @@ article
 
 pre
   // overflow: auto
-  font-size: 1rem
   border: 1px solid #dcdcdc
   padding-top: 1.5rem
   margin: 1rem 0
   line-height: 1.4
   position: relative
   border-radius: 2px
-  font-family: monospace
   box-shadow: 0 1px 1px rgba(0,0,0, 0.03)
   &:after
     content: attr(data-filename)
@@ -95,6 +93,11 @@ code
   &.hljs
     background: white
     padding: 1rem
+
+pre, code
+  font-family: monospace, monospace
+  font-size: 0.8rem
+  
 
 #header
   overflow: hidden

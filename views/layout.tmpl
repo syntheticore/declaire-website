@@ -188,7 +188,7 @@ body
             li
               a(href="#interpolation") Interpolation
             li
-              a(href="#bindings") Bindings
+              a(href="#bindings") Two-way Bindings
             li
               a(href="#text") Text
             li
@@ -426,6 +426,8 @@ body
             | Any value available in the surrounding scope can be interpolated at any practical point
             | in a template using a pair of curlies. When the value later changes, the DOM will update
             | accordingly. This also works for attributes.
+            br
+            | When a path returns null or undefined, the engine will silently render nothing.
           pre(data-filename="views/layout.tmpl")
             code(class="handlebars")
               | h2 {title}
@@ -552,6 +554,24 @@ body
                 |     h1 {myView.title}
                 |   {{view MyViewModel}}
                 |     h1 {title}
+            p
+              | Any value accessible from the scope can be passed as an argument to the view model constructor.
+            pre(data-filename="views/layout.tmpl")
+              code(class="handlebars")
+                | {{for todo in todos}}
+                |   {{view TodoView(todo)}}
+                |     h1 {description}
+            pre(data-filename="app.js")
+              code(class="javascript")
+                | declaire.ViewModel('TodoView', {
+                |   myTodo: null,
+                |   description: function() {
+                |     var todo = this.get('myTodo');
+                |     return todo && todo.get('title').toUpperCase();
+                |   }
+                | }, function(this, todo) {
+                |   this.set('myTodo', todo);
+                | });
 
           section#statements-action
             h4 action
@@ -578,38 +598,60 @@ body
               | Declair uses a simple way to combine templates that also serves as a basis to build
               | reusable components:
               | Use the import statement to import another template in the surrounding template.
+            pre(data-filename="views/myTemplate.tmpl")
+              code(class="handlebars")
+                | h1 Import me!
+            pre(data-filename="views/layout.tmpl")
+              code(class="handlebars")
+                | {{import myTemplate}}
             p
               | Parameters passed to the imported template are delegated to the topmost view inside.
               | Inside the view, the passed object is then available under a different name, just
               | like with functions in a programming language. 
             pre(data-filename="views/MyView.tmpl")
               code(class="handlebars")
-                | {{view MyView(item)}}
-                |   h1 {item.name}
+                | {{view MyView(word)}}
+                |   h1 {word}
             pre(data-filename="views/layout.tmpl")
               code(class="handlebars")
-                | {{import MyView(item1)}}
-                | {{import MyView(item2)}}
+                | {{import MyView('foo')}}
+                | {{import MyView('bar')}}
+            p
+              | This even works without a view model. In this case, the view statement simply works
+              | as a way to pass parameters to a reusable, dynamic template. 
+            pre(data-filename="views/animal.tmpl")
+              code(class="handlebars")
+                | {{view (name, species)}}
+                |   .creature
+                |     .name {name}
+                |     .species {species}
+            pre(data-filename="views/layout.tmpl")
+              code(class="handlebars")
+                | {{import animal('Lisa', 'Dog')}}
+                | {{import animal('Herbert', 'Cat')}}
 
           section#statements-content
             h4 content
             p
-              | You can also nest additional markup under an import statement. This can then be placed
+              | You can nest additional markup under an import statement. This can then be placed
               | inside the imported template using the <b>content</b> statement. 
             p 
               | This allows you to write components like dialogues, that act as wrappers around arbitrary
               | content.
-            pre(data-filename="views/MyView.tmpl")
+            pre(data-filename="views/wrapper.tmpl")
               code(class="handlebars")
-                | {{view MyView}}
+                | header
                 |   h1 Own content
+                | article
                 |   {{content}}
+                | footer
+                |   .completely wrapped
             pre(data-filename="views/layout.tmpl")
               code(class="handlebars")
-                | {{import MyView}}
+                | {{import wrapper}}
                 |   h2 Inserted content
-                | {{import MyView}}
-                |   #other content
+                | {{import wrapper}}
+                |   #other Inserted content
 
             //- p
             //-   | We can use this to refactor our todos app from above and

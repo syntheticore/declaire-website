@@ -206,6 +206,8 @@ body
                   a(href="#statements-action") action
                 li
                   a(href="#statements-import") import
+                li
+                  a(href="#statements-content") content
             li
               a(href="#comments") Comments
         li
@@ -576,35 +578,66 @@ body
               | reusable components:
               | Use the import statement to import another template in the surrounding template.
             p
-              | We can use this to refactor our todos app from above and
-              | make the TodosView a reusable component that we can insert at multiple locations.
-              br
-              | Parameters passed to the imported template are delegated to the topmost node inside.
-            pre(data-filename="views/TodosView.tmpl")
+              | Parameters passed to the imported template are delegated to the topmost view inside.
+              | Inside the view, the passed object is then available under a different name, just
+              | like with functions in a programming language. 
+            pre(data-filename="views/MyView.tmpl")
               code(class="handlebars")
-                | {{view TodosView}}
-                |   header
-                |     h1 Todos
-                |   main
-                |     input(type="text" placeholder="What's next?" {{action change newTodo}})
-                |     ul.todos
-                |       {{for todos}}
-                |         li
-                |           input(type="checkbox" checked="{{done}}")
-                |           h2 {title}
-                |   footer {todos.length} items left to do
-                //- |   .embed
-                //- |     {_content}
+                | {{view MyView(item)}}
+                |   h1 {item.name}
             pre(data-filename="views/layout.tmpl")
               code(class="handlebars")
-                | head
-                |   title Todos
-                |   link(href="/stylesheets/main.css" rel="stylesheet")
-                | body
-                |   {{import TodosView}}
-                |   span And another one
-                |   {{import TodosView}}
-                //- |     h1 This is inserted content
+                | {{import MyView(item1)}}
+                | {{import MyView(item2)}}
+
+          section#statements-content
+            h4 content
+            p
+              | You can also nest additional markup under an import statement. This can then be placed
+              | inside the imported template using the <b>content</b> statement. 
+            p 
+              | This allows you to write components like dialogues, that act as wrappers around arbitrary
+              | content.
+            pre(data-filename="views/MyView.tmpl")
+              code(class="handlebars")
+                | {{view MyView}}
+                |   h1 Own content
+                |   {{content}}
+            pre(data-filename="views/layout.tmpl")
+              code(class="handlebars")
+                | {{import MyView}}
+                |   h2 Inserted content
+                | {{import MyView}}
+                |   #other content
+
+            //- p
+            //-   | We can use this to refactor our todos app from above and
+            //-   | make the TodosView a reusable component that we can insert at multiple locations.
+            //- pre(data-filename="views/TodosView.tmpl")
+            //-   code(class="handlebars")
+            //-     | {{view TodosView}}
+            //-     |   header
+            //-     |     h1 Todos
+            //-     |   main
+            //-     |     input(type="text" placeholder="What's next?" {{action change newTodo}})
+            //-     |     ul.todos
+            //-     |       {{for todos}}
+            //-     |         li
+            //-     |           input(type="checkbox" checked="{{done}}")
+            //-     |           h2 {title}
+            //-     |   footer {todos.length} items left to do
+            //-     //- |   .embed
+            //-     //- |     {_content}
+            //- pre(data-filename="views/layout.tmpl")
+            //-   code(class="handlebars")
+            //-     | head
+            //-     |   title Todos
+            //-     |   link(href="/stylesheets/main.css" rel="stylesheet")
+            //-     | body
+            //-     |   {{import TodosView}}
+            //-     |   span And another one
+            //-     |   {{import TodosView}}
+            //-     //- |     h1 This is inserted content
 
         section#comments
           h3 Comments

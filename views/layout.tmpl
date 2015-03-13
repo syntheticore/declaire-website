@@ -75,7 +75,7 @@ body
           h3 Auto Bindings
           p
             | Watch the DOM magically update, as your model data changes. No matter if those changes
-            | resulted from your own actions or from updates to the server.
+            | resulted from your own actions or from updates to the database.
         
         li
           h3 Computed Properties
@@ -138,12 +138,12 @@ body
         li
           h3 Scalable
           p
-            | Declaire scales up from very simple pages and prototypes to complex applications.
+            | Declaire scales from simple websites and prototypes to complex web applications.
           p
             | Because of its full-stack, zero-config nature, applications are quickly
             | set up and running.
           p
-            | Because of its declarative logic, flexible components and sane module system, Declaire
+            | Because of its declarative logic, flexible components and CommonJS module system, Declaire
             | also keeps more complex applications maintainable and fast.
           p 
             | Declaire also scales horizontally and runs on an arbitrary number of Node instances.
@@ -171,18 +171,17 @@ body
             li Data over standard REST/JSON.
             li Push updates using Server-Sent-Events over standard HTTP instead of websockets.
 
-        // Implicit router and offline handling through scope
-        // Authentication and permission system
-
     nav#side-bar.side-bar
       header Contents
       ul
         li
           a(href="#install") Installation
+        //- li
+        //-   a(href="#get-started") Getting Started
         li
-          a(href="#get-started") Getting Started
+          a(href="#structure") Code Structure
         li
-          a(href="#structure") Structuring your Code
+          a(href="#startup") Application Startup
         li
           a(href="#templating") Templating
           ul
@@ -195,16 +194,18 @@ body
             li
               a(href="#scope") Scope
             li
-              a(href="#flow") Control Flow
+              a(href="#statements") Statements
               ul
                 li
-                  a(href="#flow-if") if
+                  a(href="#statements-if") if
                 li
-                  a(href="#flow-for") for
+                  a(href="#statements-for") for
                 li
-                  a(href="#flow-view") view
+                  a(href="#statements-view") view
                 li
-                  a(href="#flow-action") action
+                  a(href="#statements-action") action
+                li
+                  a(href="#statements-import") import
             li
               a(href="#comments") Comments
         li
@@ -219,23 +220,24 @@ body
             li
               a(href="#relations") Relations
             li
-              a(href="#model-offline") Offline Handling
+              a(href="#model-offline") Local Storage
         li
           a(href="#view-models") View Models
         li
           a(href="#collections") Collections
-        li
-          a(href="#queries") Queries
-        li
-          a(href="#main-model") The Main Model
-        li
-          a(href="#components") Imports and Components
+          ul
+            li
+              a(href="#queries") Queries
         li
           a(href="#routing") Routing
         li
-          a(href="#client-only") Client-only Code
+          a(href="#main-model") Main Model Instance
+        //- li
+        //-   a(href="#components") Imports and Components
         li
           a(href="#offline") Offline Support
+        li
+          a(href="#client-only") Client/Server-only Code
         li
           a(href="#stylesheets") Stylesheets
         li
@@ -251,7 +253,7 @@ body
             li
               a(href="#yeoman") Yeoman
             li
-              a(href="#nodemon") Using Nodemon
+              a(href="#nodemon") Nodemon
 
     section#main-content
 
@@ -354,8 +356,12 @@ body
             |   app.js
             |   package.json
             |   // nodemon.json - optional, but <a href="#nodemon">read this</a> if you want to use it
-
         p The public folder should contain your static assets and will get served automatically.
+
+      article#startup
+        h2 Application Startup
+        p
+          | 
 
       article#templating
         h2 Templating
@@ -478,17 +484,17 @@ body
             a(href="#main-model") main model
             | , which Declaire inserts automatically.
             | New variable names and models get introduced to the scope by control statements like
-            a(href="#flow-for") for 
+            a(href="#statements-for") for 
             | and 
-            a(href="#flow-view") view
+            a(href="#statements-view") view
             | .
 
-        section#flow
-          h3 Control Flow
+        section#statements
+          h3 Statements
           p
             | Several statements are available in templates to control the generated markup in response
             | to changes to its underlying data, accessible through their respective keywords in double curlies.
-          section#flow-if
+          section#statements-if
             h4 if
             p
               | The if statement is different from Javascript, in that it does not execute arbitrary code.
@@ -503,7 +509,7 @@ body
                 |
                 | {{if !_online}}
                 |   dialog Waiting for connection ...
-          section#flow-for
+          section#statements-for
             h4 for
             p
               | Use the for-statement to iterate through collections and produce output for
@@ -524,7 +530,7 @@ body
                 | ul
                 |   {{for todos}}
                 |     li {title}
-          section#flow-view
+          section#statements-view
             h4 view
             p
               | Views instantiate view models when they are encoutered in a template and put these
@@ -544,7 +550,7 @@ body
                 |   {{view MyViewModel}}
                 |     h1 {title}
 
-          section#flow-action
+          section#statements-action
             h4 action
             p
               | When the user generates events by interacting with the page, your application can react
@@ -562,6 +568,43 @@ body
                 |     console.log(input.val());
                 |   }
                 | });
+
+          section#statements-import
+            h4 import
+            p
+              | Declair uses a simple way to combine templates that also serves as a basis to build
+              | reusable components:
+              | Use the import statement to import another template in the surrounding template.
+            p
+              | We can use this to refactor our todos app from above and
+              | make the TodosView a reusable component that we can insert at multiple locations.
+              br
+              | Parameters passed to the imported template are delegated to the topmost node inside.
+            pre(data-filename="views/TodosView.tmpl")
+              code(class="handlebars")
+                | {{view TodosView}}
+                |   header
+                |     h1 Todos
+                |   main
+                |     input(type="text" placeholder="What's next?" {{action change newTodo}})
+                |     ul.todos
+                |       {{for todos}}
+                |         li
+                |           input(type="checkbox" checked="{{done}}")
+                |           h2 {title}
+                |   footer {todos.length} items left to do
+                //- |   .embed
+                //- |     {_content}
+            pre(data-filename="views/layout.tmpl")
+              code(class="handlebars")
+                | head
+                |   title Todos
+                |   link(href="/stylesheets/main.css" rel="stylesheet")
+                | body
+                |   {{import TodosView}}
+                |   span And another one
+                |   {{import TodosView}}
+                //- |     h1 This is inserted content
 
         section#comments
           h3 Comments
@@ -702,7 +745,7 @@ body
             | 
 
         section#model-offline
-          h3 Offline Handling
+          h3 Local Storage
           p
             | 
 
@@ -828,11 +871,13 @@ body
           | ,
           a(href="#components") components 
           | and potentially any application.
+          br
+          | Property names start with an underscore to prevent name collisions with user code.
         section
           h4 _page
           p
             | Contains another complete model object that acts as a mirror for the current url.
-            | Read its <b>route</b> and <b>params</b> properties to route your pages, or set them to navigate
+            | Read its <b>route</b>, <b>params</b> and <b>hash</b> properties to route your pages, or set them to navigate
             | from code.
           //- These get created dynamically and do not belong in the main model:
           //- h4 _params
@@ -859,7 +904,7 @@ body
         
         section
           h3 Accessing the Main Model Singleton Instance
-          p As part of every scope, its underscored properties are available in any template.
+          p As a part of any scope, its properties are available in any template.
           pre(data-filename="views/layout.tmpl")
             code(class="handlebars")
               | {{if !_online}}
@@ -872,43 +917,6 @@ body
               |     window.location = window.location;
               |   }
               | });
-
-      article#components
-        h2 Organizing Templates and Components
-        p
-          | Declair uses a simple way to combine templates that also serves as a basis to build
-          | reusable components:
-          | Use the import instruction to import another template in the surrounding template.
-        p
-          | We can use this to refactor our todos app from above and
-          | make the TodosView a reusable component that we can insert at multiple locations.
-          br
-          | Parameters passed to the imported template are delegated to the topmost node inside.
-        pre(data-filename="views/TodosView.tmpl")
-          code(class="handlebars")
-            | {{view TodosView}}
-            |   header
-            |     h1 Todos
-            |   main
-            |     input(type="text" placeholder="What's next?" {{action change newTodo}})
-            |     ul.todos
-            |       {{for todos}}
-            |         li
-            |           input(type="checkbox" checked="{{done}}")
-            |           h2 {title}
-            |   footer {todos.length} items left to do
-            //- |   .embed
-            //- |     {_content}
-        pre(data-filename="views/layout.tmpl")
-          code(class="handlebars")
-            | head
-            |   title Todos
-            |   link(href="/stylesheets/main.css" rel="stylesheet")
-            | body
-            |   {{import TodosView}}
-            |   span And another one
-            |   {{import TodosView}}
-            //- |     h1 This is inserted content
 
       article#routing
         h2 Routing
@@ -1100,7 +1108,7 @@ body
         p
           | Use these additional resources to speed up your workflow.
         section#yeoman
-          h3 Yeoman
+          h3 Bootstrap Projects with Yeoman
           p
         section#nodemon
           h3 Using Nodemon
@@ -1124,8 +1132,6 @@ body
             a(href="/") Home
           li
             a(href="https://www.npmjs.com/package/declaire") NPM
-          li
-            a(href="/pages/blog") Blog
       li
         h4 Help
         ul.items
@@ -1142,6 +1148,8 @@ body
             a(href="/pages/license") License
           li
             a(href="/pages/imprint") Imprint
+          li
+            a(href="/pages/blog") Blog
       li
         h4 Connect
         ul.items
@@ -1168,6 +1176,13 @@ body
   script(src="/js/bower/underscore/underscore-min.js")
   script(src="/js/bower/backbone/backbone.js")
   script(src="/js/bower/highlightjs/highlight.pack.js")
+
   script
     | hljs.initHighlightingOnLoad();
+    | $(window).scroll(function(e) {
+    |   var scrolled = $(window).scrollTop() > 1540;
+    |   $('body').toggleClass('scrolled', scrolled);
+    | });
+    | $(window).trigger('scroll');
+  
   //- script(src="/bundle.js")

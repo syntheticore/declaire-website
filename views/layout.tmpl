@@ -374,7 +374,7 @@ body
           a(href="http://handlebarsjs.com" target="_blank") Handlebars
           | , takes the streaming execution model from
           a(href="https://github.com/raptorjs/marko" target="_blank") Marko 
-          | and hooks natively into declaire's models and view models.
+          | and hooks natively into declaire's models.
         p
           | Hierachy is denoted through indentation, interpolation uses curlies, statements use double
           | curlies and most other syntax adheres to HTML and CSS alot.
@@ -383,7 +383,7 @@ body
           | to process the exact same parse tree.
         p
           | The client evaluator operates directly on the DOM and creates, modifies and removes elements as neccessary
-          | when data in your models or view models changes.
+          | when data in your models changes.
         p
           | The server evaluator generates ordinary html source from the same parse tree and data. It
           | does so in a fashion that minimizes time to first byte, by streaming rendered chunks of markup
@@ -500,14 +500,15 @@ body
             h4 if
             p
               | The if statement is different from Javascript, in that it does not execute arbitrary code.
-              | Only paths to model or view model properties within the scope, as well as basic literals
+              | Only paths to model properties within the scope, as well as basic literals
               | are allowed, together with a fixed set of comparison operators. Inversion works too.
             pre(data-filename="views/layout.tmpl")
               code(class="handlebars")
                 | {{if person.name == 'Peter'}}
-                |   strong Congratulations Peter!
-                |   {{if person.age < 18}}
-                |     .advice Shut your eyes!
+                |   strong That's him!
+                |
+                | {{if person.age < 18}}
+                |   .rules Stay out!
                 |
                 | {{if !_online}}
                 |   dialog Waiting for connection ...
@@ -535,18 +536,18 @@ body
           section#statements-view
             h4 view
             p
-              | Views instantiate view models when they are encoutered in a template and put these
-              | into the scope. Their properties and methods are subsequently available in the scope.
+              | The view statement instantiates a view model and puts it into the scope. Properties and methods
+              | of the view model instance are subsequently visible in the scope.
             p
               | Once a view is no longer needed, perhaps because its item was removed from a collection,
-              | or because a parent element got updated, Declaire will remove the associated model object
-              | automatically, firing the usual trail of events.
+              | or because a parent element got updated, Declaire will remove the associated view model object
+              | automatically, causing it to fire its <a href="#view-models">remove</a> event.
             p
               | Optionally, the created view model instance can be given a name by which it will be accessible
               | in the scope. If you leave that out, the model itself will be inserted into the scope.
             pre(data-filename="views/layout.tmpl")
               code(class="handlebars")
-                | {{if showSomeView}}
+                | {{if showViews}}
                 |   {{view MyViewModel as myView}}
                 |     h1 {myView.title}
                 |   {{view MyViewModel}}
@@ -654,8 +655,8 @@ body
           | Data models structure your application data and code, shield you from the database, provide offline
           | capabilities and report updates to their data to interrested listeners using events.
         p
-          | A model definition consists of a collection name, defaults for your attributes and methods to operate on that data.
-          | In this example, JSON data for your todos will be available under the url /api/todos.
+          | A model definition consists of a collection name, defaults for all attributes and optionally methods
+          | to operate on that data. In this example, JSON data for your todos will be available under the URL /api/todos.
         p
           | Note that model properties get accessed using the <b>get</b> and <b>set</b> methods and never directly.
         pre(data-filename="app.js")
@@ -759,9 +760,9 @@ body
           pre(data-filename="app.js")
             code(class="javascript")
               | todo.set({done: true});
-              | todo.get('done'); // -> true
+              | todo.get('done'); // true
               | todo.revert();
-              | todo.get('done'); // -> false
+              | todo.get('done'); // false
           p
             | In addition to emiting the regular change events for every property that got changed and the
             | generic change event, the model will also fire a fetch event, that carries a hash of actual
@@ -788,7 +789,7 @@ body
           | View models inherit from declaire.Model, but fulfill a different purpose.
           br
           | They are the building blocks of your UI logic, cannot be saved and export a name by which they can
-          | be accessed from within templates.
+          | be instantiated from within templates using the <b>view</b> statement.
         p
           | Normally, a view model will want to fetch data on instantiation to make it available to templates.
           | Note that, as opposed to normal models, you cannot instantiate and delete these
@@ -796,18 +797,29 @@ body
         p
           | Therefore, view models take a constructor function as their third argument, that gets passed the
           | fresh model instance as a parameter. If you manually allocate any resources or connect any event handlers
-          | here, make sure you also register for the <b>remove</b> event, to clean that up at the appropriate time.
+          | here, make sure that you also register for the <b>remove</b> event, to clean that up at the appropriate time.
         pre(data-filename="app.js")
           code(class="javascript")
-            | var i = 1;
-            | declaire.ViewModel('MyView', {
-            |   title: ''
+            | declaire.ViewModel('Clock', {
+            |   time: null,
             | }, function(this) {
-            |   this.set('title', 'View ' + i++);
+            |   // Update the model state every second once the view exists
+            |   var iv = setInterval(function() {
+            |     this.set('time', (new Date()).toString());
+            |   }, 1000);
+            |   // Clear handler once the view gets removed from the DOM
             |   this.on('remove', function() {
-            |     console.log(this.get('title') + " is leaving the ship...");
+            |     clearInterval(iv);
             |   });
             | });
+        pre(data-filename="views/layout.tmpl")
+          code(class="handlebars")
+            | {{view Clock}}
+            |   time {time}
+        p
+          | See the
+          a(href="#statements-view") view statement 
+          | for detailed information on how to use view models inside templates.
 
       article#collections
         h2 Collections
@@ -840,11 +852,11 @@ body
         p
           | Queries are a specific type of collection that filters its content according to a
           | given database query object. Once created, a query remains active, meaning that
-          | matching objects that get added to the database after a query was created will
+          | matching objects that get added to the database after a query was created, will
           | show up after the fact and trigger the appropriate events. A Query will also update
           | when one of the properties filtered over changes for one of the objects in the collection.
         p
-          | Queries can be further narrowed down by calling the chainable filter function:
+          | Queries can be narrowed down further, by calling the chainable filter method:
         pre(data-filename="app.js")
           code(class="javascript")
             | var finishedTodos = declaire.Query(Todo, {done: true});

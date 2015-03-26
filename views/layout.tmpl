@@ -186,6 +186,8 @@ body
           a(href="#templating") Templating
           ul
             li
+              a(href="#tags") Basic HTML Tags
+            li
               a(href="#interpolation") Interpolation
             li
               a(href="#bindings") Two-way Bindings
@@ -413,7 +415,7 @@ body
               |     li
               |       a(href="#") Item1
               |
-              | // Make this s little shorter for elements with a single child
+              | // Make this a little shorter for elements with a single child
               | nav>ul.items
               |   li>a(href="#") Item1
               |
@@ -608,6 +610,9 @@ body
               | Parameters passed to the imported template are delegated to the topmost view inside.
               | Inside the view, the passed object is then available under a different name, just
               | like with functions in a programming language. 
+            p
+              | Templates always get a clean scope that contains only the main model and the parameters
+              | passed. They don't inherit the calling scope.
             pre(data-filename="views/MyView.tmpl")
               code(class="handlebars")
                 | {{view MyView(word)}}
@@ -636,7 +641,7 @@ body
               | You can nest additional markup under an import statement. This can then be placed
               | inside the imported template using the <b>content</b> statement. 
             p 
-              | This allows you to write components like dialogues, that act as wrappers around arbitrary
+              | This allows you to write components like dialogs, that act as wrappers around arbitrary
               | content.
             pre(data-filename="views/wrapper.tmpl")
               code(class="handlebars")
@@ -697,7 +702,7 @@ body
           | Data models structure your application data and code, shield you from the database, provide offline
           | capabilities and report updates to their data to interrested listeners using events.
         p
-          | A model definition consists of a collection name, defaults for all attributes and optionally methods
+          | A model definition consists of a collection name, defaults for all attributes and methods
           | to operate on that data. In this example, JSON data for your todos will be available under the URL /api/todos.
         p
           | Note that model properties get accessed using the <b>get</b> and <b>set</b> methods and never directly.
@@ -756,7 +761,7 @@ body
               | });
               |
               | // Called when new data arrived from the network,
-              | // on initial page load or due to push updates
+              | // on initial load or due to push updates
               | todo.on('fetch', function(changes) {
               |   console.log("This will fire last");
               | });
@@ -795,7 +800,7 @@ body
           p
             | When model objects that you have checked out in your application change in the database, they
             | will automatically receive push updates from the server. This happens in such a way that local,
-            | unsaved changes are preserved and take precendence over the remote changes.
+            | unsaved changes are preserved and take precedence over the remote changes.
           p
             | If you want to purge your local changes and revert back to the most recent database state,
             | simply call the <b>revert</b> method.
@@ -812,7 +817,7 @@ body
           pre(data-filename="app.js")
             code(class="javascript")
               | // Called when new data arrived from the network,
-              | // on initial page load or due to push updates
+              | // on initial load or due to push updates
               | todo.on('fetch', function(changes) {});
 
         section#relations
@@ -843,13 +848,13 @@ body
         pre(data-filename="app.js")
           code(class="javascript")
             | declaire.ViewModel('Clock', {
-            |   time: null,
+            |   time: null
             | }, function(this) {
             |   // Update the model state every second once the view exists
             |   var iv = setInterval(function() {
             |     this.set('time', (new Date()).toString());
             |   }, 1000);
-            |   // Clear handler once the view gets removed from the DOM
+            |   // Clear handler when the view gets removed from the DOM
             |   this.on('remove', function() {
             |     clearInterval(iv);
             |   });
@@ -879,20 +884,40 @@ body
           | potentially trigger a chain reaction that would eventually load the entire database.
         p
           | You can force a collection to resolve by requesting its <b>values</b>, either through the method
-          | of that name, or implicitly by using its <b>each</b> method.
+          | of that name, implicitly by using its <b>each</b> method, or by calling the .
         pre(data-filename="app.js")
           code(class="javascript")
-            | var c = declaire.Collection(Todo);
+            | var c = declaire.Collection([1, 2, 3]);
+            | c.push(4);
+            | c.serialize() // [1,2,3,4]
+            | var todos = declaire.Collection([);
             | c.push(Todo.create({done: true}));
+            | c.serialize(); // error: cannot serialize unsaved objects
+            | c.serialize({saveItems: true}, function(output) {}); // [{_ref: {id: 'xyz123', collection: 'todos'}}]
             | c.push(Todo.create({done: false}));
             | c.each(function(todo) {});
+            | var values = c.values();
+            | for(var i in values) {}
         p
           | They can also be used to hold data inside view models, even though these cannot be saved.
+          // Make all collections lazy
+          // col.filter() returns a query
+          // Model.all returns a query
+          // col.filter().filter() builds up lazy query
+          // query.first() -> findOne
+          // col.serialize -> array with base types or references
+          // model references are first fetched on a call to get
+
+          // Warnings like here https://youtu.be/z5e7kWSHWTg?t=12m20s
+
+          // Use async to load bundle in header
+
+          // Pull elements into scope using h1(title="Foo" {{as headline}})
 
       article#queries
         h2 Queries
         p
-          | Queries are a specific type of collection that filters its content according to a
+          | Queries are a specific type of collection that filters its contents according to a
           | given database query object. Once created, a query remains active, meaning that
           | matching objects that get added to the database after a query was created, will
           | show up after the fact and trigger the appropriate events. A Query will also update
@@ -901,7 +926,7 @@ body
           | Queries can be narrowed down further, by calling the chainable filter method:
         pre(data-filename="app.js")
           code(class="javascript")
-            | var finishedTodos = declaire.Query(Todo, {done: true});
+            | var finishedTodos = declaire.Query(Todo.all, {done: true});
             | var aboutSport = finishedTodos.filter({title: {$contains: 'sport'}});
             | // Use like a regular collection
             | aboutSport.each(function(todo) {
@@ -911,7 +936,7 @@ body
         pre(data-filename="app.js")
           code(class="javascript")
             | declaire.ViewModel('SearchUsersView', {
-            |   people: declaire.Query(Person),
+            |   people: declaire.Query(Person.all),
             |   query: '',
             |   results: function() {
             |     // Filter works flawlessly on Person.name, btw,
@@ -940,8 +965,8 @@ body
             | results almost immediately. When the user is online, a live query to the database is
             | then performed in the background, to fetch additional matching objects from the server.
             br
-            | When these arrive, a regular update event, as well as fetch event, will be emited by
-            | the query, causing bound views und dependent properties to update themselves again.
+            | When these arrive, change events, as well as fetch event, will be emited by
+            | the query, causing bound views und dependent properties to update.
 
       article#main-model
         h2 The Main Model
@@ -959,7 +984,7 @@ body
           a(href="#components") components 
           | and potentially any application.
           br
-          | Property names start with an underscore to prevent name collisions with user code.
+          | Property names start with an underscore to prevent name collisions with your own properties.
         section
           h4 _page
           p
@@ -975,7 +1000,7 @@ body
           //- p Contains markup nested below an import statement. Useful to customize reusable components.
           h4 _online
           p
-            | Represents the current state of connectivity. Useful to show to user when his changes do
+            | Represents the current state of connectivity. Useful to show to the user when changes do
             | not currently reach the server.
           h4 _authenticated
           p Tells if the user is logged in.
@@ -1010,7 +1035,7 @@ body
         p
           | Declaire apps contain an implicit router, that lives as another model object inside the <b>_page</b>
           | property of the main model. This way, routing information is not only available to javascript,
-          | but - because the main model lies at the base of every scope - to templates as well.
+          | but - because the main model lies at the top of every scope - to templates as well.
         p
           | Because it's a regular model object, it will emit change events when its
           | properties are written to, which are in turn caught by the template engine.
@@ -1035,26 +1060,24 @@ body
             | });
 
       article#client-only
-        h2 Running client- (or server-) only Code
+        h2 Running Client/Server-only Code
         p
           | By default, all your code is executed on both server and client, leading to consistent results.
           | Sometimes though, this will not do the trick and you might want to execute code only on the one side
-          | or the other. Declaire offers several ways to do this:
+          | or the other.
         p
           | Declaire accepts several hooks in its start method, that get executed at specific points
-          | in time. Some on the server, some on the client. Consult the
-          a(href="/pages/docs") docs 
-          | for more detailed information!
+          | in time. Some on the server, some on the client:
         pre(data-filename="app.js")
           code(class="javascript")
             | console.log("Executed once on both client and server");
             |
             | declaire.start({
-            |   beforeConnect: function(mainModel, express, mongoDB) {
+            |   beforeConnect: function(express, mongoDB) {
             |     console.log("Executed only on the server");
             |   },
             |
-            |   onLoad: function(mainModel) {
+            |   onLoad: function() {
             |     console.log("Executed only on the client");
             |   }
             | });
@@ -1068,6 +1091,12 @@ body
             |
             | // Good ol' boolean function
             | if(declaire.onClient()) { }
+        p
+          | You can also require additional npm modules on one side only.
+          | Modules which are only required on the server will not be included in the javascript bundle.
+        pre(data-filename="app.js")
+          code(class="javascript")
+            | if(declaire.onServer()) require('newrelic');
 
       article#offline
         h2 Offline Support
@@ -1094,7 +1123,7 @@ body
       article#stylesheets
         h2 Stylesheets
         p
-          | You can use anything you want of course, but by default, Declaire supports
+          | Declaire supports
           a(href="http://learnboost.github.io/stylus/") Stylus 
           | with 
           a(href="http://tj.github.io/nib/") Nib 
@@ -1124,9 +1153,9 @@ body
             |
             | // Color calculations, etc
             | a
-            |   color: $mainColor * 0.9
+            |   color: $mainColor
             |   &:hover
-            |     color: $mainColor
+            |     color: $mainColor * 0.9
         p
           | Simply put your stylus files into the stylesheets folder of your application
           | and they will be served under the identical path, just with the .css extension.

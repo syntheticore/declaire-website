@@ -1,8 +1,9 @@
 if(typeof(window) == 'undefined') {
-  require('newrelic');
+  // require('newrelic');
 }
-var declaire = require('declaire');
 
-declaire.start({
+require('declaire')({
   mongoDevUrl: 'mongodb://127.0.0.1:27017/declaire-website'
+}, function(declaire, start) {
+  start();
 });

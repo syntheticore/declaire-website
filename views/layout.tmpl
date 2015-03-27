@@ -210,6 +210,10 @@ body
                   a(href="#statements-import") import
                 li
                   a(href="#statements-content") content
+                li
+                  a(href="#statements-route") route
+                li
+                  a(href="#statements-switch") switch
             li
               a(href="#comments") Comments
         li
@@ -516,6 +520,23 @@ body
                 |
                 | {{if !_online}}
                 |   dialog Waiting for connection ...
+            p
+              | One or several alternatives can be declared as well.
+            pre(data-filename="views/layout.tmpl")
+              code(class="handlebars")
+                | {{if path}}
+                |   | path is truthy
+                | {{=>}}
+                |   | path is falsy
+            pre(data-filename="views/layout.tmpl")
+              code(class="handlebars")
+                | {{if}}
+                | {{=> value > 0}}
+                |   .green Positive
+                | {{=> value == 0}}
+                |   div Zero
+                | {{=>}} // Default
+                |   .red Negative
           section#statements-for
             h4 for
             p
@@ -658,34 +679,42 @@ body
                 | {{import wrapper}}
                 |   #other Inserted content
 
-            //- p
-            //-   | We can use this to refactor our todos app from above and
-            //-   | make the TodosView a reusable component that we can insert at multiple locations.
-            //- pre(data-filename="views/TodosView.tmpl")
-            //-   code(class="handlebars")
-            //-     | {{view TodosView}}
-            //-     |   header
-            //-     |     h1 Todos
-            //-     |   main
-            //-     |     input(type="text" placeholder="What's next?" {{action change newTodo}})
-            //-     |     ul.todos
-            //-     |       {{for todos}}
-            //-     |         li
-            //-     |           input(type="checkbox" checked="{{done}}")
-            //-     |           h2 {title}
-            //-     |   footer {todos.length} items left to do
-            //-     //- |   .embed
-            //-     //- |     {_content}
-            //- pre(data-filename="views/layout.tmpl")
-            //-   code(class="handlebars")
-            //-     | head
-            //-     |   title Todos
-            //-     |   link(href="/stylesheets/main.css" rel="stylesheet")
-            //-     | body
-            //-     |   {{import TodosView}}
-            //-     |   span And another one
-            //-     |   {{import TodosView}}
-            //-     //- |     h1 This is inserted content
+          section#statements-route
+            h4 route
+            p
+              | Use the route statement to evaluate markup only for specific URLs. The given URL can contain wildcards,
+              | which are used to extract parts of the url and put them into the scope below the statement.
+            pre(data-filename="views/layout.tmpl")
+              code(class="handlebars")
+                | {{route /pages/users/:user}}
+                |   h1 Showing information for {user}
+                |   {{view UserView(user)}}
+                |     h2 Hello {firstName}
+
+          section#statements-switch
+            h4 switch
+            p
+              | When you nest markup below a regular if statement, the corresponding views and elements will be
+              | removed from the DOM, when the statement's expression turns falsy and get created anew when it 
+              | becomes true again.
+            p
+              | In some cases, you may wish your views to retain their state though, such as when cycling through
+              | individual tabs in a tabbed container for instance. Use the switch statement to declare a number
+              | of alternative states that are all kept in memory, while only a single element gets attached to
+              | the DOM at any given point in time.
+            pre(data-filename="views/layout.tmpl")
+              code(class="handlebars")
+                | {{switch probability > 0.8}}
+                |   {{view BadgeView}}
+            pre(data-filename="views/layout.tmpl")
+              code(class="handlebars")
+                | {{switch}}
+                | {{=> probability > 0.8}}
+                |   {{view GreenView}}
+                | {{=> probability > 0.5}}
+                |   {{view OrangeView}}
+                | {{=>}} // Default
+                |   {{view RedView}}
 
         section#comments
           h3 Comments
@@ -823,7 +852,27 @@ body
         section#relations
           h3 Relations
           p
-            | 
+            | When you set a property of a model object to another model object, saving the first one will
+            | automatically generate a reference to the second and save that to the database in its place.
+            | The same goes for collections, which get serialized to a series of references before being
+            | persisted.
+          p
+            | When the object is loaded again, its relations will get resolved automatically, but only one level deep.
+            | This means that any directly referenced model objects will get loaded as well. Collections remain lazy.
+          p
+            | To use further references in the referenced model objects, these must then be resolved first.
+            | Use the <b>resolve</b> method to do that.
+          pre(data-filename="app.js")
+            code(class="javascript")
+              | Todo.load(todoId, function(todo) {
+              |   var author = todo.get('author');
+              |   // Regular properties are immediately available
+              |   console.log(author.get('name'));
+              |   // To use object references, author must be resolved first
+              |   author.resolve(function() {
+              |     console.log(author.get('father').get('name'));
+              |   });
+              | });
 
         section#model-offline
           h3 Local Storage
@@ -850,9 +899,9 @@ body
             | declaire.ViewModel('Clock', {
             |   time: null
             | }, function(this) {
-            |   // Update the model state every second once the view exists
+            |   // Update model state every second once the view exists
             |   var iv = setInterval(function() {
-            |     this.set('time', (new Date()).toString());
+            |     this.set('time', new Date());
             |   }, 1000);
             |   // Clear handler when the view gets removed from the DOM
             |   this.on('remove', function() {

@@ -578,6 +578,17 @@ body
                 |   {{view MyViewModel}}
                 |     h1 {title}
             p
+              | If you need to fetch data from the database to render the view, it is good practice to supply
+              | an alternate piece of markup to render, should the application be offline and not find
+              | the neccessary data in local storage.
+            pre(data-filename="views/layout.tmpl")
+              code(class="handlebars")
+                | {{view MyViewModel}}
+                |   h1 {myView.author.name}
+                | {{=>}}
+                |   h1 You are not connected to the internet
+                |   h2 This view will render automatically once connectivity returns
+            p
               | Any value accessible from the scope can be passed as an argument to the view model constructor.
             pre(data-filename="views/layout.tmpl")
               code(class="handlebars")
@@ -592,7 +603,7 @@ body
                 |     var todo = this.get('myTodo');
                 |     return todo && todo.get('title').toUpperCase();
                 |   }
-                | }, function(this, todo) {
+                | }, function(todo) {
                 |   this.set('myTodo', todo);
                 | });
 
@@ -898,7 +909,7 @@ body
           code(class="javascript")
             | declaire.ViewModel('Clock', {
             |   time: null
-            | }, function(this) {
+            | }, function() {
             |   // Update model state every second once the view exists
             |   var iv = setInterval(function() {
             |     this.set('time', new Date());
@@ -968,7 +979,7 @@ body
         p
           | Queries are a specific type of collection that filters its contents according to a
           | given database query object. Once created, a query remains active, meaning that
-          | matching objects that get added to the database after a query was created, will
+          | matching objects that get added to the database will
           | show up after the fact and trigger the appropriate events. A Query will also update
           | when one of the properties filtered over changes for one of the objects in the collection.
         p
@@ -976,9 +987,9 @@ body
         pre(data-filename="app.js")
           code(class="javascript")
             | var finishedTodos = declaire.Query(Todo.all, {done: true});
-            | var aboutSport = finishedTodos.filter({title: {$contains: 'sport'}});
+            | var aboutSports = finishedTodos.filter({title: {$contains: 'sport'}});
             | // Use like a regular collection
-            | aboutSport.each(function(todo) {
+            | aboutSports.each(function(todo) {
             |   todo.remove();
             | });
         p We can use a Query in a computed property together with an input binding for creating a live search feature:

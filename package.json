@@ -22,7 +22,6 @@
   "homepage": "https://github.com/syntheticore/declaire-website",
   "dependencies": {
     "declaire": "*",
-    "bower": "*",
-    "newrelic": "*"
+    "bower": "*"
   }
 }

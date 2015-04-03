@@ -181,9 +181,10 @@ body
         //- li
         //-   a(href="#get-started") Getting Started
         li
-          a(href="#structure") Code Structure
-        li
-          a(href="#startup") Application Startup
+          a(href="#structure") Project Structure
+          ul
+            li
+              a(href="#installing-modules") Installing Modules
         li
           a(href="#templating") Templating
           ul
@@ -286,23 +287,26 @@ body
           | in the browser.
         pre(data-filename="app.js")
           code(class="javascript")
-            | var declaire = require('declaire');
+            | require('declaire')({
+            |   mongoDevUrl: 'mongodb://127.0.0.1:27017/todos'
+            | }, function(declaire, start) {
             |
-            | var Todo = declaire.Model('todos', {
-            |   title: 'Untitled Todo',
-            |   done: false
+            |   var Todo = declaire.Model('todos', {
+            |     title: 'Untitled Todo',
+            |     done: false
+            |   });
+            |
+            |   declaire.ViewModel('TodosView', {
+            |     todos: Todo.all(),
+            |   
+            |     newTodo: function(input) {
+            |       Todo.create({title: input.val()}).save();
+            |       input.val('');
+            |     }
+            |   });
+            |
+            |   start();
             | });
-            |
-            | declaire.ViewModel('TodosView', {
-            |   todos: declaire.Collection(Todo),
-            | 
-            |   newTodo: function(input) {
-            |     this.get('todos').create({title: input.val()});
-            |     input.val('');
-            |   }
-            | });
-            |
-            | declaire.start();
         p
           | Next, create your main layout template in the views folder.
           | Declaire will wrap it with an html tag automatically if you omit it.
@@ -316,11 +320,13 @@ body
             |     header
             |       h1 Todos
             |     main
-            |       input(type="text" placeholder="What's next?" {{action change newTodo}})
+            |       form({{action submit newTodo}})
+            |         input(type="text" placeholder="What's next?")
+            |         button Create Todo
             |       ul.todos
             |         {{for todos}}
-            |           li
-            |             input(type="checkbox" checked="{{done}}")
+            |           li>label
+            |             input(type="checkbox" checked="{{bind! done}}")
             |             h2 {title}
             |     footer {todos.length} items left to do
         p
@@ -342,7 +348,7 @@ body
           | the server as well. Declaire will package and serve your code using
           a(href="http://browserify.org" target="_blank") Browserify 
           | for usage in the browser.
-        p To include another module, just do as you're used to with node.
+        p To include another source file, just do as you're used to with node.
         pre(data-filename="app.js")
           code(class="javascript")
             | var myModule = require('./src/myModule.js');
@@ -368,10 +374,26 @@ body
             |   // nodemon.json - optional, but <a href="#nodemon">read this</a> if you want to use it
         p The public folder should contain your static assets and will get served automatically.
 
-      article#startup
-        h2 Application Startup
-        p
-          | 
+        section#installing-modules
+          h3 Installing and Loading Modules
+          p
+            | Install modules using NPM. These will get packaged and delivered with your app bundle
+            | automatically. Require as usual.
+          pre(data-filename="Shell")
+            code(class="javascript")
+              | $ npm install underscore --save
+          pre(data-filename="app.js")
+            code(class="javascript")
+              | var _ = require('underscore');
+          p
+            | If you want to use a specific module only on the client or the server,
+            | require the module inside a conditional. Server-only code will be optimized away from
+            | the served app bundle automatically.
+          pre(data-filename="app.js")
+            code(class="javascript")
+              | if(declaire.onServer()) {
+              |   var NewRelic = require('newrelic');
+              | }
 
       article#templating
         h2 Templating
@@ -1350,7 +1372,7 @@ body
         a(href="https://github.com/syntheticore") Björn Breitgoff 
         | in Aachen, Germany
 
-  //- script(src="/js/bower/jquery/dist/jquery.min.js")
+  script(src="/js/bower/jquery/dist/jquery.min.js")
   script(src="/js/bower/highlightjs/highlight.pack.js")
   //- script(src="/bundle.js" async)
 

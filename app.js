@@ -1,5 +1,5 @@
 if(typeof(window) == 'undefined') {
-  require('newrelic');
+  // require('newrelic');
 }
 
 require('declaire')({

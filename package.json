@@ -23,6 +23,6 @@
   "dependencies": {
     "declaire": "*",
     "bower": "*",
-    "newrelic": "1.17.x"
+    "newrelic": "*"
   }
 }

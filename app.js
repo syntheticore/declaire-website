@@ -1,10 +1,8 @@
-if(typeof(window) == 'undefined') {
-  require('newrelic');
-}
+if(typeof(window) == 'undefined') { require('newrelic') }
+
 var declaire = require('declaire');
 var Express = require('express');
 var hljs = require('highlight.js');
-
 
 var app = declaire.Application({
   mongoDevUrl: 'mongodb://127.0.0.1:27017/declaire-website'

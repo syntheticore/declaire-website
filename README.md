@@ -1,2 +1,3 @@
 # declaire-website
-Website for declare.js
+
+  Website for declare.js

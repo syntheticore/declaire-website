@@ -6,15 +6,13 @@ head
 
   title Declaire.js
 
-  link(rel="stylesheet" href="/stylesheets/main.css")
-  link(href="/js/bower/fontawesome/css/font-awesome.min.css" rel="stylesheet")
-  link(href="/js/bower/highlightjs/styles/github.css" rel="stylesheet")
+  link(href="/stylesheets/main.css" rel="stylesheet")
+  link(href="/fontawesome/css/font-awesome.min.css" rel="stylesheet")
+  link(href="/highlightjs/styles/github.css" rel="stylesheet")
   link(rel="shortcut icon" href="/favicon.png")
 
-  //- script(src="/js/bower/modernizr/modernizr.js")
-
 body
-  header#header
+  header#header(data-title="1")
     .logo
       i.fa.fa-barcode
       span Declaire
@@ -258,13 +256,6 @@ body
               a(href="#mongodb") MongoDB
             li
               a(href="#heroku") Heroku
-        li
-          a(href="#tools") Tools
-          ul
-            li
-              a(href="#yeoman") Yeoman
-            li
-              a(href="#nodemon") Nodemon
 
     section#main-content
 
@@ -302,6 +293,15 @@ body
             |     newTodo: function(input) {
             |       Todo.create({title: input.val()}).save();
             |       input.val('');
+            |     },
+            |
+            |     rename: function(todo) {
+            |       todo.setTemporary('renaming', true);
+            |     },
+            |
+            |     finishRename: function(todo, e) {
+            |       todo.save('name', e.element.val());
+            |       todo.setTemporary('renaming', false);
             |     }
             |   });
             |
@@ -320,14 +320,18 @@ body
             |     header
             |       h1 Todos
             |     main
-            |       form({{action submit newTodo}})
-            |         input(type="text" placeholder="What's next?")
+            |       form({{action submit newTodo(input)}})
+            |         input(type="text" placeholder="What's next?" {{as input}})
             |         button Create Todo
             |       ul.todos
-            |         {{for todos}}
+            |         {{for todo in todos}}
             |           li>label
-            |             input(type="checkbox" checked="{{bind! done}}")
-            |             h2 {title}
+            |             input(type="checkbox" checked="{{bind! todo.done}}")
+            |             h2({{action click rename(todo)}}) {todo.title}
+            |             button({{action click todo.delete}}) Delete
+            |             {{if todo.renaming}}
+            |               input(type="text" placeholder="New Name" value="{:todo.name}" {{action enter finishRename(todo)}})
+            |
             |     footer {todos.length} items left to do
         p
           | Finally, make sure you have a
@@ -354,10 +358,6 @@ body
             | var myModule = require('./src/myModule.js');
         p 
           | Your directory structure should look like follows by default.
-          br
-          | See the
-          a(href="#yeoman") tools section 
-          | to learn how you can generate this very quickly.
         pre(data-filename="fs")
           code(class="javascript")
             | /app
@@ -371,7 +371,6 @@ body
             |     layout.tmpl
             |   app.js
             |   package.json
-            |   // nodemon.json - optional, but <a href="#nodemon">read this</a> if you want to use it
         p The public folder should contain your static assets and will get served automatically.
 
         section#installing-modules
@@ -1303,26 +1302,6 @@ body
               | // Enjoy!
               | $ heroku open
 
-      article#tools
-        h2 Tools
-        p
-          | Use these additional resources to speed up your workflow.
-        section#yeoman
-          h3 Bootstrap Projects with Yeoman
-          p
-        section#nodemon
-          h3 Using Nodemon
-          p
-            | Declaire needs to touch the filesystem when bundling your code, which causes
-            a(href="http://nodemon.io" target="_blank") Nodemon 
-            | to reload your application. Adding '_declaire_client.js' to your
-            | nodemon configuration will make it behave correctly.
-          pre(data-filename="nodemon.json")
-            code(class="json")
-              | {
-              |   "ignore": ["fixtures/*", "public/*", "_declaire_client.js"]
-              | }
-
   footer#footer
     ul.blocks
       li
@@ -1372,18 +1351,8 @@ body
         a(href="https://github.com/syntheticore") Björn Breitgoff 
         | in Aachen, Germany
 
-  script(src="/js/bower/jquery/dist/jquery.min.js")
-  script(src="/js/bower/highlightjs/highlight.pack.js")
-  //- script(src="/bundle.js" async)
+  script(src="/bundle.js" async)
 
-  script
-    | hljs.initHighlightingOnLoad();
-    | $(window).scroll(function(e) {
-    |   var scrolled = $(window).scrollTop() > 1540;
-    |   $('body').toggleClass('scrolled', scrolled);
-    | });
-    | $(window).trigger('scroll');
-  
   script
     | (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
     | (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

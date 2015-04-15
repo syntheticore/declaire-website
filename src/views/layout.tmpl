@@ -278,33 +278,36 @@ body
           | in the browser.
         pre(data-filename="app.js")
           code(class="javascript")
-            | require('declaire')({
+            | var declaire = require('declaire');
+            |
+            | var app = declaire.Application({
             |   mongoDevUrl: 'mongodb://127.0.0.1:27017/todos'
-            | }, function(declaire, start) {
+            | });
             |
-            |   var Todo = declaire.Model('todos', {
-            |     title: 'Untitled Todo',
-            |     done: false
-            |   });
+            | var Todo = app.Model('todos', {
+            |   title: 'Untitled Todo',
+            |   done: false
+            | });
             |
-            |   declaire.ViewModel('TodosView', {
-            |     todos: Todo.all(),
-            |   
-            |     newTodo: function(input) {
-            |       Todo.create({title: input.val()}).save();
-            |       input.val('');
-            |     },
+            | app.ViewModel('TodosView', {
+            |   todos: Todo.all(),
+            | 
+            |   newTodo: function(input) {
+            |     Todo.create({title: input.val()}).save();
+            |     input.val('');
+            |   },
             |
-            |     rename: function(todo) {
-            |       todo.setTemporary('renaming', true);
-            |     },
+            |   rename: function(todo) {
+            |     todo.setTemporary('renaming', true);
+            |   },
             |
-            |     finishRename: function(todo, e) {
-            |       todo.save('name', e.element.val());
-            |       todo.setTemporary('renaming', false);
-            |     }
-            |   });
+            |   finishRename: function(todo, e) {
+            |     todo.save({name: e.element.val()});
+            |     todo.setTemporary('renaming', false);
+            |   }
+            | });
             |
+            | app.init(function(start) {
             |   start();
             | });
         p
@@ -321,7 +324,7 @@ body
             |       h1 Todos
             |     main
             |       form({{action submit newTodo(input)}})
-            |         input(type="text" placeholder="What's next?" {{as input}})
+            |         input(type="text" placeholder="What's next?" {{as ::input}})
             |         button Create Todo
             |       ul.todos
             |         {{for todo in todos}}
@@ -365,10 +368,10 @@ body
             |   /public
             |     favicon.png
             |   /src
+            |     /views
+            |       layout.tmpl
             |   /stylesheets
             |     main.styl
-            |   /views
-            |     layout.tmpl
             |   app.js
             |   package.json
         p The public folder should contain your static assets and will get served automatically.

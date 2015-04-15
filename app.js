@@ -17,7 +17,7 @@ app.init(function(start, express, db) {
   }
   start(function() {
     if(declaire.Utils.onClient()) {
-      hljs.initHighlightingOnLoad();
+      hljs.initHighlighting();
     }
   });
 });

@@ -174,88 +174,57 @@ body
     nav#side-bar.side-bar
       header Contents
       ul
-        li
-          a(href="#install") Installation
-        //- li
-        //-   a(href="#get-started") Getting Started
+        li>a(href="#install") Installation
         li
           a(href="#structure") Project Structure
           ul
-            li
-              a(href="#installing-modules") Installing Modules
+            li>a(href="#installing-modules") Installing Modules
         li
           a(href="#templating") Templating
           ul
-            li
-              a(href="#tags") Basic HTML Tags
-            li
-              a(href="#interpolation") Interpolation
-            li
-              a(href="#bindings") Two-way Bindings
-            li
-              a(href="#text") Text
-            li
-              a(href="#scope") Scope
+            li>a(href="#tags") Basic HTML Tags
+            li>a(href="#interpolation") Interpolation
+            li>a(href="#bindings") Two-way Bindings
+            li>a(href="#text") Text
+            li>a(href="#scope") Scope
             li
               a(href="#statements") Statements
               ul
-                li
-                  a(href="#statements-if") if
-                li
-                  a(href="#statements-for") for
-                li
-                  a(href="#statements-view") view
-                li
-                  a(href="#statements-action") action
-                li
-                  a(href="#statements-import") import
-                li
-                  a(href="#statements-content") content
-                li
-                  a(href="#statements-route") route
-                li
-                  a(href="#statements-switch") switch
-            li
-              a(href="#comments") Comments
+                li>a(href="#statements-if") if
+                li>a(href="#statements-for") for
+                li>a(href="#statements-view") view
+                li>a(href="#statements-action") action
+                li>a(href="#statements-import") import
+                li>a(href="#statements-content") content
+                li>a(href="#statements-route") route
+                li>a(href="#statements-as") as
+                li>a(href="#statements-switch") switch
+            li>a(href="#comments") Comments
         li
           a(href="#data-models") Data Models
           ul
-            li
-              a(href="#events") Events
-            li
-              a(href="#computed-properties") Computed Properties
-            li
-              a(href="#realtime") Realtime Updates
-            li
-              a(href="#relations") Relations
-            li
-              a(href="#model-offline") Local Storage
-        li
-          a(href="#view-models") View Models
-        li
-          a(href="#collections") Collections
-          ul
-            li
-              a(href="#queries") Queries
+            li>a(href="#events") Events
+            li>a(href="#computed-properties") Computed Properties
+            li>a(href="#realtime") Realtime Updates
+            li>a(href="#relations") Relations
+            li>a(href="#model-offline") Local Storage
+            li>a(href="#model-history") History & Rollback
+        li>a(href="#view-models") View Models
+        li>a(href="#collections") Collections
+        li>a(href="#queries") Queries
         li
           a(href="#routing") Routing
-        li
-          a(href="#main-model") Main Model Instance
-        //- li
-        //-   a(href="#components") Imports and Components
-        li
-          a(href="#offline") Offline Support
-        li
-          a(href="#client-only") Client/Server-only Code
-        li
-          a(href="#stylesheets") Stylesheets
+          ul
+            li>a(href="#routing") Navigation
+        li>a(href="#main-model") Main Model Instance
+        li>a(href="#offline") Offline Support
+        li>a(href="#client-only") Client/Server-only Code
+        li>a(href="#stylesheets") Stylesheets
         li
           a(href="#deployment") Deployment
           ul
-            li
-              a(href="#mongodb") MongoDB
-            li
-              a(href="#heroku") Heroku
+            li>a(href="#mongodb") MongoDB
+            li>a(href="#heroku") Heroku
 
     section#main-content
 
@@ -266,7 +235,7 @@ body
           a(href="http://npmjs.com") npm
           | .
         pre(data-filename="Shell")
-          code(class="javascript")
+          code.javascript
             | $ cd my-app
             | $ npm install declaire --save
 
@@ -277,7 +246,7 @@ body
           | start the framework. This will make the application listen for requests on the server and for events
           | in the browser.
         pre(data-filename="app.js")
-          code(class="javascript")
+          code.javascript
             | var declaire = require('declaire');
             |
             | var app = declaire.Application({
@@ -314,7 +283,7 @@ body
           | Next, create your main layout template in the views folder.
           | Declaire will wrap it with an html tag automatically if you omit it.
         pre(data-filename="views/layout.tmpl")
-          code(class="handlebars")
+          code.handlebars
             | head
             |   title Todos
             |   link(href="/stylesheets/main.css" rel="stylesheet")
@@ -336,6 +305,11 @@ body
             |               input(type="text" placeholder="New Name" value="{:todo.name}" {{action enter finishRename(todo)}})
             |
             |     footer {todos.length} items left to do
+        .note
+          | Note that this example contains several planned, advanced features and will not currently run.
+          br
+          | Watch for warnings like this one throughout the documentation,
+          | to check which features already work and which don't.
         p
           | Finally, make sure you have a
           a(href="http://mongodb.org" target="_blank") MongoDB 
@@ -344,7 +318,7 @@ body
           a(href="http://nodejs.org" target="_blank") Node 
           | like you always have. Enjoy!
         pre(data-filename="Shell")
-          code(class="javascript")
+          code.javascript
             | $ node app.js
 
       article#structure
@@ -357,12 +331,12 @@ body
           | for usage in the browser.
         p To include another source file, just do as you're used to with node.
         pre(data-filename="app.js")
-          code(class="javascript")
+          code.javascript
             | var myModule = require('./src/myModule.js');
         p 
           | Your directory structure should look like follows by default.
         pre(data-filename="fs")
-          code(class="javascript")
+          code.javascript
             | /app
             |   .gitignore
             |   /public
@@ -382,17 +356,17 @@ body
             | Install modules using NPM. These will get packaged and delivered with your app bundle
             | automatically. Require as usual.
           pre(data-filename="Shell")
-            code(class="javascript")
+            code.javascript
               | $ npm install underscore --save
           pre(data-filename="app.js")
-            code(class="javascript")
+            code.javascript
               | var _ = require('underscore');
           p
             | If you want to use a specific module only on the client or the server,
             | require the module inside a conditional. Server-only code will be optimized away from
             | the served app bundle automatically.
           pre(data-filename="app.js")
-            code(class="javascript")
+            code.javascript
               | if(declaire.onServer()) {
               |   var NewRelic = require('newrelic');
               | }
@@ -432,7 +406,7 @@ body
             br
             | When an id or class is used, divs may have the tag name omited, as divs are the default.
           pre(data-filename="views/layout.tmpl")
-            code(class="javascript")
+            code.javascript
               | // Simple div with a class and some text
               | div.box Hello
               |
@@ -461,15 +435,16 @@ body
             br
             | When a path returns null or undefined, the engine will silently render nothing.
           pre(data-filename="views/layout.tmpl")
-            code(class="handlebars")
+            code.handlebars
               | h2 {title}
               | input(type="checkbox" checked="{done}")
           p
             | By default, text gets escaped before being inserted into the page, to prevent injection attacks.
             | If you precede the curlies with an exclamation mark though, you can insert unescaped text.
             | Use this at your own risk!
+          .note Two-Way Bindings are not yet implemented
           pre(data-filename="views/layout.tmpl")
-            code(class="handlebars")
+            code.handlebars
               | h2 !{title}
         
         section#bindings
@@ -478,7 +453,7 @@ body
             | Using double curlies in an attribute will create a two-way binding, meaning that the
             | input will also drive the connected model property when the user makes changes.
           pre(data-filename="views/layout.tmpl")
-            code(class="handlebars")
+            code.handlebars
               | input(type="checkbox" checked="{{done}}")
         
         section#text
@@ -487,16 +462,17 @@ body
             | When your text doesn't fit on a single line anymore, you can end a tag definition with a dot
             | and indent the following lines below. Text may also contain regular html tags.
           pre(data-filename="views/layout.tmpl")
-            code(class="handlebars")
+            code.handlebars
               | p.
               |   Lorem ipsum dolor sit amet
               |   Lorem ipsum <b>dolor</b> sit amet
+          .note The dot notation is not yet implemented
           p
             | Alternatively, you may insert text anywhere you would insert a regular tag, by preceding it
             | with the '|' character. This allows you to still insert intermediate tags using the regular
             | syntax. 
           pre(data-filename="views/layout.tmpl")
-            code(class="handlebars")
+            code.handlebars
               | p
               |   | Lorem ipsum
               |   a(href="#") dolor 
@@ -537,7 +513,7 @@ body
               | Only paths to model properties within the scope, as well as basic literals
               | are allowed, together with a fixed set of comparison operators. Inversion works too.
             pre(data-filename="views/layout.tmpl")
-              code(class="handlebars")
+              code.handlebars
                 | {{if person.name == 'Peter'}}
                 |   strong That's him!
                 |
@@ -548,14 +524,15 @@ body
                 |   dialog Waiting for connection ...
             p
               | One or several alternatives can be declared as well.
+            .note Statement alternatives are not yet implemented
             pre(data-filename="views/layout.tmpl")
-              code(class="handlebars")
+              code.handlebars
                 | {{if path}}
                 |   | path is truthy
                 | {{=>}}
                 |   | path is falsy
             pre(data-filename="views/layout.tmpl")
-              code(class="handlebars")
+              code.handlebars
                 | {{if}}
                 | {{=> value > 0}}
                 |   .green Positive
@@ -570,7 +547,7 @@ body
               | every item. When items get added to or removed from the collection later, the template
               | engine will only touch the affected parts of the DOM and leave other elements intact.
             pre(data-filename="views/layout.tmpl")
-              code(class="handlebars")
+              code.handlebars
                 | ul
                 |   {{for todo in todos}}
                 |     li {todo.title}
@@ -579,8 +556,9 @@ body
               | making its properties visible from that point downward in the template.
               | Note that its properties may shadow properties or variables of the same name, higher in
               | the scope. These can then no longer be reached.
+            .note The short form is not yet implemented
             pre(data-filename="views/layout.tmpl")
-              code(class="handlebars")
+              code.handlebars
                 | ul
                 |   {{for todos}}
                 |     li {title}
@@ -597,18 +575,18 @@ body
               | Optionally, the created view model instance can be given a name by which it will be accessible
               | in the scope. If you leave that out, the model itself will be inserted into the scope.
             pre(data-filename="views/layout.tmpl")
-              code(class="handlebars")
-                | {{if showViews}}
-                |   {{view MyViewModel as myView}}
-                |     h1 {myView.title}
-                |   {{view MyViewModel}}
-                |     h1 {title}
+              code.handlebars
+                | {{view MyViewModel as myView}}
+                |   h1 {myView.title}
+                | {{view MyViewModel}}
+                |   h1 {title}
+            .note Exposing view models by name is not yet implemented
             p
               | If you need to fetch data from the database to render the view, it is good practice to supply
               | an alternate piece of markup to render, should the application be offline and not find
               | the neccessary data in local storage.
             pre(data-filename="views/layout.tmpl")
-              code(class="handlebars")
+              code.handlebars
                 | {{view MyViewModel}}
                 |   h1 {myView.author.name}
                 | {{=>}}
@@ -617,17 +595,16 @@ body
             p
               | Any value accessible from the scope can be passed as an argument to the view model constructor.
             pre(data-filename="views/layout.tmpl")
-              code(class="handlebars")
+              code.handlebars
                 | {{for todo in todos}}
                 |   {{view TodoView(todo)}}
                 |     h1 {description}
             pre(data-filename="app.js")
-              code(class="javascript")
+              code.javascript
                 | declaire.ViewModel('TodoView', {
                 |   myTodo: null,
                 |   description: function() {
-                |     var todo = this.get('myTodo');
-                |     return todo && todo.get('title').toUpperCase();
+                |     return this.get('myTodo').get('title').toUpperCase();
                 |   }
                 | }, function(todo) {
                 |   this.set('myTodo', todo);
@@ -639,15 +616,15 @@ body
               | When the user generates events by interacting with the page, your application can react
               | using the action statement. It takes the name of an event on the element and a method to
               | look up in the scope as arguments.
-            p The method will get passed the originating DOM element as a parameter.
+            p The method will get passed the originating DOM element and the event object as parameters.
             pre(data-filename="views/layout.tmpl")
-              code(class="handlebars")
+              code.handlebars
                 | {{view MyView}}
                 |   input(type="text" {{action keyup method}})
             pre(data-filename="app.js")
-              code(class="javascript")
+              code.javascript
                 | declaire.ViewModel('MyView', {
-                |   method: function(input) {
+                |   method: function(e, input) {
                 |     console.log(input.val());
                 |   }
                 | });
@@ -659,39 +636,26 @@ body
               | reusable components:
               | Use the import statement to import another template in the surrounding template.
             pre(data-filename="views/myTemplate.tmpl")
-              code(class="handlebars")
+              code.handlebars
                 | h1 Import me!
             pre(data-filename="views/layout.tmpl")
-              code(class="handlebars")
+              code.handlebars
                 | {{import myTemplate}}
             p
-              | Parameters passed to the imported template are delegated to the topmost view inside.
-              | Inside the view, the passed object is then available under a different name, just
-              | like with functions in a programming language. 
+              | You can pass named parameters to the imported template which are then available
+              | in its scope. 
+            pre(data-filename="views/animal.tmpl")
+              code.handlebars
+                | .creature
+                |   .name {name}
+                |   .species {species}
+            pre(data-filename="views/layout.tmpl")
+              code.handlebars
+                | {{import animal(name: 'Lisa', species: 'Dog')}}
+                | {{import animal(name: 'Herbert', species: 'Cat')}}
             p
               | Templates always get a clean scope that contains only the main model and the parameters
               | passed. They don't inherit the calling scope.
-            pre(data-filename="views/MyView.tmpl")
-              code(class="handlebars")
-                | {{view MyView(word)}}
-                |   h1 {word}
-            pre(data-filename="views/layout.tmpl")
-              code(class="handlebars")
-                | {{import MyView('foo')}}
-                | {{import MyView('bar')}}
-            p
-              | This even works without a view model. In this case, the view statement simply works
-              | as a way to pass parameters to a reusable, dynamic template. 
-            pre(data-filename="views/animal.tmpl")
-              code(class="handlebars")
-                | {{view (name, species)}}
-                |   .creature
-                |     .name {name}
-                |     .species {species}
-            pre(data-filename="views/layout.tmpl")
-              code(class="handlebars")
-                | {{import animal('Lisa', 'Dog')}}
-                | {{import animal('Herbert', 'Cat')}}
 
           section#statements-content
             h4 content
@@ -702,7 +666,7 @@ body
               | This allows you to write components like dialogs, that act as wrappers around arbitrary
               | content.
             pre(data-filename="views/wrapper.tmpl")
-              code(class="handlebars")
+              code.handlebars
                 | header
                 |   h1 Own content
                 | article
@@ -710,7 +674,7 @@ body
                 | footer
                 |   .completely wrapped
             pre(data-filename="views/layout.tmpl")
-              code(class="handlebars")
+              code.handlebars
                 | {{import wrapper}}
                 |   h2 Inserted content
                 | {{import wrapper}}
@@ -721,12 +685,28 @@ body
             p
               | Use the route statement to evaluate markup only for specific URLs. The given URL can contain wildcards,
               | which are used to extract parts of the url and put them into the scope below the statement.
+            .note The route statement is not yet implemented
             pre(data-filename="views/layout.tmpl")
-              code(class="handlebars")
+              code.handlebars
                 | {{route /pages/users/:user}}
                 |   h1 Showing information for {user}
                 |   {{view UserView(user)}}
                 |     h2 Hello {firstName}
+
+          section#statements-as
+            h4 as
+            p
+              | Use the as statement to introduce a DOM element to the scope.
+              br
+              | This feature can be used to pass DOM elements to view model constructors and methods,
+              | instead of relying on class selectors etc.
+            .note The as statement is not yet implemented
+            pre(data-filename="views/layout.tmpl")
+              code.javascript
+                | // Import element into scope...
+                | input(type="text" {{as myInput}})
+                | // ...use it as an argument to a view model method
+                | button({{action click someMethod(myInput)}})
 
           section#statements-switch
             h4 switch
@@ -739,12 +719,13 @@ body
               | individual tabs in a tabbed container for instance. Use the switch statement to declare a number
               | of alternative states that are all kept in memory, while only a single element gets attached to
               | the DOM at any given point in time.
+            .note The switch statement is not yet implemented
             pre(data-filename="views/layout.tmpl")
-              code(class="handlebars")
+              code.handlebars
                 | {{switch probability > 0.8}}
                 |   {{view BadgeView}}
             pre(data-filename="views/layout.tmpl")
-              code(class="handlebars")
+              code.handlebars
                 | {{switch}}
                 | {{=> probability > 0.8}}
                 |   {{view GreenView}}
@@ -757,10 +738,9 @@ body
           h3 Comments
           p
             | Comments begin with <b>//</b> and extend to the end of the line.
-            | Comments always get their own line.
           pre(data-filename="views/layout.tmpl")
-            code(class="javascript")
-              | // This will not end up in your generated markup
+            code.javascript
+              | // This will NOT end up in your generated markup
 
       article#data-models
         h2 Data Models
@@ -773,7 +753,7 @@ body
         p
           | Note that model properties get accessed using the <b>get</b> and <b>set</b> methods and never directly.
         pre(data-filename="app.js")
-          code(class="javascript")
+          code.javascript
             | var Todo = declaire.Model('todos', {
             |   title: 'Untitled Todo',
             |   done: false,
@@ -790,13 +770,13 @@ body
           | persisted to the server yet. To make it visible to other users of the app as well,
           | we need to save it to the database using the appropriately named method.
         pre(data-filename="app.js")
-          code(class="javascript")
+          code.javascript
             | var todo = Todo.create({title: 'Foo'});
             | todo.check();
             | todo.save();
         p As a convenience, setting properties and saving immediately can be done in a single method call.
         pre(data-filename="app.js")
-          code(class="javascript")
+          code.javascript
             | todo.save({done: true});
         
         section#events
@@ -806,7 +786,7 @@ body
             | automatically to update the DOM when data in your models changes.
             | You can also access it yourself however, using a handful of methods:
           pre(data-filename="app.js")
-            code(class="javascript")
+            code.javascript
               | // Change events for individual properties trigger first
               | todo.on('change:title', function(title) {
               |   console.log("The title changed to " + title);
@@ -822,18 +802,27 @@ body
               | });
               |
               | // Destroy after use
-              | todo.once('change:done', function() {
+              | todo.once('change:done', function(done) {
               |   console.log("This will get called only once");
+              |   todo.delete();
               | });
               |
-              | // Called when new data arrived from the network,
+              | // Emitted when new data arrived from the network,
               | // on initial load or due to push updates
-              | todo.on('fetch', function(changes) {
-              |   console.log("This will fire last");
-              | });
+              | todo.on('fetch', function() {});
+              |
+              | // Emitted after an object got reset to the remote state
+              | todo.on('revert', function() {});
+              |
+              | // Emitted after successful perssistance to the server
+              | todo.on('save', function() {});
+              |
+              | // Emitted before the object gets deleted locally
+              | // and potentially after it was deleted remotely
+              | todo.on('delete', function() {});
           p The <b>on</b> method returns the handler itself, so that it can be unregistered again later:
           pre(data-filename="app.js")
-            code(class="javascript")
+            code.javascript
               | var handler = todo.on('change', function() {});
               | todo.off(handler);
           //- p What events are emited?
@@ -848,7 +837,7 @@ body
             | dependencies changes. These dependencies are tracked automatically upon the first
             | call to <b>get</b> and will subsequently get updated on every access.
           pre(data-filename="app.js")
-            code(class="javascript")
+            code.javascript
               | var Person = declaire.Model('people', {
               |   firstName: '',
               |   lastName: '',
@@ -858,7 +847,7 @@ body
               |   }
               | });
           pre(data-filename="views/ContactView.tmpl")
-            code(class="handlebars")
+            code.handlebars
               | h1 {name}
 
         section#realtime
@@ -871,7 +860,7 @@ body
             | If you want to purge your local changes and revert back to the most recent database state,
             | simply call the <b>revert</b> method.
           pre(data-filename="app.js")
-            code(class="javascript")
+            code.javascript
               | todo.set({done: true});
               | todo.get('done'); // true
               | todo.revert();
@@ -881,7 +870,7 @@ body
             | generic change event, the model will also fire a fetch event, that carries a hash of actual
             | changes. Note that the fetch event will also be fired when its list of changes is empty.
           pre(data-filename="app.js")
-            code(class="javascript")
+            code.javascript
               | // Called when new data arrived from the network,
               | // on initial load or due to push updates
               | todo.on('fetch', function(changes) {});
@@ -900,7 +889,7 @@ body
             | To use further references in the referenced model objects, these must then be resolved first.
             | Use the <b>resolve</b> method to do that.
           pre(data-filename="app.js")
-            code(class="javascript")
+            code.javascript
               | Todo.load(todoId, function(todo) {
               |   var author = todo.get('author');
               |   // Regular properties are immediately available
@@ -915,6 +904,32 @@ body
           h3 Local Storage
           p
             | 
+          .note This feature is not fully implemented yet
+
+        section#model-history
+          h3 History & Rollback
+          p
+            | Use the UndoManager class to manage collections of related model instances that you want to
+            | keep track of as a whole.
+            br
+            | After setting and/or saving several related model properties you can save these changes as
+            | an atomic unit using the step method.
+          pre(data-filename="app.js")
+            code.javascript
+              | var manager = declaire.UndoManager([todo, user]);
+              | todo.set({done: true, title: 'New Title'});
+              | user.get('todos').add(todo);
+              | manager.step();
+          p
+            | You can now navigate between all saved milestones using the back and forward methods.
+          pre(data-filename="app.js")
+            code.javascript
+              | manager.back();
+              | manager.forward();
+          p
+            | Note that calling the step method as well as the navigation methods will actually save your
+            | models to the database. You can thus also use an undo manager to easily save a whole collection
+            | of related objects in a single step, without ever making use of the actual undo functionality.
 
       article#view-models
         h2 View Models
@@ -932,7 +947,7 @@ body
           | fresh model instance as a parameter. If you manually allocate any resources or connect any event handlers
           | here, make sure that you also register for the <b>remove</b> event, to clean that up at the appropriate time.
         pre(data-filename="app.js")
-          code(class="javascript")
+          code.javascript
             | declaire.ViewModel('Clock', {
             |   time: null
             | }, function() {
@@ -946,7 +961,7 @@ body
             |   });
             | });
         pre(data-filename="views/layout.tmpl")
-          code(class="handlebars")
+          code.handlebars
             | {{view Clock}}
             |   time {time}
         p
@@ -972,7 +987,7 @@ body
           | You can force a collection to resolve by requesting its <b>values</b>, either through the method
           | of that name, implicitly by using its <b>each</b> method, or by calling the .
         pre(data-filename="app.js")
-          code(class="javascript")
+          code.javascript
             | var c = declaire.Collection([1, 2, 3]);
             | c.push(4);
             | c.serialize() // [1,2,3,4]
@@ -1003,26 +1018,33 @@ body
       article#queries
         h2 Queries
         p
-          | Queries are a specific type of collection that filters its contents according to a
-          | given database query object. Once created, a query remains active, meaning that
-          | matching objects that get added to the database will
+          | Queries filter collections and models according to a
+          | given query object. Once created, a query remains active, meaning that
+          | matching objects that get added to the database or collection will
           | show up after the fact and trigger the appropriate events. A Query will also update
           | when one of the properties filtered over changes for one of the objects in the collection.
         p
           | Queries can be narrowed down further, by calling the chainable filter method:
         pre(data-filename="app.js")
-          code(class="javascript")
-            | var finishedTodos = declaire.Query(Todo.all, {done: true});
+          code.javascript
+            | var finishedTodos = declaire.Query(Todo, {done: true});
             | var aboutSports = finishedTodos.filter({title: {$contains: 'sport'}});
-            | // Use like a regular collection
-            | aboutSports.each(function(todo) {
-            |   todo.remove();
+            |
+            | // Calling all() will actually execute the built up query
+            | // and return a collection of matching items
+            | aboutSports.all(function(todos) {
+            |   todos.each(function(todo) {
+            |     todo.remove();
+            |   });
             | });
-        p We can use a Query in a computed property together with an input binding for creating a live search feature:
+        p
+          | We can use a Query in a computed property together with an input binding for creating a live search feature.
+          br
+          | Note that we construct the query using the shorthand all() method on a model.
         pre(data-filename="app.js")
-          code(class="javascript")
+          code.javascript
             | declaire.ViewModel('SearchUsersView', {
-            |   people: declaire.Query(Person.all),
+            |   people: Person.all(),
             |   query: '',
             |   results: function() {
             |     // Filter works flawlessly on Person.name, btw,
@@ -1031,7 +1053,7 @@ body
             |   }
             | });
         pre(data-filename="views/searchUsers.tmpl")
-          code(class="handlebars")
+          code.handlebars
             | {{view SearchUsersView}}
             |   input(type="text" placeholder="Search for people" value="{{query}}")
             |   ul
@@ -1104,12 +1126,12 @@ body
           h3 Accessing the Main Model Singleton Instance
           p As a part of any scope, its properties are available in any template.
           pre(data-filename="views/layout.tmpl")
-            code(class="handlebars")
+            code.handlebars
               | {{if !_online}}
               |   dialog Waiting for connection ...
           p The main model can also be accessed from javascript as a field on the main module.
           pre(data-filename="app.js")
-            code(class="javascript")
+            code.javascript
               | declaire.mainModel.on('change:_version', function(v) {
               |   if(confirm('Reload to install new version?')) {
               |     window.location = window.location;
@@ -1126,7 +1148,7 @@ body
           | Because it's a regular model object, it will emit change events when its
           | properties are written to, which are in turn caught by the template engine.
         pre(data-filename="views/layout.tmpl")
-          code(class="handlebars")
+          code.handlebars
             | body
             |   header
             |     h1 My Page
@@ -1140,10 +1162,11 @@ body
             |       {{import TodosView(_page.params)}}
         p If you want to access the router more directly, listen to its events using Javascript:
         pre(data-filename="app.js")
-          code(class="javascript")
+          code.javascript
             | declaire.mainModel.get('_page').on('change:route', function(route) {
             |   console.log("The url changed to " + route);
             | });
+        p For more complex routing, see the <a href="#statements-route">route statement</a>.
 
       article#client-only
         h2 Running Client/Server-only Code
@@ -1155,7 +1178,7 @@ body
           | Declaire accepts several hooks in its start method, that get executed at specific points
           | in time. Some on the server, some on the client:
         pre(data-filename="app.js")
-          code(class="javascript")
+          code.javascript
             | console.log("Executed once on both client and server");
             |
             | declaire.start({
@@ -1171,7 +1194,7 @@ body
           | Declaire also provides helper methods to exclude arbitrary code segments, that can
           | be used both with a callback, or as a regular function:
         pre(data-filename="app.js")
-          code(class="javascript")
+          code.javascript
             | // Continuation passing style
             | declaire.onServer(function() { });
             |
@@ -1181,7 +1204,7 @@ body
           | You can also require additional npm modules on one side only.
           | Modules which are only required on the server will not be included in the javascript bundle.
         pre(data-filename="app.js")
-          code(class="javascript")
+          code.javascript
             | if(declaire.onServer()) require('newrelic');
 
       article#offline
@@ -1217,7 +1240,7 @@ body
           | These are great libraries and the indented syntax matches Declaire nicely.
           | Among lots of other functionality, they provide you with:
         pre(data-filename="stylesheets/main.styl")
-          code(class="less")
+          code.less
             | // Server side imports
             | @require 'nib'
             |
@@ -1246,7 +1269,7 @@ body
           | Simply put your stylus files into the stylesheets folder of your application
           | and they will be served under the identical path, just with the .css extension.
         pre(data-filename="views/layout.tmpl")
-          code(class="handlebars")
+          code.handlebars
             | head
             |   link(href="/stylesheets/main.css" rel="stylesheet")
 
@@ -1272,7 +1295,7 @@ body
             a(href="http://heroku.com" target="_blank") Heroku
             | , this allows Declaire apps to connect to these popular services automagically.
           pre(data-filename="app.js")
-            code(class="javascript")
+            code.javascript
               | declaire.start({
               |   mongoUrl: 'mongodb://my-host:27017/my-app'
               | });
@@ -1285,7 +1308,7 @@ body
             a(href="http://heroku.com" target="_blank") Heroku
             | :
           pre(data-filename="Shell")
-            code(class="javascript")
+            code.javascript
               | // Go to your app folder
               | $ cd my-app
               | // Initialize a git repository here

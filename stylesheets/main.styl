@@ -77,7 +77,7 @@ pre
     color: $main
     // font-family: $baseFont
   &[data-filename="fs"]
-    &:after
+    &::after
       content: "\f0e8"
       font-family: FontAwesome
       text-rendering: auto
@@ -174,6 +174,25 @@ main
     color: $black * 0.7
   p
     font-size: 0.9rem
+
+.note
+  background: #FFFCDC
+  border: 1px solid #CC870A
+  padding: 0.4rem 0.5rem
+  padding-left: 2rem
+  display: inline-block
+  color: #A25B0B
+  border-radius: 2px
+  font-size: 0.8rem
+  font-weight: 500
+  line-height: 1.3
+  position: relative
+  &::before
+    content: "\f071"
+    font-family: FontAwesome
+    color: #FF7E00
+    position: absolute
+    left: 0.5rem
 
 .list
   li

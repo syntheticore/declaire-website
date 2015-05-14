@@ -20,7 +20,7 @@
   },
   "homepage": "https://github.com/syntheticore/declaire-website",
   "dependencies": {
-    "declaire": "^0.1.47",
+    "declaire": "^0.1.49",
     "font-awesome": "^4.3.0",
     "highlight.js": "^8.5.0",
     "newrelic": "^1.18.2"

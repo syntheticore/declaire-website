@@ -1,6 +1,7 @@
 if(typeof(window) == 'undefined') { require('newrelic') }
 
 var declaire = require('declaire');
+var _ = declaire.Utils;
 var hljs = require('highlight.js');
 
 var app = declaire.Application({
@@ -8,10 +9,14 @@ var app = declaire.Application({
   npmPublic: ['font-awesome', 'highlight.js']
 });
 
-app.init(function(start, express, db) {
-  start(function() {
-    if(declaire.Utils.onClient()) {
-      hljs.initHighlighting();
-    }
-  });
+app.ViewModel('IndexView', {}, null, function() {
+  if(_.onClient()) {
+    this.el.find("code").each(function() { 
+      hljs.highlightBlock(this);
+    });
+  }
+});
+
+app.init(function(start) {
+  start();
 });

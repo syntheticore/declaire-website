@@ -1,0 +1,68 @@
+article#todos
+  h2 Todos Application with renaming
+  p
+    | This is a more complete version of the Todos demo application on the start
+    | page. It allows for renaming todos by clicking on their title and it tracks
+    | the number of finished and unfinished todos separately.
+  .note
+    | Note that this example contains several planned, advanced features and will not currently run.
+    br
+    | Watch for warnings like this one throughout the documentation,
+    | to check which features already work and which don't.
+  pre(data-filename="app.js")
+    code.javascript
+      | var declaire = require('declaire');
+      |
+      | var app = declaire.Application({
+      |   mongoDevUrl: 'mongodb://127.0.0.1:27017/todos'
+      | });
+      |
+      | var Todo = app.Model('todos', {
+      |   title: 'Untitled Todo',
+      |   done: false
+      | });
+      |
+      | app.ViewModel('TodosView', {
+      |   todos: Todo.all(),
+      | 
+      |   newTodo: function(e, input) {
+      |     Todo.create({title: input.val()}).save();
+      |     input.val('');
+      |   },
+      |
+      |   rename: function(e, todo) {
+      |     todo.setTemporary('renaming', true);
+      |   },
+      |
+      |   finishRename: function(e, todo) {
+      |     todo.save({name: e.element.val()});
+      |     todo.setTemporary('renaming', false);
+      |   }
+      | });
+      |
+      | app.init(function(start) {
+      |   start();
+      | });
+  pre(data-filename="views/layout.tmpl")
+    code.handlebars
+      | head
+      |   title Todos
+      |   link(href="/stylesheets/main.css" rel="stylesheet")
+      | body
+      |   {{view TodosView}}
+      |     header
+      |       h1 Todos
+      |     main
+      |       form({{action submit newTodo(input)}})
+      |         input(type="text" placeholder="What's next?" {{as ::input}})
+      |         button Create Todo
+      |       ul.todos
+      |         {{for todo in todos}}
+      |           li>label
+      |             input(type="checkbox" checked="{todo.done!!}")
+      |             h2({{action click rename(todo)}}) {todo.title}
+      |             button({{action click todo.delete}}) Delete
+      |             {{if todo.renaming}}
+      |               input(type="text" placeholder="New Name" value="{:todo.name}" {{action enter finishRename(todo)}})
+      |
+      |     footer {todos.length} items left to do

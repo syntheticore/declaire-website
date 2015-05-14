@@ -9,6 +9,9 @@ head
   link(href="/stylesheets/main.css" rel="stylesheet")
   link(href="/font-awesome/css/font-awesome.min.css" rel="stylesheet")
   link(href="/highlight.js/styles/github.css" rel="stylesheet")
+
+  script(src="/bundle.js" async="async")
+
   link(rel="shortcut icon" href="/favicon.png")
 
 body
@@ -30,7 +33,7 @@ body
   main
     header
       h1 Declaire.js
-      h2 A minimal, yet complete Web Application Framework
+      h2 A declarative, full stack Web Application Framework
       a.cta(href="#install") Get Started
       
     article#features
@@ -199,6 +202,7 @@ body
                 li>a(href="#statements-route") route
                 li>a(href="#statements-as") as
                 li>a(href="#statements-switch") switch
+                li>a(href="#statements-client") client
             li>a(href="#comments") Comments
         li
           a(href="#data-models") Data Models
@@ -261,16 +265,16 @@ body
             | app.ViewModel('TodosView', {
             |   todos: Todo.all(),
             | 
-            |   newTodo: function(input) {
+            |   newTodo: function(e, input) {
             |     Todo.create({title: input.val()}).save();
             |     input.val('');
             |   },
             |
-            |   rename: function(todo) {
+            |   rename: function(e, todo) {
             |     todo.setTemporary('renaming', true);
             |   },
             |
-            |   finishRename: function(todo, e) {
+            |   finishRename: function(e, todo) {
             |     todo.save({name: e.element.val()});
             |     todo.setTemporary('renaming', false);
             |   }
@@ -298,7 +302,7 @@ body
             |       ul.todos
             |         {{for todo in todos}}
             |           li>label
-            |             input(type="checkbox" checked="{{bind! todo.done}}")
+            |             input(type="checkbox" checked="{todo.done!!}")
             |             h2({{action click rename(todo)}}) {todo.title}
             |             button({{action click todo.delete}}) Delete
             |             {{if todo.renaming}}
@@ -442,7 +446,7 @@ body
             | By default, text gets escaped before being inserted into the page, to prevent injection attacks.
             | If you precede the curlies with an exclamation mark though, you can insert unescaped text.
             | Use this at your own risk!
-          .note Two-Way Bindings are not yet implemented
+          .note Unescape is not yet implemented
           pre(data-filename="views/layout.tmpl")
             code.handlebars
               | h2 !{title}
@@ -450,11 +454,16 @@ body
         section#bindings
           h3 Two-way Bindings
           p
-            | Using double curlies in an attribute will create a two-way binding, meaning that the
-            | input will also drive the connected model property when the user makes changes.
+            | Using an exclamation mark at the end of a path in an attribute binding will create a two-way binding,
+            | meaning that the input will also drive the connected model property when the user makes changes.
           pre(data-filename="views/layout.tmpl")
             code.handlebars
-              | input(type="checkbox" checked="{{done}}")
+              | input(type="checkbox" checked="{done!}")
+          p
+            | Use another exclamation mark to not only set the model property, but also save it to the server.
+          pre(data-filename="views/layout.tmpl")
+            code.handlebars
+              | input(type="checkbox" checked="{done!!}")
         
         section#text
           h3 Text
@@ -700,7 +709,6 @@ body
               br
               | This feature can be used to pass DOM elements to view model constructors and methods,
               | instead of relying on class selectors etc.
-            .note The as statement is not yet implemented
             pre(data-filename="views/layout.tmpl")
               code.javascript
                 | // Import element into scope...
@@ -733,6 +741,30 @@ body
                 |   {{view OrangeView}}
                 | {{=>}} // Default
                 |   {{view RedView}}
+
+          section#statements-client
+            h4 client
+            p
+              | Use the client statement to omit sections of your template from server rendering.
+            .note The client statement is not yet implemented
+            pre(data-filename="views/layout.tmpl")
+              code.handlebars
+                | {{client}}
+                |   h1 Interactive demo
+                |   canvas({{action mousemove onMouseMove}})
+            p
+              | In same cases this can make your html even more semantic.
+              | Consider links in a document for example, that you might spice up at runtime by surfacing information
+              | about their target resource on mouse hover.
+              br
+              | You might render this as a simple anchor tag on the server,
+              | but use a more elaborate widget on the client, which would not by semantically describable using HTML anyway.
+            pre(data-filename="views/layout.tmpl")
+              code.handlebars
+                | {{client}}
+                |   {{import CrazyWidget('/my/resource')}}
+                | {{=>}}
+                |   a(href="/my/resource") Check this!
 
         section#comments
           h3 Comments
@@ -1376,8 +1408,6 @@ body
         | Declaire was built with ❤ by
         a(href="https://github.com/syntheticore") Björn Breitgoff 
         | in Aachen, Germany
-
-  script(src="/bundle.js" async)
 
   script
     | (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

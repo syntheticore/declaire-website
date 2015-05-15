@@ -191,6 +191,7 @@
       li>a(href="#main-model") Main Model Instance
       li>a(href="#offline") Offline Support
       li>a(href="#client-only") Client/Server-only Code
+      li>a(href="#service-models") Service Models
       li>a(href="#stylesheets") Stylesheets
       li
         a(href="#deployment") Deployment
@@ -317,9 +318,9 @@
         p
           | You can put your source files anywhere you like, but the src folder is a good idea.
           | When you declare models or view models in your external files, you don't have access
-          | to your applications object to aid in defining these. Instead use the methods of the
+          | to your applications object to aid in defining these. Instead, use the methods of the
           | same name on the main declaire object.
-        pre(data-filename="app.js")
+        pre(data-filename="src/models/todo.js")
           code.javascript
             | var declaire = require('declaire');
             | 
@@ -328,12 +329,13 @@
             |   done: false
             | });
         p
-          | You can then call the application's use method to include your external models in
+          | You can then call the application's use method to register your external models with
           | your application.
         pre(data-filename="app.js")
           code.javascript
             | var Todo = app.use(require('./src/models/todo.js'));
             | app.use(require('./src/views/MyView.js'));
+        p Make sure all your models are registered before calling app.<b>init</b>()!
       
       section#installing-modules
         h3 Installing and Loading NPM Modules
@@ -344,10 +346,10 @@
           | automatically. Require as usual.
         pre(data-filename="Shell")
           code.javascript
-            | $ npm install underscore --save
+            | $ npm install jquery --save
         pre(data-filename="app.js")
           code.javascript
-            | var _ = require('underscore');
+            | var $ = require('jquery');
         p
           | If you want to use a specific module only on the client or the server,
           | require the module inside a conditional. Server-only code will be optimized away from
@@ -728,7 +730,6 @@
           h4 client
           p
             | Use the client statement to omit sections of your template from server rendering.
-          .note The client statement is not yet implemented
           pre(data-filename="views/layout.tmpl")
             code.handlebars
               | {{client}}
@@ -1251,6 +1252,54 @@
         | more about its internal state though, the 
         a(href="#main-model") main model 
         | contains several fields of interest.
+
+    article#service-models
+      h2 Service Models
+      p
+        | Service Models offer a seamless way to integrate external services into a declaire
+        | application.
+        br
+        | Data will be mapped to a regular model object that can be consumed by
+        | applications like any other model instance.
+      p
+        | This means not only that your templates and queries will update automatically as new
+        | data arrives, but also brings other advantages:
+      ul
+        li
+          h3 Performance
+          p Slow requests to the API can not slow down your page loads.
+          p
+            | The render cache knows when data changes and can invalidate render fragments in a
+            | fine-grained way.
+        li
+          h3 Robustness
+          p
+            | You don't introduce another point of failure, as declaire can handle unresponsive
+            | services gracefully.
+        li
+          h3 Offline Capability
+          p Once requested, data transparently remains available offline as with any model object.
+      .note Service models are not implemented yet
+      pre(data-filename="app.js")
+        code.javascript
+          | var Twitter = app.ServiceModel('tweets', {
+          |   endpoint: 'http://api.twitter.com' 
+          | }, {
+          |   user_name: 'userName',
+          |   hash_tags: 'hashes'
+          | });
+          |
+          | app.ViewModel('TwitterView', {
+          |   tweets: Twitter.all({hashTags: {$contains: 'yolo'}})
+          | });
+      pre(data-filename="views/layout.tmpl")
+        code.handlebars
+          | {{for tweets}}
+          |   h2 {userName} said:
+          |   p {text}
+          |   ul.tags
+          |     {{for tag in hashes}}
+          |       li {tag}
 
     article#stylesheets
       h2 Stylesheets

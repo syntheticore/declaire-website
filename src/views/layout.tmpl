@@ -31,11 +31,11 @@ body
         //-   a(href="https://github.com/syntheticore/declaire") Github
 
   main
-    {{if-equal _page 'index'}}
+    {{route /pages/index}}
       {{view IndexView}}
         {{import index}}
     
-    {{if-equal _page 'demos'}}
+    {{route /pages/demos}}
       {{import demos}}
 
   footer#footer

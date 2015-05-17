@@ -460,7 +460,6 @@
             | p.
             |   Lorem ipsum dolor sit amet
             |   Lorem ipsum <b>dolor</b> sit amet
-        .note The dot notation is not yet implemented
         p
           | Alternatively, you may insert text anywhere you would insert a regular tag, by preceding it
           | with the '|' character. This allows you to still insert intermediate tags using the regular
@@ -518,7 +517,6 @@
               |   dialog Waiting for connection ...
           p
             | One or several alternatives can be declared as well.
-          .note Statement alternatives are not yet implemented
           pre(data-filename="views/layout.tmpl")
             code.handlebars
               | {{if path}}
@@ -534,6 +532,7 @@
               |   div Zero
               | {{=>}} // Default
               |   .red Negative
+          .note Multiple alternative branches are not yet implemented
         section#statements-for
           h4 for
           p
@@ -678,13 +677,22 @@
           p
             | Use the route statement to evaluate markup only for specific URLs. The given URL can contain wildcards,
             | which are used to extract parts of the url and put them into the scope below the statement.
-          .note The route statement is not yet implemented
           pre(data-filename="views/layout.tmpl")
             code.handlebars
               | {{route /pages/users/:user}}
               |   h1 Showing information for {user}
               |   {{view UserView(user)}}
               |     h2 Hello {firstName}
+          p You can provide several alternatives and a default route, which is matched if no other route matches.
+          .note Route alternatives are not implemented yet
+          pre(data-filename="views/layout.tmpl")
+            code.handlebars
+              | {{route /pages/users/:user}}
+              |   {{import UserView(user)}}
+              | {{=> /pages/projects/:project}}
+              |   {{import ProjectView(project)}}
+              | {{=>}}
+              |   {{import NotFoundView}}
 
         section#statements-as
           h4 as

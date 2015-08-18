@@ -27,16 +27,21 @@ body
           a(href="#install") Get Started
         li
           a(href="/pages/docs") Documentation
+        li
+          a(href="/pages/examples") Examples
         //- li
         //-   a(href="https://github.com/syntheticore/declaire") Github
 
   main
-    {{route /pages/index}}
-      {{view IndexView}}
+    {{view HighlightView}}
+      {{route /pages/index}}
         {{import index}}
-    
-    {{route /pages/demos}}
-      {{import demos}}
+      
+      {{route /pages/demos}}
+        {{import demos}}
+
+      {{route /pages/examples}}
+        {{import examples}}
 
   footer#footer
     ul.blocks

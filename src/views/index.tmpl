@@ -144,11 +144,12 @@
       li>a(href="#install") Installation
       li
         a(href="#structure") Project Structure
-        ul
-          li>a(href="#installing-modules") Installing Modules
+        //- ul
+        //-   li>a(href="#installing-modules") Installing Modules
       li
         a(href="#templating") Templating
         ul
+          li>a(href="#comments") Comments
           li>a(href="#tags") Basic HTML Tags
           li>a(href="#interpolation") Interpolation
           li>a(href="#bindings") Two-way Bindings
@@ -156,44 +157,43 @@
           li>a(href="#scope") Scope
           li
             a(href="#statements") Statements
-            ul
-              li>a(href="#statements-if") if
-              li>a(href="#statements-for") for
-              li>a(href="#statements-view") view
-              li>a(href="#statements-action") action
-              li>a(href="#statements-import") import
-              li>a(href="#statements-content") content
-              li>a(href="#statements-route") route
-              li>a(href="#statements-as") as
-              li>a(href="#statements-switch") switch
-              li>a(href="#statements-client") client
-          li>a(href="#comments") Comments
+            //- ul
+            //-   li>a(href="#statements-if") if
+            //-   li>a(href="#statements-for") for
+            //-   li>a(href="#statements-view") views
+            //-   li>a(href="#statements-action") action
+            //-   li>a(href="#statements-import") import
+            //-   li>a(href="#statements-content") content
+            //-   li>a(href="#statements-route") route
+            //-   li>a(href="#statements-as") as
+            //-   li>a(href="#statements-switch") switch
+            //-   li>a(href="#statements-client") client
       li
         a(href="#data-models") Data Models
         ul
           li>a(href="#events") Events
           li>a(href="#computed-properties") Computed Properties
-          li>a(href="#realtime") Realtime Updates
+          //- li>a(href="#realtime") Realtime Updates
           li>a(href="#relations") Relations
-          li>a(href="#model-offline") Local Storage
+          //- li>a(href="#model-offline") Local Storage
           li>a(href="#model-history") History & Rollback
       li>a(href="#view-models") View Models
       li>a(href="#collections") Collections
       li>a(href="#queries") Queries
       li
-        a(href="#routing") Routing
-        ul
-          li>a(href="#routing") Navigation
+        a(href="#routing") Routing & Navigation
+        //- ul
+        //-   li>a(href="#routing") Navigation
       li>a(href="#main-model") Main Model Instance
       li>a(href="#offline") Offline Support
-      li>a(href="#client-only") Client/Server-only Code
+      //- li>a(href="#client-only") Client/Server-only Code
       li>a(href="#service-models") Service Models
       li>a(href="#stylesheets") Stylesheets
       li
         a(href="#deployment") Deployment
-        ul
-          li>a(href="#mongodb") MongoDB
-          li>a(href="#heroku") Heroku
+        //- ul
+        //-   li>a(href="#mongodb") MongoDB
+        //-   li>a(href="#heroku") Heroku
 
   section.main-content
 
@@ -266,10 +266,10 @@
               footer {todos.length} items left to do
       p.
         Finally, make sure you have a
-        a(href="http://mongodb.org" target="_blank") MongoDB 
+        <a href="http://mongodb.org" target="_blank">MongoDB</a>
         instance running on your local machine and run your
         application with
-        a(href="http://nodejs.org" target="_blank") Node 
+        <a href="http://nodejs.org" target="_blank">Node</a>
         like you always have. Enjoy!
       pre(data-filename="Shell")
         code.javascript.
@@ -277,7 +277,7 @@
       p.
         For a more complete example with additional features and a detailed explanation
         of how the application works, see the 
-        a(href="/pages/demos#todos") demos
+        <a href="/pages/examples">examples</a>
          page!
 
     article#structure
@@ -286,7 +286,7 @@
         Node.js uses the CommonJS standard for the definition and import of modules.
         Your Declaire app will use it too, because it must be able to run on
         the server as well. Declaire will package and serve your code using
-        a(href="http://browserify.org" target="_blank") Browserify 
+        <a href="http://browserify.org" target="_blank"> Browserify </a>
         for usage in the browser.
       p To include another source file, just do as you're used to with node.
       pre(data-filename="app.js")
@@ -360,11 +360,11 @@
       h2 Templating
       p.
         Declaire's templating language borrows syntax heavily from 
-        a(href="http://jade-lang.com" target="_blank") Jade 
+        <a href="http://jade-lang.com" target="_blank">Jade</a>
         and
-        a(href="http://handlebarsjs.com" target="_blank") Handlebars
+        <a href="http://handlebarsjs.com" target="_blank">Handlebars</a>
         , takes the streaming execution model from
-        a(href="https://github.com/raptorjs/marko" target="_blank") Marko 
+        <a href="https://github.com/raptorjs/marko" target="_blank">Marko</a>
         and hooks natively into declaire's models.
       p.
         Hierachy is denoted through indentation, interpolation uses curlies, statements use double
@@ -381,6 +381,14 @@
         to the client already, while it's still waiting for the database to return  further data.
         The asynchronous resolution of data in the view models is also taken into account and
         the generated html is reassembled and streamed in the correct order.
+
+      section#comments
+        h3 Comments
+        p.
+          Comments begin with <b>//</b> and extend to the end of the line.
+        pre(data-filename="views/layout.tmpl")
+          code.javascript.
+            // This will NOT end up in your generated markup
       
       section#tags
         h3 Basic HTML Tags
@@ -753,14 +761,6 @@
               {{=>}}
                 a(href="/my/resource") Check this!
 
-      section#comments
-        h3 Comments
-        p.
-          Comments begin with <b>//</b> and extend to the end of the line.
-        pre(data-filename="views/layout.tmpl")
-          code.javascript.
-            // This will NOT end up in your generated markup
-
     article#data-models
       h2 Data Models
       p.
@@ -1100,7 +1100,7 @@
           When a query is evaluated, it is performed against the local model cache first, returning
           results almost immediately. When the user is online, a live query to the database is
           then performed in the background, to fetch additional matching objects from the server.
-          br
+          <br>
           When these arrive, change events, as well as fetch event, will be emited by
           the query, causing bound views und dependent properties to update.
 
@@ -1111,15 +1111,12 @@
         by the framework. It is not meant to be written to directly.
       p.
         It contains several properties of interest to
-        a(href="#routing") routing
-        ,
-        a(href="#offline") offline handling
-        ,
-        a(href="#session") session
-        ,
-        a(href="#components") components 
+        <a href="#routing">routing</a>,
+        <a href="#offline">offline handling</a>,
+        <a href="#session">session</a>,
+        <a href="#components">components</a>
         and potentially any application.
-        br
+        <br>
         Property names start with an underscore to prevent name collisions with your own properties.
       section
         h4 _page

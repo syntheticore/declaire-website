@@ -23,9 +23,10 @@
           RESTfull resources get served for your models automatically, without the need to write
           additional code. Just define a data model, create instances and you're good to go.
         p.
-          Stylesheets written in <a href="http://learnboost.github.io/stylus/" target="_blank">Stylus</a>
-          /<a href="http://tj.github.io/nib/" target="_blank">Nib</a> are compiled and served
-          automatically for you.
+          Stylesheets written in
+          <a href="http://learnboost.github.io/stylus/" target="_blank">Stylus</a> /
+          <a href="http://tj.github.io/nib/" target="_blank">Nib</a>
+          are compiled and served automatically for you.
       
       li
         h3 Declarative
@@ -77,8 +78,8 @@
         h3 Streaming Server
         p.
           When templates get first rendered on the server, Declaire utilises 
-          <a href="http://nodejs.org" target="_blank">Node.js</a>
-          ' streaming technology to transmit the first few bytes as soon as possible. Browsers can
+          <a href="http://nodejs.org" target="_blank">Node.js</a>'
+          streaming technology to transmit the first few bytes as soon as possible. Browsers can
           already display content and start downloading additional resources, while the database
           is still returning data.
       
@@ -93,13 +94,12 @@
           Data is stored in a 
           <a href="http://mongodb.org" target="_blank">MongoDB</a>
           instance, and code is packaged using 
-          <a href="http://browserify.org" target="_blank">Browserify</a>
-          .
+          <a href="http://browserify.org" target="_blank">Browserify</a>.
         p.
           The express app, as well as the connected database instance are exposed to interested
           applications just before listening for requests.
           This allows you to hook up legacy code or load additional 
-          <a href="http://expressjs.com/resources/middleware.html" target="_blank">express middleware </a>
+          <a href="http://expressjs.com/resources/middleware.html" target="_blank">express middleware</a>
           and make changes to the database before serving requests.
 
       li
@@ -121,16 +121,16 @@
         h3 ❤ ing the Web
         p.
           In the transition from server generated pages to single-page applications, some values
-          of the web have - I believe - been lost in translation.
-        //- p
-        //-   Pages often only contain a small fragment of
-        //-   container html and generate everything else using javascript. Some frameworks these days
-        //-   even go as far as bypassing the http protocol completely and transmit everything over websockets.
-        //- p
-        //-   This is not only problematic for search engines and comparatively slow when it comes to
-        //-   time to first impression, but also undermines the movement to semantic html somewhat,
-        //-   by relying on a "semantic DOM" that only high-powered, javascript-savy browser engines
-        //-   can still consume, instead of, say, a simple shell script.
+          of the web have been - I believe - lost in translation.
+        p.
+          Pages often only contain a small fragment of
+          container html and generate everything else using javascript.<br>Some frameworks these days
+          even go as far as bypassing the http protocol completely and transmit everything over websockets.
+        p.
+          This is not only problematic for search engines and comparatively slow when it comes to
+          time to first impression, but also undermines the movement to semantic html somewhat,
+          by relying on a "semantic DOM" that only high-powered, javascript-savy browser engines
+          can still consume, instead of, say, a simple shell script.
         p.
           Declaire therefore delivers:
         ul.list
@@ -201,8 +201,7 @@
       h2 Install Declaire
       p.
         Install Declaire into any node application using 
-        a(href="http://npmjs.com") npm
-        .
+        <a href="http://npmjs.com">npm</a>.
       pre(data-filename="Shell")
         code.javascript.
           $ cd my-app.
@@ -396,26 +395,26 @@
           Use the <b>#</b> character to give elements an id, apply classes using <b>.</b> and
           set attributes in parentheses using the regular html notation. Text may follow on the
           same line, or other tags may be indented below.
-          br
+          <br>
           When an id or class is used, divs may have the tag name omited, as divs are the default.
         pre(data-filename="views/layout.tmpl")
           code.javascript.
             // Simple div with a class and some text
             div.box Hello
-            |
+            
             // The same
             .box Hello
-            |
+            
             // Nest tags through indentation
             nav
               ul.items
                 li
                   a(href="#") Item1
-            |
+            
             // Make this a little shorter for elements with a single child
             nav>ul.items
               li>a(href="#") Item1
-            |
+            
             // Input with an id and several classes and attributes
             input#my-id.foo.bar(type="checkbox" checked)
 
@@ -425,7 +424,7 @@
           Any value available in the surrounding scope can be interpolated at any practical point
           in a template using a pair of curlies. When the value later changes, the DOM will update
           accordingly. This also works for attributes.
-          br
+          <br>
           When a path returns null or undefined, the engine will silently render nothing.
         pre(data-filename="views/layout.tmpl")
           code.handlebars.
@@ -490,13 +489,12 @@
           object until we hit a base type that can be interpolated into the page.
         p.
           The scope at least contains the 
-          a(href="#main-model") main model
-          , which Declaire inserts automatically.
+          <a href="#main-model">main model</a>,
+          which Declaire inserts automatically.
           New variable names and models get introduced to the scope by control statements like
-          a(href="#statements-for") for 
+          <a href="#statements-for">for</a>
           and 
-          a(href="#statements-view") view
-          .
+          <a href="#statements-view">view</a>.
 
       section#statements
         h3 Statements
@@ -560,14 +558,14 @@
                   li {title}
         section#statements-view
           h4 view
-          p
+          p.
             The view statement instantiates a view model and puts it into the scope. Properties and methods
             of the view model instance are subsequently visible in the scope.
-          p
+          p.
             Once a view is no longer needed, perhaps because its item was removed from a collection,
             or because a parent element got updated, Declaire will remove the associated view model object
             automatically, causing it to fire its <a href="#view-models">remove</a> event.
-          p
+          p.
             Optionally, the created view model instance can be given a name by which it will be accessible
             in the scope. If you leave that out, the model itself will be inserted into the scope.
           pre(data-filename="views/layout.tmpl")
@@ -577,7 +575,7 @@
               {{view MyViewModel}}
                 h1 {title}
           .note Exposing view models by name is not yet implemented
-          p
+          p.
             If you need to fetch data from the database to render the view, it is good practice to supply
             an alternate piece of markup to render, should the application be offline and not find
             the neccessary data in local storage.
@@ -588,7 +586,7 @@
               {{=>}}
                 h1 You are not connected to the internet
                 h2 This view will render automatically once connectivity returns
-          p
+          p.
             Any value accessible from the scope can be passed as an argument to the view model constructor.
           pre(data-filename="views/layout.tmpl")
             code.handlebars.
@@ -608,7 +606,7 @@
 
         section#statements-action
           h4 action
-          p
+          p.
             When the user generates events by interacting with the page, your application can react
             using the action statement. It takes the name of an event on the element and a method to
             look up in the scope as arguments.
@@ -627,7 +625,7 @@
 
         section#statements-import
           h4 import
-          p
+          p.
             Declair uses a simple way to combine templates that also serves as a basis to build
             reusable components:
             Use the import statement to import another template in the surrounding template.
@@ -637,7 +635,7 @@
           pre(data-filename="views/layout.tmpl")
             code.handlebars.
               {{import myTemplate}}
-          p
+          p.
             You can pass named parameters to the imported template which are then available
             in its scope. 
           pre(data-filename="views/animal.tmpl")
@@ -649,16 +647,16 @@
             code.handlebars.
               {{import animal(name: 'Lisa', species: 'Dog')}}
               {{import animal(name: 'Herbert', species: 'Cat')}}
-          p
+          p.
             Templates always get a clean scope that contains only the main model and the parameters
             passed. They don't inherit the calling scope.
 
         section#statements-content
           h4 content
-          p
+          p.
             You can nest additional markup under an import statement. This can then be placed
             inside the imported template using the <b>content</b> statement. 
-          p 
+          p.
             This allows you to write components like dialogs, that act as wrappers around arbitrary
             content.
           pre(data-filename="views/wrapper.tmpl")
@@ -678,7 +676,7 @@
 
         section#statements-route
           h4 route
-          p
+          p.
             Use the route statement to evaluate markup only for specific URLs. The given URL can contain wildcards,
             which are used to extract parts of the url and put them into the scope below the statement.
           pre(data-filename="views/layout.tmpl")
@@ -700,9 +698,9 @@
 
         section#statements-as
           h4 as
-          p
+          p.
             Use the as statement to introduce a DOM element to the scope.
-            br
+            <br>
             This feature can be used to pass DOM elements to view model constructors and methods,
             instead of relying on class selectors etc.
           pre(data-filename="views/layout.tmpl")
@@ -714,11 +712,11 @@
 
         section#statements-switch
           h4 switch
-          p
+          p.
             When you nest markup below a regular if statement, the corresponding views and elements will be
             removed from the DOM, when the statement's expression turns falsy and get created anew when it 
             becomes true again.
-          p
+          p.
             In some cases, you may wish your views to retain their state though, such as when cycling through
             individual tabs in a tabbed container for instance. Use the switch statement to declare a number
             of alternative states that are all kept in memory, while only a single element gets attached to
@@ -740,18 +738,18 @@
 
         section#statements-client
           h4 client
-          p
+          p.
             Use the client statement to omit sections of your template from server rendering.
           pre(data-filename="views/layout.tmpl")
             code.handlebars.
               {{client}}
                 h1 Interactive demo
                 canvas({{action mousemove onMouseMove}})
-          p
+          p.
             In same cases this can make your html even more semantic.
             Consider links in a document for example, that you might spice up at runtime by surfacing information
             about their target resource on mouse hover.
-            br
+            <br>
             You might render this as a simple anchor tag on the server,
             but use a more elaborate widget on the client, which would not by semantically describable using HTML anyway.
           pre(data-filename="views/layout.tmpl")
@@ -776,7 +774,7 @@
           var Todo = declaire.Model('todos', {
             title: 'Untitled Todo',
             done: false,
-          |
+          
             check: function() {
               this.set('done', true);
             }
@@ -784,7 +782,7 @@
       p.
         Individual models can now be created from that definition using the create method.
         You can also pass a hash of values to the constructor to set some properties directly on creation.
-        br
+        <br>
         Once created, the object is visible to your application and fully functional, but is not
         persisted to the server yet. To make it visible to other users of the app as well,
         we need to save it to the database using the appropriately named method.
@@ -810,7 +808,7 @@
             todo.on('change:title', function(title) {
               console.log("The title changed to " + title);
             });
-            |
+            
             // Updates to one or many properties finalize with a generic
             // change event, that carries a hash of all new values
             todo.on('change', function(changes) {
@@ -819,23 +817,23 @@
                 console.log(key + ' changed to ' + changes[key]);
               }
             });
-            |
+            
             // Destroy after use
             todo.once('change:done', function(done) {
               console.log("This will get called only once");
               todo.delete();
             });
-            |
+            
             // Emitted when new data arrived from the network,
             // on initial load or due to push updates
             todo.on('fetch', function() {});
-            |
+            
             // Emitted after an object got reset to the remote state
             todo.on('revert', function() {});
-            |
+            
             // Emitted after successful perssistance to the server
             todo.on('save', function() {});
-            |
+            
             // Emitted before the object gets deleted locally
             // and potentially after it was deleted remotely
             todo.on('delete', function() {});
@@ -860,7 +858,7 @@
             var Person = declaire.Model('people', {
               firstName: '',
               lastName: '',
-            |
+            
               name: function() {
                 return this.get('firstName') + ' ' + this.get('lastName');
               }
@@ -930,7 +928,7 @@
 
       section#model-offline
         h3 Local Storage
-        p.
+        p
 
         .note This feature is not fully implemented yet
 
@@ -939,7 +937,7 @@
         p.
           Use the UndoManager class to manage collections of related model instances that you want to
           keep track of as a whole.
-          br
+          <br>
           After setting and/or saving several related model properties you can save these changes as
           an atomic unit using the step method.
         pre(data-filename="app.js")
@@ -963,7 +961,7 @@
       h2 View Models
       p.
         View models inherit from declaire.Model, but fulfill a different purpose.
-        br
+        <br>
         They are the building blocks of your UI logic, cannot be saved and export a name by which they can
         be instantiated from within templates using the <b>view</b> statement.
       p.
@@ -994,20 +992,20 @@
             time {time}
       p.
         See the
-        a(href="#statements-view") view statement 
+        <a href="#statements-view">view statement </a>
         for detailed information on how to use view models inside templates.
 
     article#collections
       h2 Collections
       p.
         Collections represent a set of model objects at a potential REST endpoint.
-        br
+        <br>
         Use them to define the relationships between your models.
       p.
         When a model contains a collection as
         a property, saving the model will only save references to other objects in its collection.
         When the model is later loaded again, its collections will be restored.
-        br
+        <br>
         This happens immediately upon load for collection objects that are already in local storage.
         Collections will not be resolved over the network automatically however, as this could
         potentially trigger a chain reaction that would eventually load the entire database.
@@ -1029,19 +1027,9 @@
           for(var i in values) {}
       p.
         They can also be used to hold data inside view models, even though these cannot be saved.
-        // Make all collections lazy
-        // col.filter() returns a query
-        // Model.all returns a query
-        // col.filter().filter() builds up lazy query
-        // query.first() -> findOne
-        // col.serialize -> array with base types or references
-        // model references are first fetched on a call to get
 
-        // Warnings like here https://youtu.be/z5e7kWSHWTg?t=12m20s
+    // Warnings like here https://youtu.be/z5e7kWSHWTg?t=12m20s
 
-        // Use async to load bundle in header
-
-        // Pull elements into scope using h1(title="Foo" {{as headline}})
 
     article#queries
       h2 Queries
@@ -1067,7 +1055,7 @@
           });
       p.
         We can use a Query in a computed property together with an input binding for creating a live search feature.
-        br
+        <br>
         Note that we construct the query using the shorthand all() method on a model.
       pre(data-filename="app.js")
         code.javascript.
@@ -1205,12 +1193,12 @@
       pre(data-filename="app.js")
         code.javascript.
           console.log("Executed once on both client and server");
-          |
+          
           declaire.start({
             beforeConnect: function(express, mongoDB) {
               console.log("Executed only on the server");
             },
-          |
+          
             onLoad: function() {
               console.log("Executed only on the client");
             }
@@ -1222,7 +1210,7 @@
         code.javascript.
           // Continuation passing style
           declaire.onServer(function() { });
-          |
+          
           // Good ol' boolean function
           if(declaire.onClient()) { }
       p.
@@ -1238,7 +1226,7 @@
         After the initial page load, Declaire apps can be reloaded - even across browser
         restarts - when the device has no connection to the internet, by the virtue of a
         framework generated offline manifest that is injected into your pages.
-        br
+        <br>
         Even when you are online, this will give your applications a serious boost on
         subsequent loads. 
       p.
@@ -1251,7 +1239,7 @@
       p.
         All of this happens completely transparently to you. When your app needs to know
         more about its internal state though, the 
-        a(href="#main-model") main model 
+        <a href="#main-model">main model</a>
         contains several fields of interest.
 
     article#service-models
@@ -1259,7 +1247,7 @@
       p.
         Service Models offer a seamless way to integrate external services into a declaire
         application.
-        br
+        <br>
         Data will be mapped to a regular model object that can be consumed by
         applications like any other model instance.
       p.
@@ -1289,7 +1277,7 @@
             user_name: 'userName',
             hash_tags: 'hashes'
           });
-          |
+          
           app.ViewModel('TwitterView', {
             tweets: Twitter.all({hashTags: {$contains: 'yolo'}})
           });
@@ -1306,9 +1294,9 @@
       h2 Stylesheets
       p.
         Declaire supports
-        a(href="http://learnboost.github.io/stylus/") Stylus 
+        <a href="http://learnboost.github.io/stylus/">Stylus</a>
         with 
-        a(href="http://tj.github.io/nib/") Nib 
+        <a href="http://tj.github.io/nib/">Nib</a>
         for writing your stylesheets.
         These are great libraries and the indented syntax matches Declaire nicely.
         Among lots of other functionality, they provide you with:
@@ -1316,23 +1304,23 @@
         code.less.
           // Server side imports
           @require 'nib'
-          |
+          
           // Cross-browser reset
           global-reset()
-          |
+          
           // Variables
           $mainColor = #0aaaad
-          |
+          
           // Apply vendor-prefixes automatically for unstandardized CSS
           body
             background: linear-gradient(top, white, black)
-          |
+          
           // Nested definitions
           article
             margin: 3rem 0
             h2
               font-weight: bold
-          |
+          
           // Color calculations, etc
           a
             color: $mainColor
@@ -1350,21 +1338,21 @@
       h2 Deployment
       p.
         Declaire works as a standard 
-        a(href="http://npmjs.com") NPM 
+        <a href="http://npmjs.com">NPM</a>
         library and doesn't use any special protocols beside HTTP. You should therefore
         be able to deploy your application anywhere where node applications run.
       p.
         Be sure to set the environment variable NODE_ENV to 'production' on production
         systems, to disable development guides like automatic reparsing of templates.
-        br
+        <br>
         This will also minify your assets and apply some other optimizations.
       section#mongodb
         h3 MongoDB
         p.
           Declaire will take connection information from the environment variables MONGOHQ_URL
           and MONGOLAB_URI. Because these variables are set by PaaS services like 
-          a(href="http://heroku.com" target="_blank") Heroku
-          , this allows Declaire apps to connect to these popular services automagically.
+          <a href="http://heroku.com" target="_blank">Heroku</a>,
+          this allows Declaire apps to connect to these popular services automagically.
         p You can override this by passing a mongo connection string to the start method.
         pre(data-filename="app.js")
           code.javascript.
@@ -1376,10 +1364,9 @@
         h3 Heroku
         p.
           Follow these simple steps to wrap your app in a
-          a(href="http://git-scm.com" target="_blank") Git 
+          <a href="http://git-scm.com" target="_blank">Git</a>
           repository and deploy it to
-          a(href="http://heroku.com" target="_blank") Heroku
-          :
+          <a href="http://heroku.com" target="_blank">Heroku</a>:
         pre(data-filename="Shell")
           code.javascript.
             // Go to your app folder

@@ -1,18 +1,84 @@
-#examples-view
+article#examples-view
+
+  header
+    h1 Snippets and Examples
+    p.
+      This is intended to be a collection of useful snippets that demonstrate how to
+      achieve common tasks using Declaire.
+
   nav.side-bar
     header Contents
     ul
+      li>a(href="#font-awesome") Using FontAwesome
+      li>a(href="#live-search") Live search
       li>a(href="#todos") Todos Application
-      li
-        a(href="#font-awesome") Using FontAwesome
   
   section.main-content
+
+    article#font-awesome
+      h2 Using FontAwesome as an NPM dependency
+      p.
+        If a module that you installed as an NPM dependency needs to be hosted over http to work,
+        you can easily achieve that by including it in the npmPublic field of the Application declaration:
+      
+      pre(data-filename="Shell")
+        code.javascript.
+          $ npm install font-awesome --save
+
+      pre(data-filename="app.js")
+        code.javascript.
+          var app = declaire.Application({
+            npmPublic: ['font-awesome']
+          });
+      
+      p It will be hosted at the top level of your application:
+      
+      pre(data-filename="views/layout.tmpl")
+        code.handlebars.
+          head
+            link(href="/font-awesome/css/font-awesome.min.css" rel="stylesheet")
+
+    
+    article#live-search
+      h2 Implementing a live search feature
+      p.
+        We can use a Query in a computed property together with an input binding for creating a live search feature.
+        <br>
+        Note that we construct the query using the shorthand all() method on a model.
+      
+      pre(data-filename="app.js")
+        code.javascript.
+          declaire.ViewModel('SearchUsersView', {
+            query: '',
+            results: function() {
+              // Filter works flawlessly on Person.name, btw,
+              // which is itself a computed property
+              return Person.all().filter({name: {$contains: this.get('query')}});
+            }
+          });
+      
+      pre(data-filename="views/searchUsers.tmpl")
+        code.handlebars.
+          {{view SearchUsersView}}
+            input(type="text" placeholder="Search for people" value="{query!}")
+            ul
+              {{for results}}
+                li {name}
+      p.
+        Here, the query property of the view model gets driven by its binding to the text input.
+        When the user inserts a character, query gets updated, fires a change event which causes
+        results to fire one as well, which causes the template engine to update the list of
+        search results.
+      p Look ma! No ajax! No event handlers!
+
+
     article#todos
       h2 Todos Application
       p.
         This is a more complete version of the Todos demo application on the start
         page. It allows for renaming todos by clicking on their title and it tracks
         the number of finished and unfinished todos separately.
+      
       .note.
         Note that this example contains several planned, advanced features and will not currently run.
         <br>
@@ -77,19 +143,3 @@
                         input(type="text" placeholder="New Name" value="{:todo.name}" {{action enter finishRename(todo)}})
           
               footer {todos.length} items left to do
-
-    article#font-awesome
-      h2 Using FontAwesome as a dependency
-      p.
-        If a module that you installed as an NPM dependency needs to be hosted over http to work,
-        you can easily achieve that by including it in the Application declaration:
-      pre(data-filename="app.js")
-        code.javascript.
-          var app = declaire.Application({
-            npmPublic: ['font-awesome']
-          });
-      p It will be hosted at the top level of your application:
-      pre(data-filename="views/layout.tmpl")
-        code.handlebars.
-          head
-            link(href="/font-awesome/css/font-awesome.min.css" rel="stylesheet")

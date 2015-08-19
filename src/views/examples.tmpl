@@ -1,16 +1,19 @@
 article#examples-view
 
-  header
+  header.top-header
     h1 Snippets and Examples
     p.
-      This is intended to be a collection of useful snippets that demonstrate how to
-      achieve common tasks using Declaire.
+      This is intended to be a collection of useful snippets and demo applications that demonstrate how to
+      achieve common tasks using Declaire. Note that some of the snippets imply the existence of code from previous
+      examples without making that explicit.
 
   nav.side-bar
-    header Contents
+    header Examples
     ul
       li>a(href="#font-awesome") Using FontAwesome
-      li>a(href="#live-search") Live search
+      li>a(href="#live-search") Live Search
+      li>a(href="#dialog") Easy Dialogs
+      li>a(href="#live-times") Live Dates and Times
       li>a(href="#todos") Todos Application
   
   section.main-content
@@ -19,18 +22,16 @@ article#examples-view
       h2 Using FontAwesome as an NPM dependency
       p.
         If a module that you installed as an NPM dependency needs to be hosted over http to work,
-        you can easily achieve that by including it in the npmPublic field of the Application declaration:
+        you can easily achieve that by including it in the <b>npmPublic</b> field of the Application declaration:
       
       pre(data-filename="Shell")
         code.javascript.
           $ npm install font-awesome --save
-
       pre(data-filename="app.js")
         code.javascript.
           var app = declaire.Application({
             npmPublic: ['font-awesome']
           });
-      
       p It will be hosted at the top level of your application:
       
       pre(data-filename="views/layout.tmpl")
@@ -38,13 +39,12 @@ article#examples-view
           head
             link(href="/font-awesome/css/font-awesome.min.css" rel="stylesheet")
 
-    
     article#live-search
       h2 Implementing a live search feature
       p.
-        We can use a Query in a computed property together with an input binding for creating a live search feature.
+        We can use a query returned from a computed property together with an input binding for creating a live search feature.
         <br>
-        Note that we construct the query using the shorthand all() method on a model.
+        Note that we construct the query using the shorthand <b>all</b> method on a model.
       
       pre(data-filename="app.js")
         code.javascript.
@@ -71,19 +71,80 @@ article#examples-view
         search results.
       p Look ma! No ajax! No event handlers!
 
+    article#dialog
+      h2 Easily edit an object's properties in a dialog
+      p.
+        If you want edits in a form to be 'live' - showing a preview of what the changes look like -
+        while still being able to revert all changes when the user cancels the dialog, you could
+        do it like this:
+      pre(data-filename="views/layout.tmpl")
+        code.handlebars.
+          form
+            h1 Edit Object
+            input(type="range" min="0" max="100" value="{:brightness!}")
+            input(type="range" min="0" max="100" value="{:opacity!}")
+            footer
+              button({{action click save}}) Ok
+              button({{action click revert}}) Cancel
+      p.
+        The colons before the binding paths make sure that concurrent edits from other
+        users do not fight with the users input. Adding the exclamation mark still makes the
+        bindings 'set' the object's properties though, which will be reflected in all
+        views.
+      p.
+        The Ok and Cancel buttons can now be nicely mapped to the <b>save</b> and <b>revert</b> methods inherited
+        from <b>declaire.Model</b>, to either commit the changes to the database or drop the recent changes.
+
+    article#live-times
+      h2 Keep dates and times on your pages up to date
+      p.
+        In this example, we show the seconds passed since the creation of individual Todos.
+        The <b>createdAt</b> property - which we pass this to the constructor of our <b>RelativeTime</b> component -
+        is automatically set by the framework for every new object.
+        We trigger updates to the view by repeatedly setting its <b>now</b> property, which is referenced in
+        the computed property bound in the template.
+      pre(data-filename="src/views/RelativeTime.js")
+        code.javascript.
+          module.exports = declaire.ViewModel('RelativeTime', {
+            secondsAgo: function() {
+              return Math.round((this.get('now').getTime() - this.get('date').getTime()) / 1000);
+            }
+          }, function(date) {
+            var self = this;
+            self.set('date', new Date(date));
+            // Update model state every second once the view exists
+            var iv = setInterval(function() {
+              self.set('now', new Date());
+            }, 1000);
+            // Clear handler when the view gets removed from the DOM
+            self.on('remove', function() {
+              clearInterval(iv);
+            });
+          });
+      pre(data-filename="src/views/RelativeTime.tmpl")
+        code.handlebars.
+          {{view RelativeTime(date)}}
+            time {secondsAgo} seconds ago
+      pre(data-filename="src/views/layout.tmpl")
+        code.handlebars.
+          {{for todos}}
+            h1 {title}
+            p
+              | This Todo was created
+              {{import RelativeTime(date: createdAt)}}
 
     article#todos
-      h2 Todos Application
+      h2 Write a Todos Application
       p.
         This is a more complete version of the Todos demo application on the start
         page. It allows for renaming todos by clicking on their title and it tracks
         the number of finished and unfinished todos separately.
       
-      .note.
-        Note that this example contains several planned, advanced features and will not currently run.
-        <br>
-        Watch for warnings like this one throughout the documentation,
-        to check which features already work and which don't.
+      //- .note.
+      //-   Note that this example contains several planned, advanced features and will not currently run.
+      //-   <br>
+      //-   Watch for warnings like this one throughout the documentation,
+      //-   to check which features already work and which don't.
       
       pre(data-filename="app.js")
         code.javascript.

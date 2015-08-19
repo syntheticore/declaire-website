@@ -201,7 +201,7 @@
       h2 Install Declaire
       p.
         Install Declaire into any node application using 
-        <a href="http://npmjs.com">npm</a>.
+        <a href="http://npmjs.com" target="_blank">npm</a>.
       pre(data-filename="Shell")
         code.javascript.
           $ cd my-app.
@@ -335,10 +335,8 @@
       section#installing-modules
         h3 Installing and Loading NPM Modules
         p.
-          Install modules using 
-          a(href="http://npmjs.com") npm
-          . These will get packaged and delivered with your app bundle
-          automatically. Require as usual.
+          Install modules using  <a href="http://npmjs.com">npm</a>. These will get packaged and
+          delivered with your app bundle automatically. Require as usual.
         pre(data-filename="Shell")
           code.javascript.
             $ npm install jquery --save
@@ -359,16 +357,14 @@
       h2 Templating
       p.
         Declaire's templating language borrows syntax heavily from 
-        <a href="http://jade-lang.com" target="_blank">Jade</a>
-        and
-        <a href="http://handlebarsjs.com" target="_blank">Handlebars</a>
-        , takes the streaming execution model from
+        <a href="http://jade-lang.com" target="_blank">Jade</a> and
+        <a href="http://handlebarsjs.com" target="_blank">Handlebars</a>, takes the streaming execution model from
         <a href="https://github.com/raptorjs/marko" target="_blank">Marko</a>
         and hooks natively into declaire's models.
       p.
         Hierachy is denoted through indentation, interpolation uses curlies, statements use double
         curlies and most other syntax adheres to HTML and CSS alot.
-      p
+      p.
         Declaire uses a different evaluator on the client than on the server,
         to process the exact same parse tree.
       p.
@@ -511,10 +507,10 @@
             code.handlebars.
               {{if person.name == 'Peter'}}
                 strong That's him!
-              |
+              
               {{if person.age < 18}}
                 .rules Stay out!
-              |
+              
               {{if !_online}}
                 dialog Waiting for connection ...
           p.
@@ -882,7 +878,7 @@
             todo.get('done'); // true
             todo.revert();
             todo.get('done'); // false
-        p You can use this to easily implement a dialog which allows canceling changes.
+        p You can use this to easily implement a dialog which allows for canceling changes.
         pre(data-filename="views/layout.tmpl")
           code.handlebars.
             form
@@ -1045,7 +1041,7 @@
         code.javascript.
           var finishedTodos = declaire.Query(Todo, {done: true});
           var aboutSports = finishedTodos.filter({title: {$contains: 'sport'}});
-          |
+          
           // Calling all() will actually execute the built up query
           // and return a collection of matching items
           aboutSports.all(function(todos) {

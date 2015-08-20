@@ -11,11 +11,11 @@ var app = declaire.Application({
 
 app.ViewModel('HighlightView', {}, null, function() {
   var self = this;
-  _.defer(function() {
-    self.el.find("code").each(function() { 
-      hljs.highlightBlock(this);
-    });
-  }, 500);
+  var blocks = self.el.getElementsByTagName("code");
+  for(var i = 0; i < blocks.length; i++) {
+    var block = blocks[i];
+    hljs.highlightBlock(block);
+  }
 });
 
 app.init(function(start) {

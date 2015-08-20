@@ -10,8 +10,6 @@ head
   link(href="/font-awesome/css/font-awesome.min.css" rel="stylesheet")
   link(href="/highlight.js/styles/github.css" rel="stylesheet")
 
-  script(src="/bundle.js" async="async")
-
   link(rel="shortcut icon" href="/favicon.png")
 
 body
@@ -28,14 +26,16 @@ body
         //- li>a(href="https://github.com/syntheticore/declaire") Github
 
   main
-    {{view HighlightView}}
-      {{route /pages/index}}
+    {{route /pages/index}}
+      {{view HighlightView}}
         {{import index}}
-      
-      {{route /pages/demos}}
+    
+    {{route /pages/demos}}
+      {{view HighlightView}}
         {{import demos}}
 
-      {{route /pages/examples}}
+    {{route /pages/examples}}
+      {{view HighlightView}}
         {{import examples}}
 
   footer#footer

@@ -9,13 +9,15 @@ var app = declaire.Application({
   npmPublic: ['font-awesome', 'highlight.js']
 });
 
-app.ViewModel('HighlightView', {}, null, function() {
+app.ViewModel('HighlightView', {}, function() {
   var self = this;
-  var blocks = self.el.getElementsByTagName("code");
-  for(var i = 0; i < blocks.length; i++) {
-    var block = blocks[i];
-    hljs.highlightBlock(block);
-  }
+  self.on('attach', function() {
+    var blocks = self.el.getElementsByTagName("code");
+    for(var i = 0; i < blocks.length; i++) {
+      var block = blocks[i];
+      hljs.highlightBlock(block);
+    }
+  });
 });
 
 app.init(function(start) {

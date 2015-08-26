@@ -44,14 +44,14 @@
       li
         h3 Auto Bindings
         p.
-          Watch the DOM magically update, as your model data changes. No matter if those changes
+          Watch the DOM magically update as your model data changes. No matter if those changes
           resulted from your own actions or from updates to the database.
       
       li
         h3 Computed Properties
         p.
           Computed properties are like regular model methods, except that they also emit change
-          events when one of the properties they depend on changes. This allow you to hook up.
+          events when one of the properties they depend on changes. This allow you to hook up
           complex logic to templates in a completely declarative way.
         p.
           Dependency tracking happens automatically, without the need to declare these
@@ -206,7 +206,7 @@
         code.javascript.
           $ cd my-app.
           $ npm install declaire --save
-
+      //-
     article#get-started
       h2 Get Started (with a nice and easy Todos app)
       p.
@@ -230,7 +230,7 @@
             todos: Todo.all(),
           
             newTodo: function(e, input) {
-              Todo.create({title: input.val()}).save();
+              Todo.create({title: input.value}).save();
               input.val('');
             }
           });
@@ -352,7 +352,7 @@
             if(declaire.onServer()) {
               var NewRelic = require('newrelic');
             }
-
+        //-
     article#templating
       h2 Templating
       p.
@@ -425,7 +425,7 @@
         pre(data-filename="views/layout.tmpl")
           code.handlebars.
             h2 {title}
-            input(type="checkbox" checked="{done}")
+            input(type="checkbox" checked={done})
         p.
           By default, text gets escaped before being inserted into the page, to prevent injection attacks.
           If you precede the curlies with an exclamation mark though, you can insert unescaped text.
@@ -434,7 +434,7 @@
         pre(data-filename="views/layout.tmpl")
           code.handlebars.
             h2 !{title}
-      
+        //-
       section#bindings
         h3 Two-way Bindings
         p.
@@ -448,6 +448,17 @@
         pre(data-filename="views/layout.tmpl")
           code.handlebars.
             input(type="checkbox" checked="{done!!}")
+        p.
+          Adding a colon before the binding path will interpolate the value only once and not update
+          upon data changes. This is useful for prefilling inputs in a dialog that you do not want
+          to change upon remote changes.
+        pre(data-filename="views/layout.tmpl")
+          code.handlebars.
+            form.dialog
+              input(type="text" value={:title!})
+              input(type="checkbox" checked={:done!})
+              footer
+                button({{action click save}}) Ok
       
       section#text
         h3 Text
@@ -461,7 +472,7 @@
               Lorem ipsum <b>dolor</b> sit amet
         p.
           Alternatively, you may insert text anywhere you would insert a regular tag, by preceding it
-          with the '|' character. This allows you to still insert intermediate tags using the regular
+          with the <b>|</b> character. This allows you to still insert intermediate tags using the regular
           syntax. 
         pre(data-filename="views/layout.tmpl")
           code.handlebars.
@@ -592,7 +603,6 @@
           pre(data-filename="app.js")
             code.javascript.
               declaire.ViewModel('TodoView', {
-                myTodo: null,
                 description: function() {
                   return this.get('myTodo').get('title').toUpperCase();
                 }
@@ -606,16 +616,16 @@
             When the user generates events by interacting with the page, your application can react
             using the action statement. It takes the name of an event on the element and a method to
             look up in the scope as arguments.
-          p The method will get passed the originating DOM element and the event object as parameters.
+          p The method will get passed the event object as well as any parameters passed as arguments.
           pre(data-filename="views/layout.tmpl")
             code.handlebars.
               {{view MyView}}
-                input(type="text" {{action keyup method}})
+                input(type="text" {{action keyup method("some argument")}})
           pre(data-filename="app.js")
             code.javascript.
               declaire.ViewModel('MyView', {
-                method: function(e, input) {
-                  console.log(input.val());
+                method: function(e, someArgument) {
+                  console.log(e.target.value);
                 }
               });
 
@@ -717,7 +727,7 @@
             individual tabs in a tabbed container for instance. Use the switch statement to declare a number
             of alternative states that are all kept in memory, while only a single element gets attached to
             the DOM at any given point in time.
-          .note The switch statement is not yet implemented
+          .note The switch statement is not implemented yet
           pre(data-filename="views/layout.tmpl")
             code.handlebars.
               {{switch probability > 0.8}}
@@ -791,7 +801,7 @@
       pre(data-filename="app.js")
         code.javascript.
           todo.save({done: true});
-      
+      //-
       section#events
         h3 Events
         p.
@@ -862,7 +872,7 @@
         pre(data-filename="views/ContactView.tmpl")
           code.handlebars.
             h1 {name}
-
+        //- 
       section#realtime
         h3 Realtime Updates
         p.
@@ -883,7 +893,7 @@
           code.handlebars.
             form
               h1 Edit Todo
-              input(type="text" value="{todo.title!}")
+              input(type="text" value="{:todo.title!}")
               footer
                 button({{action click todo.save}}) Save
                 button({{action click todo.revert}}) Cancel
@@ -924,9 +934,14 @@
 
       section#model-offline
         h3 Local Storage
-        p
-
-        .note This feature is not fully implemented yet
+        p.
+          Any model instance checked out from the server, or created, modified or deleted locally,
+          will get cached in local storage if possible. This allows for using the model system transparently
+          while the user is offline. <br>Any changes saved will be synchronized to the server once it can be
+          reached again. When you load a model instance, either manually or by resolving another model,
+          you will receive a copy from local storage almost immediately. A network request is then made
+          to receive any new changes from the server, which will trigger the appropriate <b>change</b>
+          and <b>fetch</b> events.
 
       section#model-history
         h3 History & Rollback
@@ -962,11 +977,11 @@
         be instantiated from within templates using the <b>view</b> statement.
       p.
         Normally, a view model will want to fetch data on instantiation to make it available to templates.
-        Note that, as opposed to normal models, you cannot instantiate and delete these
+        Note that, as opposed to normal models, you cannot instantiate and delete view models
         yourself, as this job is done by the template engine automatically.
       p.
         Therefore, view models take a constructor function as their third argument, that gets passed the
-        fresh model instance as a parameter. If you manually allocate any resources or connect any event handlers
+        fresh model instance as <b>this</b>. If you manually allocate any resources or connect any event handlers
         here, make sure that you also register for the <b>remove</b> event, to clean that up at the appropriate time.
       pre(data-filename="app.js")
         code.javascript.
@@ -987,6 +1002,46 @@
           {{view Clock}}
             time {time}
       p.
+        When you need to call asynchronous code to initialize your view, you may return a promise from the
+        constructor function. Any <a href="http://promises-aplus.github.com/promises-spec/" target="_blank">Promises/A+</a>
+        compatible promise library will do, such as <a href="https://github.com/tildeio/rsvp.js/" target="_blank">RSVP</a>.
+      pre(data-filename="app.js")
+        code.javascript.
+          declaire.ViewModel('SomeViewModel', {}, function() {
+            var self = this;
+            return new RSVP.Promise(function(resolve, reject) {
+              $.get(url).done(function(data) {
+                self.set('data', data);
+                resolve();
+              }).fail(reject);
+            });
+          });
+      p.
+        When you need to manually register event handlers on other models from a constructor, you can do so
+        using the view's <b>listenTo</b> method. This has the advantage of your event handlers being automatically
+        unregistered when the view gets destroyed.
+      pre(data-filename="app.js")
+        code.javascript.
+          declaire.ViewModel('SomeViewModel', {}, function() {
+            this.listenTo(otherObj, 'change', function() {
+              console.log("Other object changed");
+            });
+          });
+      p.
+        Accessing the DOM manually is discouraged in Declaire, but if you absolutely need to do so, perhaps
+        because of another library that you want to use, you can achieve that using the <b>attach</b> event.
+      pre(data-filename="app.js")
+        code.javascript.
+          declaire.ViewModel('SomeViewModel', {}, function() {
+            // Our DOM element itself is already accessible in the constructor
+            var el = this.element;
+            // Wait for the attach event to make sure that it has been
+            // inserted into the page and all children have been rendered
+            this.on('attach', function() {
+              SomeLibrary.mangle(el);
+            });
+          });
+      p.
         See the
         <a href="#statements-view">view statement </a>
         for detailed information on how to use view models inside templates.
@@ -994,36 +1049,34 @@
     article#collections
       h2 Collections
       p.
-        Collections represent a set of model objects at a potential REST endpoint.
-        <br>
-        Use them to define the relationships between your models.
-      p.
-        When a model contains a collection as
-        a property, saving the model will only save references to other objects in its collection.
-        When the model is later loaded again, its collections will be restored.
-        <br>
-        This happens immediately upon load for collection objects that are already in local storage.
-        Collections will not be resolved over the network automatically however, as this could
-        potentially trigger a chain reaction that would eventually load the entire database.
-      p.
-        You can force a collection to resolve by requesting its <b>values</b>, either through the method
-        of that name, implicitly by using its <b>each</b> method, or by calling the .
+        Collections are like arrays that additionally emit <b>add</b>, <b>remove</b>, <b>change:length</b>
+        and <b>change</b> events when their contents are changed.
       pre(data-filename="app.js")
         code.javascript.
           var c = declaire.Collection([1, 2, 3]);
-          c.push(4);
-          c.serialize() // [1,2,3,4]
-          var todos = declaire.Collection([);
-          c.push(Todo.create({done: true}));
-          c.serialize(); // error: cannot serialize unsaved objects
-          c.serialize({saveItems: true}, function(output) {}); // [{_ref: {id: 'xyz123', collection: 'todos'}}]
-          c.push(Todo.create({done: false}));
-          c.each(function(todo) {});
-          var values = c.values();
-          for(var i in values) {}
+          c.once('add', function() {
+            c.remove(2);
+          });
+          c.add(4);
+          c.serialize(); // [1,3,4]
       p.
-        They can also be used to hold data inside view models, even though these cannot be saved.
-
+        When a model contains a collections as
+        properties, saving the model will only save references to related objects in its collections.
+        When the model is later loaded again, its collections will be restored automatically, but only if
+        you loaded the instance manually using <b>Model.load</b>. All other collections must
+        be resolved before usage using the asynchronous <b>resolve</b> method.
+      pre(data-filename="app.js")
+        code.javascript.
+          var todos = declaire.Collection();
+          todos.add(Todo.create());
+          todos.serialize(); // error: cannot serialize unsaved objects
+          todos.at(0).save(function() {
+            todos.serialize(); // [{_ref: {id: 'xyz123', collection: 'todos'}}]
+          });
+          // Resolve is of course unneccessary in this case, because we just created the collection ourselves
+          todos.resolve(function() {
+            todos.each(function(todo) {});
+          });
     // Warnings like here https://youtu.be/z5e7kWSHWTg?t=12m20s
 
 
@@ -1033,7 +1086,7 @@
         Queries filter collections and models according to a
         given query object. Once created, a query remains active, meaning that
         matching objects that get added to the database or collection will
-        show up after the fact and trigger the appropriate events. A Query will also update
+        show up after the fact and trigger the appropriate <b>add</b>, <b>remove</b>, <b>change:length</b> and <b>change</b> events. A Query will also update
         when one of the properties filtered over changes for one of the objects in the collection.
       p.
         Queries can be narrowed down further, by calling the chainable filter method:
@@ -1042,9 +1095,9 @@
           var finishedTodos = declaire.Query(Todo, {done: true});
           var aboutSports = finishedTodos.filter({title: {$contains: 'sport'}});
           
-          // Calling all() will actually execute the built up query
+          // Calling resolve() will actually execute the built up query
           // and return a collection of matching items
-          aboutSports.all(function(todos) {
+          aboutSports.resolve(function(todos) {
             todos.each(function(todo) {
               todo.remove();
             });
@@ -1052,16 +1105,15 @@
       p.
         We can use a Query in a computed property together with an input binding for creating a live search feature.
         <br>
-        Note that we construct the query using the shorthand all() method on a model.
+        Note that we construct the query using the shorthand <b>all</b> method on a model.
       pre(data-filename="app.js")
         code.javascript.
           declaire.ViewModel('SearchUsersView', {
-            people: Person.all(),
             query: '',
             results: function() {
               // Filter works flawlessly on Person.name, btw,
               // which is itself a computed property
-              return this.get('people').filter({name: {$contains: this.get('query')}});
+              return Person.all().filter({name: {$contains: this.get('query')}});
             }
           });
       pre(data-filename="views/searchUsers.tmpl")
@@ -1079,14 +1131,14 @@
       p Look ma! No ajax! No event handlers!
 
       section
-        h3 Local Queries
+        h3 Local Storage
         p.
           When a query is evaluated, it is performed against the local model cache first, returning
           results almost immediately. When the user is online, a live query to the database is
           then performed in the background, to fetch additional matching objects from the server.
           <br>
-          When these arrive, change events, as well as fetch event, will be emited by
-          the query, causing bound views und dependent properties to update.
+          When these arrive, <b>add</b> and <b>remove</b> events, as well as a final <b>fetch</b> event
+          will be emited by the query, causing bound views und dependent properties to update.
 
     article#main-model
       h2 The Main Model
@@ -1141,14 +1193,14 @@
         p The main model can also be accessed from javascript as a field on the main module.
         pre(data-filename="app.js")
           code.javascript.
-            declaire.mainModel.on('change:_version', function(v) {
+            app.mainModel.on('change:_version', function(v) {
               if(confirm('Reload to install new version?')) {
                 window.location = window.location;
               }
             });
 
     article#routing
-      h2 Routing
+      h2 Routing & Navigation
       p.
         Declaire apps contain an implicit router, that lives as another model object inside the <b>_page</b>
         property of the main model. This way, routing information is not only available to javascript,
@@ -1172,49 +1224,62 @@
       p If you want to access the router more directly, listen to its events using Javascript:
       pre(data-filename="app.js")
         code.javascript.
-          declaire.mainModel.get('_page').on('change:route', function(route) {
-            console.log("The url changed to " + route);
+          app.mainModel.on('change:_page', function(page) {
+            console.log("The url changed to " + page);
           });
+
+      section#routing-navigation
+        h3 Navigation
+        p.
+          Any anchor tag pointing to a URL below the <b>/pages</b> namespace, will automatically be hijacked
+          by the framework und change the <b>_page</b> property of the <a href="#main-model">main model</a>
+          when clicked, causing the <a href="#statements-route">route statement</a> to update as well.
+        p.
+          If you need to manually change the current page from Javascript, simply <b>set</b> the _page
+          property yourself.
+        pre(data-filename="app.js")
+          code.javascript.
+            app.mainModel.set('_page', '/pages/welcome');
       p For more complex routing, see the <a href="#statements-route">route statement</a>.
 
-    article#client-only
-      h2 Running Client/Server-only Code
-      p.
-        By default, all your code is executed on both server and client, leading to consistent results.
-        Sometimes though, this will not do the trick and you might want to execute code only on the one side
-        or the other.
-      p.
-        Declaire accepts several hooks in its start method, that get executed at specific points
-        in time. Some on the server, some on the client:
-      pre(data-filename="app.js")
-        code.javascript.
-          console.log("Executed once on both client and server");
+    //- article#client-only
+    //-   h2 Running Client/Server-only Code
+    //-   p.
+    //-     By default, all your code is executed on both server and client, leading to consistent results.
+    //-     Sometimes though, this will not do the trick and you might want to execute code only on the one side
+    //-     or the other.
+    //-   p.
+    //-     Declaire accepts several hooks in its start method, that get executed at specific points
+    //-     in time. Some on the server, some on the client:
+    //-   pre(data-filename="app.js")
+    //-     code.javascript.
+    //-       console.log("Executed once on both client and server");
           
-          declaire.start({
-            beforeConnect: function(express, mongoDB) {
-              console.log("Executed only on the server");
-            },
+    //-       declaire.start({
+    //-         beforeConnect: function(express, mongoDB) {
+    //-           console.log("Executed only on the server");
+    //-         },
           
-            onLoad: function() {
-              console.log("Executed only on the client");
-            }
-          });
-      p.
-        Declaire also provides helper methods to exclude arbitrary code segments, that can
-        be used both with a callback, or as a regular function:
-      pre(data-filename="app.js")
-        code.javascript.
-          // Continuation passing style
-          declaire.onServer(function() { });
+    //-         onLoad: function() {
+    //-           console.log("Executed only on the client");
+    //-         }
+    //-       });
+    //-   p.
+    //-     Declaire also provides helper methods to exclude arbitrary code segments, that can
+    //-     be used both with a callback, or as a regular function:
+    //-   pre(data-filename="app.js")
+    //-     code.javascript.
+    //-       // Continuation passing style
+    //-       declaire.onServer(function() { });
           
-          // Good ol' boolean function
-          if(declaire.onClient()) { }
-      p.
-        You can also require additional npm modules on one side only.
-        Modules which are only required on the server will not be included in the javascript bundle.
-      pre(data-filename="app.js")
-        code.javascript.
-          if(declaire.onServer()) require('newrelic');
+    //-       // Good ol' boolean function
+    //-       if(declaire.onClient()) { }
+    //-   p.
+    //-     You can also require additional npm modules on one side only.
+    //-     Modules which are only required on the server will not be included in the javascript bundle.
+    //-   pre(data-filename="app.js")
+    //-     code.javascript.
+    //-       if(declaire.onServer()) require('newrelic');
 
     article#offline
       h2 Offline Support

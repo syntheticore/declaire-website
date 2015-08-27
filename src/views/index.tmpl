@@ -188,6 +188,7 @@
       li>a(href="#offline") Offline Support
       //- li>a(href="#client-only") Client/Server-only Code
       li>a(href="#service-models") Service Models
+      li>a(href="#utils") Utility Functions
       li>a(href="#stylesheets") Stylesheets
       li
         a(href="#deployment") Deployment
@@ -353,6 +354,76 @@
               var NewRelic = require('newrelic');
             }
         //-
+
+    article#startup
+      h2 Application Startup
+      p.
+        The Application constructor takes several flags that control your app's behaviour, like the
+        database to connect to or the base URL of your pages. These cannot be changed after an Application
+        has been created.
+      p.
+        The <b>init</b> method represents the initialization phase of the framework on the client as well
+        as on the server. The callback that you pass will be called when Declaire is completely initialized,
+        but before listening to requests on the server and before listening to events on the client.
+        The <b>start</b> function passed will finally make that happen once you are finished with your
+        own setup.
+      pre(data-filename="app.js")
+        code.javascript.
+          var declaire = require('declaire');
+          // Make Declaire's utility functions easily accessible
+          var _ = declaire.Utils;
+          
+          // Create an Application object
+          var app = declaire.Application({
+            // Mongo URL to use when expressApp.get('env') == 'development'
+            mongoDevUrl: 'mongodb://127.0.0.1:27017/todos',
+            
+            // Production database
+            mongoUrl: process.env.MONGO_URL,
+            
+            // NPM folders to to host along with other static assets
+            npmPublic: ['font-awesome'],
+            
+            // Base URL below which the router expects HTML pages
+            baseUrl: '/pages',
+            
+            // The base URL of the generated REST API
+            apiUrl: '/api'
+          });
+
+          // Load and/or declare all models used
+          // ..Data Models
+          var Todo = app.use(require('./src/models/todo.js'));
+          // ..View Models
+          app.use(require('./src/views/MyView.js'));
+
+          // Start the framework when all models are set up
+          app.init(function(start, express, db) {
+            if(_.onServer()) {
+              // We can still make changes to the database
+              // while the server starts up...
+              db.collection('todos').createIndex({done: 1});
+              
+              // ..or create a server-side route using express
+              express.get('/ping', function(req, res) {
+                res.send('pong');
+              });
+              
+              // Call start when you're done
+              start(function() {
+                // The server is now accepting requests
+              });
+            
+            // On the client
+            } else {
+              // The main model is initialized
+              start(function() {
+                // The page has been completely replaced with a client-side version,
+                // anchors have been hijacked and the router is running
+              });
+            }
+          });
+      //-
     article#templating
       h2 Templating
       p.
@@ -413,7 +484,7 @@
             
             // Input with an id and several classes and attributes
             input#my-id.foo.bar(type="checkbox" checked)
-
+        //-
       section#interpolation
         h3 Interpolation
         p.
@@ -459,7 +530,7 @@
               input(type="checkbox" checked={:done!})
               footer
                 button({{action click save}}) Ok
-      
+        //- 
       section#text
         h3 Text
         p.
@@ -1060,20 +1131,20 @@
           c.add(4);
           c.serialize(); // [1,3,4]
       p.
-        When a model contains a collections as
-        properties, saving the model will only save references to related objects in its collections.
-        When the model is later loaded again, its collections will be restored automatically, but only if
-        you loaded the instance manually using <b>Model.load</b>. All other collections must
-        be resolved before usage using the asynchronous <b>resolve</b> method.
+        When a model contains collections as properties, saving the model will only save references to related
+        objects in its collections. Note that when the model is later loaded again, its collections will not be restored
+        automatically, as a safeguard against accidentally downloading the entire database.<br>
+        Collections containing model instances therefore need to be resolved using the asynchronous <b>resolve</b> method before usage.
       pre(data-filename="app.js")
         code.javascript.
           var todos = declaire.Collection();
           todos.add(Todo.create());
-          todos.serialize(); // error: cannot serialize unsaved objects
+          todos.serialize(); // error: Cannot serialize unsaved objects
           todos.at(0).save(function() {
             todos.serialize(); // [{_ref: {id: 'xyz123', collection: 'todos'}}]
           });
-          // Resolve is of course unneccessary in this case, because we just created the collection ourselves
+          // Resolve is of course unneccessary in this case,
+          // because we just created the collection ourselves
           todos.resolve(function() {
             todos.each(function(todo) {});
           });
@@ -1104,9 +1175,9 @@
           });
       p.
         You can directly return a Query from a computed property. The template engine will resolve
-        the Query automatically when rendering the property.
+        it automatically when/if it renders the property.
         <br>
-        Note that we construct the query using the shorthand <b>all</b> method on a model.
+        Note that we construct the query using the shorthand <b>all</b> method on a model in this example.
       pre(data-filename="app.js")
         code.javascript.
           declaire.ViewModel('SearchUsersView', {
@@ -1132,6 +1203,37 @@
       p Look ma! No ajax! No event handlers!
 
       section
+        h3 Query Syntax
+        p.
+          Declaire's query syntax is actually a subset of MongoDB's query objects:
+          Simply supply a reference object with the values that you want to match.
+        pre(data-filename="app.js")
+          code.javascript.
+            var scienceBooks = books.filter({topic: 'science'});
+        p For more complex queries, the following special operators are available:
+        //-
+        section
+          h4 $regex
+          p Filter models by matching a regular expression to a field.
+          pre(data-filename="app.js")
+            code.javascript.
+              var searchResults = books.filter({title: {$regex: 'foo'}});
+        //-
+        section
+          h4 $lt, $gt
+          p Filter models by comparing values numerically.
+          pre(data-filename="app.js")
+            code.javascript.
+              var cheapBooks = books.filter({price: {$lt: 5}});
+        //-
+        section
+          h4 $or
+          p Supply an array of conditions, at least one of which must be met to satisfy the filter.
+          pre(data-filename="app.js")
+            code.javascript.
+              var goodValueBooks = books.filter({$or: [{rating: {$gt: 8}}, {price: {$lt: 5}}]});
+
+      section
         h3 Local Storage
         p.
           When a query is evaluated, it is performed against the local model cache first, returning
@@ -1142,7 +1244,7 @@
           will be emited by the query, causing bound views und dependent properties to update.
 
     article#main-model
-      h2 The Main Model
+      h2 The Main Model Singleton Instance
       p.
         The main model sits at the very bottom of every scope and gets created and updated
         by the framework. It is not meant to be written to directly.
@@ -1185,7 +1287,7 @@
           This allows you to use the cookie everywhere you can use a model.
       
       section
-        h3 Accessing the Main Model Singleton Instance
+        h3 Accessing the Main Model from Javascript
         p As a part of any scope, its properties are available in any template.
         pre(data-filename="views/layout.tmpl")
           code.handlebars.
@@ -1352,6 +1454,106 @@
               {{for tag in hashes}}
                 li {tag}
 
+    article#utils
+      h2 Utility Functions
+      p.
+        Declaire strives to keep a footprint as low as possible and doesn't use any client-side dependencies.
+        It therefore keeps its own little library of utility functions internally, instead of depending on a fullblown
+        alternative such as <a href="http://underscorejs.org" target="_blank">Underscore.js</a>. This way, we actually use every
+        single line of code that we ship.
+      p.
+        Your application can access these as a field on the main module as well. It is a good idea to assign the module to a
+        shorter handle before using it.
+      pre(data-filename="app.js")
+        code.javascript.
+          var declaire = require('declaire');
+          var _ = declaire.Utils;
+      p.
+        You may or may not find these utilities to be sufficient already for your application's needs.
+      //-
+      section
+        h4 each
+        p Iterate arrays in the same way as objects.
+        pre(data-filename="app.js")
+          code.javascript.
+            // Iterate through arrays
+            _.each([1,2,3], function(value) {});
+            
+            // ..with index if you like
+            _.each([5,6,7], function(value, index) {});
+            
+            // Iterate objects in the same way
+            _.each({a: 'foo', b: 'bar'}, function(value, key) {});
+      //-
+      section
+        h4 map
+        p Return a copy the given array or object, with each item replaced by the given callback
+        pre(data-filename="app.js")
+          code.javascript.
+            var doubles = _.map([1,2,3], function(n) { return n * 2 });
+      //-
+      section
+        h4 times
+        p Call the given function <b>n</b> times
+        pre(data-filename="app.js")
+          code.javascript.
+            _.times(5, function() { console.log('Hooray') });
+      //-
+      section
+        h4 select
+        p Returns a subset of items, for which the given function returns something truthy
+        pre(data-filename="app.js")
+          code.javascript.
+            var odds = _.select([1,2,3,4], function(n) { return n % 2 });
+      //-
+      section
+        h4 all
+        p Check if all items match the given condition
+        pre(data-filename="app.js")
+          code.javascript.
+            var doneDeal = _.all(books, function(book) { return book.price < 10 });
+      //-
+      section
+        h4 any
+        p Check if any item matches the given condition
+        pre(data-filename="app.js")
+          code.javascript.
+            var forbidden = _.any(people, function(person) { return person.age < 18 });
+      //-
+      section
+        h4 contains
+        p Check if the given item is a member of the array or string
+        pre(data-filename="app.js")
+          code.javascript.
+            var hasFooInList = _.contains(['foo', 'bar'], 'foo');
+      //-
+      section
+        h4 invoke
+        p Call the named method on each item
+        pre(data-filename="app.js")
+          code.javascript.
+            _.invoke(todos, 'delete');
+      //-
+      section
+        h4 zip
+        p Interleave the items of two arrays
+        pre(data-filename="app.js")
+          code.javascript.
+      //-
+      section
+        h4 merge
+        p Return new object with the fields from both given objects
+        pre(data-filename="app.js")
+          code.javascript.
+            _.merge({a: 'foo'}, {b: 'bar'}); //=> {a: 'foo', b: 'bar'}
+      //-
+      section
+        h4 union
+        p Merge two arrays
+        pre(data-filename="app.js")
+          code.javascript.
+            var one2six = _.union([1,2,3], [4,5,6]);
+      //-
     article#stylesheets
       h2 Stylesheets
       p.
@@ -1395,7 +1597,7 @@
         code.handlebars.
           head
             link(href="/stylesheets/main.css" rel="stylesheet")
-
+      //-
     article#deployment
       h2 Deployment
       p.

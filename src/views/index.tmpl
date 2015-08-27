@@ -204,7 +204,7 @@
         <a href="http://npmjs.com" target="_blank">npm</a>.
       pre(data-filename="Shell")
         code.javascript.
-          $ cd my-app.
+          $ cd my-app
           $ npm install declaire --save
       //-
     article#get-started
@@ -231,7 +231,7 @@
           
             newTodo: function(e, input) {
               Todo.create({title: input.value}).save();
-              input.val('');
+              input.value = '';
             }
           });
           
@@ -1093,17 +1093,18 @@
       pre(data-filename="app.js")
         code.javascript.
           var finishedTodos = declaire.Query(Todo, {done: true});
-          var aboutSports = finishedTodos.filter({title: {$contains: 'sport'}});
+          var aboutSports = finishedTodos.filter({topic: 'sports'});
           
           // Calling resolve() will actually execute the built up query
           // and return a collection of matching items
           aboutSports.resolve(function(todos) {
             todos.each(function(todo) {
-              todo.remove();
+              todo.delete();
             });
           });
       p.
-        We can use a Query in a computed property together with an input binding for creating a live search feature.
+        You can directly return a Query from a computed property. The template engine will resolve
+        the Query automatically when rendering the property.
         <br>
         Note that we construct the query using the shorthand <b>all</b> method on a model.
       pre(data-filename="app.js")
@@ -1113,13 +1114,13 @@
             results: function() {
               // Filter works flawlessly on Person.name, btw,
               // which is itself a computed property
-              return Person.all().filter({name: {$contains: this.get('query')}});
+              return Person.all().filter({name: {$regex: this.get('query')}});
             }
           });
       pre(data-filename="views/searchUsers.tmpl")
         code.handlebars.
           {{view SearchUsersView}}
-            input(type="text" placeholder="Search for people" value="{{query}}")
+            input(type="text" placeholder="Search for people" value="{query!}")
             ul
               {{for results}}
                 li {name}

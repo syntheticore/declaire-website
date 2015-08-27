@@ -53,7 +53,7 @@ article#examples-view
             results: function() {
               // Filter works flawlessly on Person.name, btw,
               // which is itself a computed property
-              return Person.all().filter({name: {$contains: this.get('query')}});
+              return Person.all().filter({name: {$regex: this.get('query')}});
             }
           });
       

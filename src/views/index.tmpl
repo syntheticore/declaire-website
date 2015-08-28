@@ -1491,13 +1491,27 @@
         pre(data-filename="app.js")
           code.javascript.
             var doubles = _.map([1,2,3], function(n) { return n * 2 });
+            // Index available if needed
+            _.map([9,8,7], function(n, index) { return n + index });
+
+            // Objects are welcome too
+            var ages = {
+              Fred: 31,
+              Anna: 24
+            };
+            var futureAges = _.map(ages, function(age) { return age + 20 });
+            //-> {Fred: 51, Anna: 44}
+
+            // When called with a string, we map directly to the items' members
+            var names = _.map(people, 'name');
       //-
       section
         h4 times
         p Call the given function <b>n</b> times
         pre(data-filename="app.js")
           code.javascript.
-            _.times(5, function() { console.log('Hooray') });
+            _.times(2, function() { console.log('Hip') });
+            console.log('Hooray');
       //-
       section
         h4 select
@@ -1522,10 +1536,13 @@
       //-
       section
         h4 contains
-        p Check if the given item is a member of the array or string
+        p Check if the given item is a member of the array, object or string
         pre(data-filename="app.js")
           code.javascript.
             var hasFooInList = _.contains(['foo', 'bar'], 'foo');
+
+            // For objects, the actual key where the value was found is returned
+            var barKey = _.contains({foo: 1, bar: 2}, 2);
       //-
       section
         h4 invoke
@@ -1533,12 +1550,24 @@
         pre(data-filename="app.js")
           code.javascript.
             _.invoke(todos, 'delete');
+
+            // Further arguments will get passed to the invoked method
+            _.invoke(items, 'meth', arg1, arg2);
+
+            // Invoke returns an array of return values
+            var uppercased = _.invoke(['foo', 'bar'], 'toUpperCase');
       //-
       section
         h4 zip
-        p Interleave the items of two arrays
+        p Interleave the items of two arrays, stop on the shorter list
         pre(data-filename="app.js")
           code.javascript.
+            var a = [1,2,3];
+            var b = [4,5,6];
+            _.zip(a, b); //-> [[1,4], [2,5], [3,6]]
+
+            // Zip can be also be used with a callback 
+            _.zip(a, b, function(fromA, fromB) {});
       //-
       section
         h4 merge

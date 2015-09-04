@@ -141,60 +141,60 @@
   nav.side-bar
     header Contents
     ul
-      li>a(href="#install") Installation
+      li > a(href="#install") Installation
       li
         a(href="#structure") Project Structure
         //- ul
-        //-   li>a(href="#installing-modules") Installing Modules
+        //-   li > a(href="#installing-modules") Installing Modules
       li
         a(href="#templating") Templating
         ul
-          li>a(href="#comments") Comments
-          li>a(href="#tags") Basic HTML Tags
-          li>a(href="#interpolation") Interpolation
-          li>a(href="#bindings") Two-way Bindings
-          li>a(href="#text") Text
-          li>a(href="#scope") Scope
+          li > a(href="#comments") Comments
+          li > a(href="#tags") Basic HTML Tags
+          li > a(href="#interpolation") Interpolation
+          li > a(href="#bindings") Two-way Bindings
+          li > a(href="#text") Text
+          li > a(href="#scope") Scope
           li
             a(href="#statements") Statements
             //- ul
-            //-   li>a(href="#statements-if") if
-            //-   li>a(href="#statements-for") for
-            //-   li>a(href="#statements-view") views
-            //-   li>a(href="#statements-action") action
-            //-   li>a(href="#statements-import") import
-            //-   li>a(href="#statements-content") content
-            //-   li>a(href="#statements-route") route
-            //-   li>a(href="#statements-as") as
-            //-   li>a(href="#statements-switch") switch
-            //-   li>a(href="#statements-client") client
+            //-   li > a(href="#statements-if") if
+            //-   li > a(href="#statements-for") for
+            //-   li > a(href="#statements-view") views
+            //-   li > a(href="#statements-action") action
+            //-   li > a(href="#statements-import") import
+            //-   li > a(href="#statements-content") content
+            //-   li > a(href="#statements-route") route
+            //-   li > a(href="#statements-as") as
+            //-   li > a(href="#statements-switch") switch
+            //-   li > a(href="#statements-client") client
       li
         a(href="#data-models") Data Models
         ul
-          li>a(href="#events") Events
-          li>a(href="#computed-properties") Computed Properties
-          //- li>a(href="#realtime") Realtime Updates
-          li>a(href="#relations") Relations
-          //- li>a(href="#model-offline") Local Storage
-          li>a(href="#model-history") History & Rollback
-      li>a(href="#view-models") View Models
-      li>a(href="#collections") Collections
-      li>a(href="#queries") Queries
+          li > a(href="#events") Events
+          li > a(href="#computed-properties") Computed Properties
+          //- li > a(href="#realtime") Realtime Updates
+          li > a(href="#relations") Relations
+          //- li > a(href="#model-offline") Local Storage
+          li > a(href="#model-history") History & Rollback
+      li > a(href="#view-models") View Models
+      li > a(href="#collections") Collections
+      li > a(href="#queries") Queries
       li
         a(href="#routing") Routing & Navigation
         //- ul
-        //-   li>a(href="#routing") Navigation
-      li>a(href="#main-model") Main Model Instance
-      li>a(href="#offline") Offline Support
-      //- li>a(href="#client-only") Client/Server-only Code
-      li>a(href="#service-models") Service Models
-      li>a(href="#utils") Utility Functions
-      li>a(href="#stylesheets") Stylesheets
+        //-   li > a(href="#routing") Navigation
+      li > a(href="#main-model") Main Model Instance
+      li > a(href="#offline") Offline Support
+      //- li > a(href="#client-only") Client/Server-only Code
+      li > a(href="#service-models") Service Models
+      li > a(href="#utils") Utility Functions
+      li > a(href="#stylesheets") Stylesheets
       li
         a(href="#deployment") Deployment
         //- ul
-        //-   li>a(href="#mongodb") MongoDB
-        //-   li>a(href="#heroku") Heroku
+        //-   li > a(href="#mongodb") MongoDB
+        //-   li > a(href="#heroku") Heroku
 
   section.main-content
 
@@ -480,7 +480,7 @@
             
             // Make this a little shorter for elements with a single child
             nav>ul.items
-              li>a(href="#") Item1
+              li > a(href="#") Item1
             
             // Input with an id and several classes and attributes
             input#my-id.foo.bar(type="checkbox" checked)
@@ -548,9 +548,9 @@
         pre(data-filename="views/layout.tmpl")
           code.handlebars.
             p
-              Lorem ipsum
+              | Lorem ipsum
               a(href="#") dolor 
-              sit amet
+              | sit amet
 
       section#scope
         h3 Scope
@@ -1317,8 +1317,8 @@
             header
               h1 My Page
               nav>ul
-                li>a(href="/") Home
-                li>a(href="/pages/todos") Todos
+                li > a(href="/") Home
+                li > a(href="/pages/todos") Todos
             main
               {{if _page.route == '/'}}
                 {{import IndexView}}

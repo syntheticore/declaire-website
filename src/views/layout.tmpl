@@ -19,9 +19,9 @@ body
       span Declaire
     nav
       ul
-        li > a(href="/pages/index#features") Features
-        li > a(href="/pages/index#install") Get Started
-        //- li > a(href="/pages/docs") Documentation
+        //- li > a(href="/pages/index#features") Features
+        //- li > a(href="/pages/index#install") Get Started
+        li > a(href="/pages/index#install") Documentation
         li > a(href="/pages/examples") Examples
         li > a(href="https://github.com/syntheticore/declaire") Github
 
@@ -29,10 +29,6 @@ body
     {{route /pages/index}}
       {{view HighlightView}}
         {{import index}}
-    
-    {{route /pages/demos}}
-      {{view HighlightView}}
-        {{import demos}}
 
     {{route /pages/examples}}
       {{view HighlightView}}
@@ -43,14 +39,14 @@ body
       li
         h4 Declaire
         ul.items
-          li > a(href="/") Home
+          li > a(href="/pages/index") Home
           li > a(href="https://www.npmjs.com/package/declaire") NPM
       li
         h4 Help
         ul.items
-          li > a(href="#install") Get started
+          //- li > a(href="/pages/index#install") Get started
           li > a(href="/pages/examples") Examples
-          //- li > a(href="/pages/docs") Documentation
+          li > a(href="/pages/index#install") Documentation
       li
         h4 About
         ul.items

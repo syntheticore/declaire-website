@@ -10,9 +10,8 @@ var app = declaire.Application({
 });
 
 app.ViewModel('HighlightView', {}, function() {
-  var self = this;
-  self.on('attach', function() {
-    var blocks = self.el.getElementsByTagName("code");
+  this.on('attach', function() {
+    var blocks = this.element.getElementsByTagName("code");
     for(var i = 0; i < blocks.length; i++) {
       var block = blocks[i];
       hljs.highlightBlock(block);

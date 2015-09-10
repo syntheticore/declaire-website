@@ -143,17 +143,22 @@
     header Contents
     ul
       li > a(href="#install") Installation
+      //- li > a(href="#get-started") Get Started
       li
         a(href="#structure") Project Structure
-        //- ul
-        //-   li > a(href="#installing-modules") Installing Modules
+        ul
+          li > a(href="#structure-models") Organizing Models
+          li > a(href="#structure-modules") Installing Modules
       li
         a(href="#templating") Templating
         ul
           li > a(href="#comments") Comments
           li > a(href="#tags") Basic HTML Tags
-          li > a(href="#bindings") Bindings
-          li > a(href="#bindings-two-way") Two-way Bindings
+          li
+            a(href="#bindings") Bindings
+            ul
+              li > a(href="#bindings-class") Binding CSS Classes
+              li > a(href="#bindings-two-way") Two-way Bindings
           li > a(href="#text") Text
           li > a(href="#scope") Scope
           li
@@ -174,18 +179,21 @@
         ul
           li > a(href="#events") Events
           li > a(href="#computed-properties") Computed Properties
-          //- li > a(href="#realtime") Realtime Updates
+          li > a(href="#realtime") Realtime Updates
           li > a(href="#relations") Relations
-          //- li > a(href="#model-offline") Local Storage
-          li > a(href="#model-history") History & Rollback
+          li > a(href="#model-offline") Local Storage
+          //- li > a(href="#model-history") History & Rollback
       li > a(href="#view-models") View Models
       li > a(href="#collections") Collections
-      li > a(href="#queries") Queries
       li
-        a(href="#routing") Routing & Navigation
-        //- ul
-        //-   li > a(href="#routing") Navigation
-      li > a(href="#main-model") Main Model Instance
+        a(href="#queries") Queries
+        ul
+          li > a(href="#queries-syntax") Query Syntax
+      li > a(href="#main-model") Main Model
+      li
+        a(href="#routing") Routing
+        ul
+          li > a(href="#routing-navigation") Navigation
       li > a(href="#offline") Offline Support
       //- li > a(href="#client-only") Client/Server-only Code
       li > a(href="#service-models") Service Models
@@ -209,6 +217,7 @@
           $ cd my-app
           $ npm install declaire --save
       //-
+    
     article#get-started
       h2 Get Started (with a nice and easy Todos app)
       p.
@@ -312,7 +321,7 @@
             package.json
       p The public folder should contain your static assets and will get served automatically.
 
-      section#loading-models
+      section#structure-models
         h3 Organizing Models and View Models
         p.
           You can put your source files anywhere you like, but the <b>src</b> folder is a good idea.
@@ -336,7 +345,7 @@
             app.use(require('./src/views/MyView.js'));
         p Make sure all your models are registered before calling app.<b>init</b>()!
       
-      section#installing-modules
+      section#structure-modules
         h3 Installing and Loading NPM Modules
         p.
           Install modules using  <a href="http://npmjs.com" target="_blank">npm</a>. These will get packaged and
@@ -522,9 +531,8 @@
         //- option(value="fruits" selected={selectedFood == <value>}) Fruits
         //- OR
         //- select({{selected selectedFood}})
-        
         section#bindings-class
-          h4 Binding CSS classes
+          h4 Binding CSS Classes
           p.
             As setting several classes dynamically is a very common operation, a special syntax exists just for doing that:
           pre(data-filename="views/layout.tmpl")
@@ -534,32 +542,32 @@
           p.
             Note that the <b>li</b> element will still always get the <b>.item</b> class in addition to the dynamically
             determined classes.
-        //-
-      section#bindings-two-way
-        h3 Two-way Bindings
-        p.
-          Using an exclamation mark at the end of a path in an attribute binding will create a two-way binding,
-          meaning that the input will also drive the connected model property when the user makes changes.
-        pre(data-filename="views/layout.tmpl")
-          code.handlebars.
-            input(type="checkbox" checked="{done!}")
-        p.
-          Use another exclamation mark to not only set the model property, but also save it to the server.
-        pre(data-filename="views/layout.tmpl")
-          code.handlebars.
-            input(type="checkbox" checked="{done!!}")
-        p.
-          Adding a colon before the binding path will interpolate the value only once and not update
-          upon data changes. This is useful for prefilling inputs in a dialog that you do not want
-          to change upon remote changes.
-        pre(data-filename="views/layout.tmpl")
-          code.handlebars.
-            form.dialog
-              input(type="text" value={:title!})
-              input(type="checkbox" checked={:done!})
-              footer
-                button({{on click save}}) Ok
-        //- 
+        section#bindings-two-way
+          h4 Two-way Bindings
+          p.
+            Using an exclamation mark at the end of a path in an attribute binding will create a two-way binding,
+            meaning that the input will also drive the connected model property when the user makes changes.
+          pre(data-filename="views/layout.tmpl")
+            code.handlebars.
+              input(type="checkbox" checked="{done!}")
+          p.
+            Use another exclamation mark to not only set the model property, but also save it to the server.
+          pre(data-filename="views/layout.tmpl")
+            code.handlebars.
+              input(type="checkbox" checked="{done!!}")
+          p.
+            Adding a colon before the binding path will interpolate the value only once and not update
+            upon data changes. This is useful for prefilling inputs in a dialog that you do not want
+            to change upon remote changes.
+          pre(data-filename="views/layout.tmpl")
+            code.handlebars.
+              form.dialog
+                input(type="text" value={:title!})
+                input(type="checkbox" checked={:done!})
+                footer
+                  button({{on click save}}) Ok
+          //- 
+      
       section#text
         h3 Text
         p.
@@ -706,6 +714,7 @@
               }, function(todo) {
                 this.set('myTodo', todo);
               });
+          //- 
 
         section#statements-on
           h4 on
@@ -738,7 +747,7 @@
           h4 import
           p.
             Declaire uses a simple way to combine templates that also serves to build
-            reusable components:
+            <b>reusable components</b>:
             Use the import statement to import another template in the surrounding template.
           pre(data-filename="views/myTemplate.tmpl")
             code.handlebars.
@@ -747,7 +756,7 @@
             code.handlebars.
               {{import myTemplate}}
           p.
-            You can pass named parameters to the imported template which are then available
+            You can pass <b>named parameters</b> to the imported template which are then available
             in its scope. 
           pre(data-filename="views/animal.tmpl")
             code.handlebars.
@@ -1236,7 +1245,7 @@
         search results.
       p Look ma! No ajax! No event handlers!
 
-      section
+      section#queries-syntax
         h3 Query Syntax
         p.
           Declaire's query syntax is actually a <b>subset of MongoDB's query objects</b>:

@@ -1,13 +1,14 @@
 {
   "name": "declaire-website",
-  "version": "0.2.0",
+  "version": "0.2.3",
   "description": "Website for Declaire.js",
   "main": "app.js",
   "engines": {
     "node": "0.12.x"
   },
   "scripts": {
-    "start": "node app.js"
+    "start": "node app.js",
+    "postinstall": "npm ddp"
   },
   "repository": {
     "type": "git",

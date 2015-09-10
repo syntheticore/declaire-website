@@ -12,10 +12,9 @@ var app = declaire.Application({
 app.ViewModel('HighlightView', {}, function() {
   this.on('attach', function() {
     var blocks = this.element.getElementsByTagName("code");
-    for(var i = 0; i < blocks.length; i++) {
-      var block = blocks[i];
+    _.each(blocks, function(block) {
       hljs.highlightBlock(block);
-    }
+    });
   });
 });
 

@@ -18,6 +18,4 @@ app.ViewModel('HighlightView', {}, function() {
   });
 });
 
-app.init(function(start) {
-  start();
-});
+app.init(function(start) { start() });

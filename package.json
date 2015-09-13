@@ -1,6 +1,6 @@
 {
   "name": "declaire-website",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "description": "Website for Declaire.js",
   "main": "app.js",
   "engines": {
@@ -21,7 +21,7 @@
   },
   "homepage": "https://github.com/syntheticore/declaire-website",
   "dependencies": {
-    "declaire": "^0.2.5",
+    "declaire": "^0.2.6",
     "font-awesome": "*",
     "highlight.js": "*",
     "newrelic": "*"

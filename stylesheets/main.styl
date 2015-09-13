@@ -1,11 +1,10 @@
-@require 'nib'
 global-reset()
 
 $baseFont = 'Neue Helvetica', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif
 $black = #515151
 $main = #0aaaad
 
-sticky()
+$sticky
   position: -webkit-sticky
   position: -moz-sticky
   position: -ms-sticky
@@ -137,12 +136,12 @@ pre, code
     margin: 1rem 0
 
 .side-bar
+  @extend $sticky
   overflow: hidden
   // margin-top: 1rem
   float: right
   width: 11rem
   margin: 3rem 0
-  sticky()
   top: 2rem
   header
     margin-bottom: 1rem

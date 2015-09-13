@@ -264,7 +264,7 @@
                 h1 Todos
               main
                 form({{on submit newTodo(input)}})
-                  input(type="text" placeholder="What's next?" {{as input}})
+                  input(type="text" placeholder="What's next?" required {{as input}})
                   button Create Todo
                 ul.todos
                   {{for todos}}
@@ -1506,6 +1506,9 @@
       p.
         Your application can access these as an attribute on the <b>main module</b> as well. It is a good idea to assign the module to a
         shorter handle before using it.
+      //- {{import HighlightView('app.js')}}+
+      //-   var declaire = require('declaire');
+      //-   var _ = declaire.Utils;
       pre(data-filename="app.js")
         code.javascript.
           var declaire = require('declaire');
@@ -1642,9 +1645,6 @@
         Among lots of other functionality, they provide you with:
       pre(data-filename="stylesheets/main.styl")
         code.less.
-          // Server side imports
-          @require 'nib'
-          
           // Cross-browser reset
           global-reset()
           
@@ -1666,6 +1666,9 @@
             color: $mainColor
             &:hover
               color: $mainColor * 0.9
+
+          // Server side imports
+          @require 'other.styl'
       p.
         Simply put your stylus files into the <b>/stylesheets</b> folder of your application
         and they will be served under the identical path, just with the <b>.css</b> extension.

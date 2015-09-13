@@ -2,7 +2,7 @@ if(typeof(window) == 'undefined') { require('newrelic') }
 
 var declaire = require('declaire');
 var hljs = require('highlight.js');
-var _ = declaire.Utils;
+var _ = declaire.utils;
 
 var app = declaire.Application({
   mongoDevUrl: 'mongodb://127.0.0.1:27017/declaire-website',
@@ -12,9 +12,10 @@ var app = declaire.Application({
 app.ViewModel('HighlightView', {}, function() {
   this.on('attach', function() {
     var blocks = this.element.getElementsByTagName("code");
-    _.each(blocks, function(block) {
+    for (var i = 0; i < blocks.length; ++i) {
+      var block = blocks[i];
       hljs.highlightBlock(block);
-    });
+    }
   });
 });
 

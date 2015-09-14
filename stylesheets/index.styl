@@ -1,6 +1,6 @@
 .index-view
   & > header
-    padding: 6rem 0
+    margin: 6rem 0
     text-align: center
     h1
       font-size: 4rem
@@ -11,6 +11,13 @@
       line-height: 1.3
       color: $main
       margin-bottom: 3rem
+    @media(max-width: 360px)
+      margin: 2rem 0
+      h1
+        font-size: 3rem
+      h2
+        font-size: 1.3rem
+        margin-bottom: 1rem
     .cta
       display: inline-block
       margin-top: 4rem
@@ -31,7 +38,11 @@
         top: 1px
         transition: all 0.05s
         box-shadow: 0 1px 4px rgba(0,0,0, 0.25)
-
+  
+  @media(max-width: 740px)
+    #features
+      margin-bottom: 1rem
+    
   .features
     -webkit-column-width: 15rem
     -webkit-column-gap: 2.5rem

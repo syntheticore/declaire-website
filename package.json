@@ -7,8 +7,7 @@
     "node": "0.12.x"
   },
   "scripts": {
-    "start": "node app.js",
-    "postinstall": "npm ddp"
+    "start": "node app.js"
   },
   "repository": {
     "type": "git",
@@ -21,7 +20,7 @@
   },
   "homepage": "https://github.com/syntheticore/declaire-website",
   "dependencies": {
-    "declaire": "^0.2.7",
+    "declaire": "^0.2.16",
     "font-awesome": "*",
     "highlight.js": "*",
     "newrelic": "*"

@@ -18,7 +18,7 @@
         p+
           Declaire brings its own <b>templating language</b>, with a compact, 
           <a href="http://jade-lang.com" target="_blank">Jade</a>-inspired syntax and a
-          robust set of logic blocks for structuring your markup+
+          robust set of logic blocks for structuring your markup.
         p+
           <b>RESTfull resources</b> get served for your models automatically, without the need to write
           additional code. Just define a data model, create instances and you're good to go.
@@ -378,7 +378,7 @@
         as on the server. The callback that you pass will be called when Declaire is completely initialized,
         but before listening to requests on the server and before listening to events on the client.
         The <b>start</b> function passed will finally make that happen once you're finished with your
-        own setup+
+        own setup.
       pre(data-filename="app.js")
         code.javascript+
           var declaire = require('declaire');
@@ -571,7 +571,7 @@
       section#text
         h3 Text
         p+
-          When your text doesn't fit on a single line anymore, you can end a tag definition with a dot
+          When your text doesn't fit on a single line anymore, you can end a tag definition with a '+' character
           and indent the following lines below. Text may also contain regular html tags.
         pre(data-filename="views/layout.tmpl")
           code.handlebars+
@@ -1034,7 +1034,7 @@
           The same goes for collections, which get serialized to a series of references before being
           persisted.
         p+
-          When the object is loaded again, its relations will get resolved automatically, but only one level deep+
+          When the object is loaded again, its relations will get resolved automatically, but only one level deep.
           This means that any <b>directly</b> referenced model objects will get loaded as well. Collections remain <b>lazy</b>.
         p+
           To use further references in the referenced model objects, these must then be resolved first.
@@ -1502,7 +1502,7 @@
         Declaire strives to keep a footprint as <b>low as possible</b> and doesn't use any client-side dependencies.
         It therefore keeps its own little library of utility functions internally, instead of depending on a fullblown
         alternative such as <a href="http://underscorejs.org" target="_blank">Underscore.js</a>. This way, we actually use every
-        single line of code that we ship+
+        single line of code that we ship.
       p+
         Your application can access these as an attribute on the <b>main module</b> as well. It is a good idea to assign the module to a
         shorter handle before using it.
@@ -1682,7 +1682,7 @@
       p+
         Declaire works as a standard 
         <a href="http://npmjs.com" target="_blank">NPM</a>
-        library and doesn't use any special protocols beside HTTp+ You should therefore
+        library and doesn't use any special protocols beside HTTP. You should therefore
         be able to deploy your application anywhere where node applications run.
       p+
         Be sure to set the environment variable <b>NODE_ENV</b> to <b>'production'</b> on production

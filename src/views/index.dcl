@@ -1641,7 +1641,7 @@
         These are great libraries and the indented syntax matches Declaire's templates nicely.
         Among lots of other functionality, they provide you with:
       pre(data-filename="stylesheets/main.styl")
-        code.less+
+        code.stylus+
           // Cross-browser reset
           global-reset()
           
@@ -1670,7 +1670,7 @@
         Simply put your stylus files into the <b>/stylesheets</b> folder of your application
         and they will be served under the identical path, just with the <b>.css</b> extension.
       pre(data-filename="src/views/layout.dcl")
-        code.handlebars+
+        code.jade+
           head
             link(href="/stylesheets/main.css" rel="stylesheet")
       //-

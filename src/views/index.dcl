@@ -196,7 +196,7 @@
           li > a(href="#routing-navigation") Navigation
       li > a(href="#offline") Offline Support
       //- li > a(href="#client-only") Client/Server-only Code
-      li > a(href="#service-models") Service Models
+      //- li > a(href="#service-models") Service Models
       li > a(href="#utils") Utility Functions
       li > a(href="#stylesheets") Stylesheets
       li
@@ -251,9 +251,9 @@
             start();
           });
       p+
-        Next, create your main layout template in the <b>/views</b> folder.
+        Next, create your main layout template in the <b>/src/views</b> folder.
         Declaire will wrap it with an HTML tag automatically if you omit it.
-      pre(data-filename="views/layout.tmpl")
+      pre(data-filename="src/views/layout.dcl")
         code.handlebars+
           head
             title Todos
@@ -463,7 +463,7 @@
         h3 Comments
         p+
           Comments begin with <b>//</b> and extend to the end of the line.
-        pre(data-filename="views/layout.tmpl")
+        pre(data-filename="src/views/layout.dcl")
           code.javascript+
             // This will NOT end up in your generated markup
         //-
@@ -476,7 +476,7 @@
           same line, or other tags may be indented below.
           <br>
           When an id or class is used, divs may have the tag name omited, as divs are the default.
-        pre(data-filename="views/layout.tmpl")
+        pre(data-filename="src/views/layout.dcl")
           code.javascript+
             // Simple div with a class and some text
             div.box Hello
@@ -505,7 +505,7 @@
           accordingly. This also works for attributes.
           <br>
           When a path returns null or undefined, the engine will silently render nothing.
-        pre(data-filename="views/layout.tmpl")
+        pre(data-filename="src/views/layout.dcl")
           code.handlebars+
             h2 {title}
             input(type="text" value="{title}")
@@ -514,13 +514,13 @@
           If you precede the curlies with an exclamation mark though, you can insert unescaped text.
           Use this at your own risk!
         .note Unescape is not implemented yet
-        pre(data-filename="views/layout.tmpl")
+        pre(data-filename="src/views/layout.dcl")
           code.handlebars+
             h2 !{title}
         p+
           For boolean attributes like <b>checked</b> or <b>selected</b>, the value of the given expression
           will determine if the attribute is set.
-        pre(data-filename="views/layout.tmpl")
+        pre(data-filename="src/views/layout.dcl")
           code.handlebars+
             input(type="checkbox" checked="{done}")
 
@@ -535,7 +535,7 @@
           h4 Binding CSS Classes
           p+
             As setting several classes dynamically is a very common operation, a special syntax exists just for doing that:
-          pre(data-filename="views/layout.tmpl")
+          pre(data-filename="src/views/layout.dcl")
             code.handlebars+
               li.item(class="{big: obj.isImportant, translucent: obj.status == 'waiting'}")
           //- li.{completed: done}
@@ -547,19 +547,19 @@
           p+
             Using an exclamation mark at the end of a path in an attribute binding will create a two-way binding,
             meaning that the input will also drive the connected model property when the user makes changes.
-          pre(data-filename="views/layout.tmpl")
+          pre(data-filename="src/views/layout.dcl")
             code.handlebars+
               input(type="checkbox" checked="{done!}")
           p+
             Use another exclamation mark to not only set the model property, but also save it to the server.
-          pre(data-filename="views/layout.tmpl")
+          pre(data-filename="src/views/layout.dcl")
             code.handlebars+
               input(type="checkbox" checked="{done!!}")
           p+
             Adding a colon before the binding path will interpolate the value only once and not update
             upon data changes. This is useful for prefilling inputs in a dialog that you do not want
             to change upon remote changes.
-          pre(data-filename="views/layout.tmpl")
+          pre(data-filename="src/views/layout.dcl")
             code.handlebars+
               form.dialog
                 input(type="text" value={:title!})
@@ -573,7 +573,7 @@
         p+
           When your text doesn't fit on a single line anymore, you can end a tag definition with a '+' character
           and indent the following lines below. Text may also contain regular html tags.
-        pre(data-filename="views/layout.tmpl")
+        pre(data-filename="src/views/layout.dcl")
           code.handlebars+
             p+
               Lorem ipsum dolor sit amet
@@ -582,7 +582,7 @@
           Alternatively, you may insert text anywhere you would insert a regular tag, by preceding it
           with the <b>|</b> character. This allows you to still insert intermediate tags using the regular
           syntax. 
-        pre(data-filename="views/layout.tmpl")
+        pre(data-filename="src/views/layout.dcl")
           code.handlebars+
             p
               | Lorem ipsum
@@ -621,7 +621,7 @@
             The if statement renders nested markup only if a condition is met.<br>
             Expressions may contain model properties within the scope, as well as basic literals,
             together with a fixed set of comparison operators. Inversion works too.
-          pre(data-filename="views/layout.tmpl")
+          pre(data-filename="src/views/layout.dcl")
             code.handlebars+
               {{if person.name == 'Peter'}}
                 strong You are the winner today!
@@ -630,30 +630,28 @@
                 dialog Waiting for connection ...
           p+
             One or several alternatives can be declared as well.
-          pre(data-filename="views/layout.tmpl")
+          pre(data-filename="src/views/layout.dcl")
             code.handlebars+
               {{if path}}
                 p Path is truthy
               {{=>}}
                 p Path is falsy
-          pre(data-filename="views/layout.tmpl")
+          pre(data-filename="src/views/layout.dcl")
             code.handlebars+
-              {{if}}
-              {{=> value > 0}}
+              {{if value > 0}}
                 .green Positive
               {{=> value == 0}}
                 div Zero
               {{=>}}
                 // Default
                 .red Negative
-          .note Multiple alternative branches are not implemented yet
         section#statements-for
           h4 for
           p+
             Use the for-statement to iterate through collections and produce output for
             every item. When items get added to or removed from the collection later, the template
             engine will update affected parts of the DOM, but leave other elements intact.
-          pre(data-filename="views/layout.tmpl")
+          pre(data-filename="src/views/layout.dcl")
             code.handlebars+
               ul
                 {{for todo in todos}}
@@ -663,7 +661,7 @@
             making its properties visible from that point downward in the template.
             Note that these may shadow properties or variables of the same name, higher in
             the scope. These can then no longer be reached.
-          pre(data-filename="views/layout.tmpl")
+          pre(data-filename="src/views/layout.dcl")
             code.handlebars+
               ul
                 {{for todos}}
@@ -680,7 +678,7 @@
           p+
             Optionally, the created view model instance can be given a name by which it will be accessible
             in the scope. If you leave that out, the model itself will be inserted into the scope.
-          pre(data-filename="views/layout.tmpl")
+          pre(data-filename="src/views/layout.dcl")
             code.handlebars+
               {{view MyViewModel as myView}}
                 h1 {myView.title}
@@ -691,7 +689,7 @@
             If you need to fetch data from the database to render the view, it is good practice to supply
             an alternate piece of markup to render, should the application be offline and not find
             the neccessary data in local storage.
-          pre(data-filename="views/layout.tmpl")
+          pre(data-filename="src/views/layout.dcl")
             code.handlebars+
               {{view MyViewModel}}
                 h1 {author.name}
@@ -700,7 +698,7 @@
                 h2 This view will render automatically once connectivity returns
           p+
             Any value accessible from the scope can be passed as an argument to the view model constructor.
-          pre(data-filename="views/layout.tmpl")
+          pre(data-filename="src/views/layout.dcl")
             code.handlebars+
               {{for todo in todos}}
                 {{view TodoView(todo)}}
@@ -723,7 +721,7 @@
             using the on-statement. It takes the name of an event on the element and a method to
             look up in the scope as arguments.
           p The method will get passed the event object as well as any parameters given as arguments.
-          pre(data-filename="views/layout.tmpl")
+          pre(data-filename="src/views/layout.dcl")
             code.handlebars+
               {{view MyView}}
                 input(type="text" {{on keyup method("Some argument")}})
@@ -737,7 +735,7 @@
           p+
             In addition to the regular DOM-events, Declaire allows you to use several virtual events,
             that make common interactions easier to write:
-          pre(data-filename="views/layout.tmpl")
+          pre(data-filename="src/views/layout.dcl")
             code.handlebars+
               input(type="text" {{on enter doIt}} {{on escape cancel}})
               h2({{on doubleClick rename}})
@@ -749,21 +747,21 @@
             Declaire uses a simple way to combine templates that also serves to build
             <b>reusable components</b>:
             Use the import statement to import another template in the surrounding template.
-          pre(data-filename="views/myTemplate.tmpl")
+          pre(data-filename="src/views/myTemplate.dcl")
             code.handlebars+
               h1 Import me!
-          pre(data-filename="views/layout.tmpl")
+          pre(data-filename="src/views/layout.dcl")
             code.handlebars+
               {{import myTemplate}}
           p+
             You can pass <b>named parameters</b> to the imported template which are then available
             in its scope. 
-          pre(data-filename="views/animal.tmpl")
+          pre(data-filename="src/views/animal.dcl")
             code.handlebars+
               .creature
                 .name {name}
                 .species {species}
-          pre(data-filename="views/layout.tmpl")
+          pre(data-filename="src/views/layout.dcl")
             code.handlebars+
               {{import animal(name: 'Lisa', species: 'Dog')}}
               {{import animal(name: 'Herbert', species: 'Cat')}}
@@ -779,7 +777,7 @@
           p+
             This allows you to write components like dialogs, that act as wrappers around arbitrary
             content.
-          pre(data-filename="views/wrapper.tmpl")
+          pre(data-filename="src/views/wrapper.dcl")
             code.handlebars+
               header
                 h1 Own content
@@ -787,7 +785,7 @@
                 {{content}}
               footer
                 .completely wrapped
-          pre(data-filename="views/layout.tmpl")
+          pre(data-filename="src/views/layout.dcl")
             code.handlebars+
               {{import wrapper}}
                 h2 Inserted content
@@ -800,15 +798,14 @@
           p+
             Use the route statement to evaluate markup only for specific URLs. The given URL can contain wildcards,
             which are used to extract parts of the url and put them into the scope below the statement.
-          pre(data-filename="views/layout.tmpl")
+          pre(data-filename="src/views/layout.dcl")
             code.handlebars+
               {{route /pages/users/:user}}
                 h1 Showing information for {user}
                 {{view UserView(user)}}
                   h2 Hello {firstName}
           p You can provide several alternatives and a default route, which is matched if no other route matches.
-          .note Route alternatives are not implemented yet
-          pre(data-filename="views/layout.tmpl")
+          pre(data-filename="src/views/layout.dcl")
             code.handlebars+
               {{route /pages/users/:user}}
                 {{import UserView(user)}}
@@ -825,7 +822,7 @@
             <br>
             This feature can be used to pass DOM elements to view model constructors and methods,
             instead of relying on class selectors etc.
-          pre(data-filename="views/layout.tmpl")
+          pre(data-filename="src/views/layout.dcl")
             code.javascript+
               // Import element into scope...
               input(type="text" {{as myInput}})
@@ -845,11 +842,11 @@
             of alternative states that are all kept in memory, while only a single element gets attached to
             the DOM at any given point in time.
           .note The switch statement is not implemented yet
-          pre(data-filename="views/layout.tmpl")
+          pre(data-filename="src/views/layout.dcl")
             code.handlebars+
               {{switch probability > 0.8}}
                 {{view BadgeView}}
-          pre(data-filename="views/layout.tmpl")
+          pre(data-filename="src/views/layout.dcl")
             code.handlebars+
               {{switch}}
               {{=> probability > 0.8}}
@@ -864,7 +861,7 @@
           h4 client
           p+
             Use the client statement to omit sections of your template from server rendering.
-          pre(data-filename="views/layout.tmpl")
+          pre(data-filename="src/views/layout.dcl")
             code.handlebars+
               {{client}}
                 h1 Interactive demo
@@ -876,7 +873,7 @@
             <br>
             You might render this as a simple anchor tag on the server,
             but use a more elaborate widget on the client, which would not by semantically describable using HTML anyway.
-          pre(data-filename="views/layout.tmpl")
+          pre(data-filename="src/views/layout.dcl")
             code.handlebars+
               {{client}}
                 {{import CrazyWidget('/my/resource')}}
@@ -988,7 +985,7 @@
                 return this.get('firstName') + ' ' + this.get('lastName');
               }
             });
-        pre(data-filename="views/ContactView.tmpl")
+        pre(data-filename="src/views/ContactView.dcl")
           code.handlebars+
             h1 {name}
         //- 
@@ -1008,7 +1005,7 @@
             todo.revert();
             todo.get('done'); // false
         p You can use this to easily implement a dialog which allows for cancelling changes.
-        pre(data-filename="views/layout.tmpl")
+        pre(data-filename="src/views/layout.dcl")
           code.handlebars+
             form
               h1 Edit Todo
@@ -1115,7 +1112,7 @@
               clearInterval(iv);
             });
           });
-      pre(data-filename="views/layout.tmpl")
+      pre(data-filename="src/views/layout.dcl")
         code.handlebars+
           {{view Clock}}
             time {time}
@@ -1231,7 +1228,7 @@
               return Person.all().filter({name: {$regex: this.get('query')}});
             }
           });
-      pre(data-filename="views/searchUsers.tmpl")
+      pre(data-filename="src/views/searchUsers.dcl")
         code.handlebars+
           {{view SearchUsersView}}
             input(type="text" placeholder="Search for people" value="{query!}")
@@ -1330,7 +1327,7 @@
       section
         h3 Accessing the Main Model from Javascript
         p As a part of any scope, its properties are available in any template.
-        pre(data-filename="views/layout.tmpl")
+        pre(data-filename="src/views/layout.dcl")
           code.handlebars+
             {{if !_online}}
               dialog Waiting for connection ...
@@ -1353,7 +1350,7 @@
       p+
         Another possibility is using the <b>_page</b> property on the main model directly from <b>templates</b> or
         <b>computed properties</b>:
-      pre(data-filename="views/layout.tmpl")
+      pre(data-filename="src/views/layout.dcl")
         code.handlebars+
           {{if _page == '/pages/todos'}}
             {{import TodosView}}
@@ -1448,53 +1445,53 @@
         <a href="#main-model">main model</a>
         contains several fields of interest.
 
-    article#service-models
-      h2 Service Models
-      p+
-        Service Models offer a seamless way to integrate <b>external services</b> into a Declaire
-        application.
-        <br>
-        Data will be mapped to a regular model object that can be consumed by
-        applications like any other model instance.
-      p+
-        This means not only that your templates and queries will update automatically as new
-        data arrives, but also brings other advantages:
-      ul
-        li
-          h3 Performance
-          p Slow <b>requests to the API</b> can not slow down your page loads.
-          p+
-            The render cache knows when data changes and can invalidate render fragments in a
-            fine-grained way.
-        li
-          h3 Robustness
-          p+
-            You don't introduce another <b>point of failure</b>, as declaire can handle unresponsive
-            services gracefully.
-        li
-          h3 Offline Capability
-          p Once requested, data transparently remains <b>available offline</b> as with any model object.
-      .note Service models are not implemented yet
-      pre(data-filename="app.js")
-        code.javascript+
-          var Twitter = app.ServiceModel('tweets', {
-            endpoint: 'http://api.twitter.com' 
-          }, {
-            user_name: 'userName',
-            hash_tags: 'hashes'
-          });
+    //- article#service-models
+    //-   h2 Service Models
+    //-   p+
+    //-     Service Models offer a seamless way to integrate <b>external services</b> into a Declaire
+    //-     application.
+    //-     <br>
+    //-     Data will be mapped to a regular model object that can be consumed by
+    //-     applications like any other model instance.
+    //-   p+
+    //-     This means not only that your templates and queries will update automatically as new
+    //-     data arrives, but also brings other advantages:
+    //-   ul
+    //-     li
+    //-       h3 Performance
+    //-       p Slow <b>requests to the API</b> can not slow down your page loads.
+    //-       p+
+    //-         The render cache knows when data changes and can invalidate render fragments in a
+    //-         fine-grained way.
+    //-     li
+    //-       h3 Robustness
+    //-       p+
+    //-         You don't introduce another <b>point of failure</b>, as declaire can handle unresponsive
+    //-         services gracefully.
+    //-     li
+    //-       h3 Offline Capability
+    //-       p Once requested, data transparently remains <b>available offline</b> as with any model object.
+    //-   .note Service models are not implemented yet
+    //-   pre(data-filename="app.js")
+    //-     code.javascript+
+    //-       var Twitter = app.ServiceModel('tweets', {
+    //-         endpoint: 'http://api.twitter.com' 
+    //-       }, {
+    //-         user_name: 'userName',
+    //-         hash_tags: 'hashes'
+    //-       });
           
-          app.ViewModel('TwitterView', {
-            tweets: Twitter.all({hashTags: {$contains: 'yolo'}})
-          });
-      pre(data-filename="views/layout.tmpl")
-        code.handlebars+
-          {{for tweets}}
-            h2 {userName} said:
-            p {text}
-            ul.tags
-              {{for tag in hashes}}
-                li {tag}
+    //-       app.ViewModel('TwitterView', {
+    //-         tweets: Twitter.all({hashTags: {$contains: 'yolo'}})
+    //-       });
+    //-   pre(data-filename="src/views/layout.dcl")
+    //-     code.handlebars+
+    //-       {{for tweets}}
+    //-         h2 {userName} said:
+    //-         p {text}
+    //-         ul.tags
+    //-           {{for tag in hashes}}
+    //-             li {tag}
 
     article#utils
       h2 Utility Functions
@@ -1672,7 +1669,7 @@
       p+
         Simply put your stylus files into the <b>/stylesheets</b> folder of your application
         and they will be served under the identical path, just with the <b>.css</b> extension.
-      pre(data-filename="views/layout.tmpl")
+      pre(data-filename="src/views/layout.dcl")
         code.handlebars+
           head
             link(href="/stylesheets/main.css" rel="stylesheet")
